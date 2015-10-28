@@ -1,2 +1,2 @@
 # kore
-Code review platform for trainers
+A project management platform for Agile perfectionists with deadlines.
