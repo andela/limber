@@ -4,11 +4,12 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
+  - "3.5"
 
 before_install:
   - "pip install -r requirements.txt"
 script:
-  - python -m unittest try1
+  - python -m unittest tests -p "*_test.py"
 branches:
   only:
   - feature/travis-ci
