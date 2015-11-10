@@ -37,7 +37,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'limber',
     'public',
 )
 
@@ -97,8 +96,30 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Parse database configuration from $DATABASE_URL
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Allow all host headers
+ALLOWED_HOSTS = ['*']
+
+# Static asset configuration
+import os
+
+STATIC_ROOT = 'staticfiles'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/' 
+#STATIC_URL = os.path.join(BASE_DIR,'public','static','public')+'/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR,"public","static","public"),
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/'
+    
+)
