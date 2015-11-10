@@ -17,6 +17,9 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+	url(r'^home/', include('public.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'limber.views.index', name='index'),
+    
+
 ]
