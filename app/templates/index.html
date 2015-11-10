@@ -1,0 +1,30 @@
+{% extends 'partials/layout.html' %}
+
+{% load staticfiles %}
+{% block content %}
+    <div class="mdl-grid">
+      <div class="mdl-cell mdl-cell--12-col">
+
+			<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+			  <div class="mdl-card__title">
+			    <h2 class="mdl-card__title-text"><strong>LIMBER</strong></h2>
+			  </div>
+			  <div class="mdl-card__media">
+			  	<img src="{% static 'images/welcome.jpg' %}">
+			  </div>
+			  
+			  <div class="mdl-card__actions mdl-card--border">
+			  <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+			      Login
+			    </a>
+			    <a class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+			      Register
+			    </a>
+			    
+			  </div>
+			  <div class="">
+			  	A project management platform for Agile perfectionists with deadlines.</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
