@@ -1,7 +1,9 @@
-.mdl-card {
-  margin-right: auto;
-  margin-left: auto;
-  width: 75%;
+.home-card .mdl-card {
+  width: 50%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%)
 }
 
 .mdl-card__media > img {
@@ -17,4 +19,10 @@
 
 .mdl-card__title {
 	text-align: center;
+}
+
+.home-card .mdl-card__title {
+  color: #fff;
+  height: 176px;
+  background: url('../images/welcome.jpg') center / cover;
 }
