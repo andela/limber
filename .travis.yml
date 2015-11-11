@@ -9,7 +9,7 @@ python:
 before_install:
   - "pip install -r requirements.txt"
 script:
-  - python -m unittest discover -s tests -p "*_test.py"
+  - ./manage.py test
 branches:
   only:
-  - feature/travis-ci
+  - develop
