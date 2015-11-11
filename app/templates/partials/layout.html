@@ -1,19 +1,18 @@
 {% load staticfiles %}
 <html>
-    <head>
-        <title></title>
-        <link rel="stylesheet" href="{% static 'css/material.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
-        <script src="{% static 'js/material.min.js' %}"></script>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    </head>
-    <body>
-        <div class="mdl-layout mdl-js-layout">
-            <main class="mdl-layout__content">
-                {% block content %}
-                {% endblock %}
-            </main>
-            
-        </div>
-</body>
+	<head>
+		<title>Limber &#187; {{ title|default:""}}</title>
+		<link rel="stylesheet" href="{% static 'css/material.min.css' %}">
+		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<script src="{% static 'js/material.min.js' %}"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	</head>
+	<body>
+		<div class="mdl-layout mdl-js-layout">
+			<main class="mdl-layout__content">
+				{% block content %}
+				{% endblock %}
+			</main>			
+		</div>
+	</body>
 </html>
