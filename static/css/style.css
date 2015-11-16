@@ -233,6 +233,15 @@ _:-ms-input-placeholder, :root .demo-graph {
   transform: translate(-50%, -50%)
 }
 
+.centered {
+  width: 320px;
+  min-width: 50%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%)
+}
+
 .mdl-card__media > img {
   max-width: 100%;
 }
