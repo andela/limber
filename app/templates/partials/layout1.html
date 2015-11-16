@@ -4,18 +4,16 @@
     <head>
         <title>Limber{{title | default:''}}</title>
         <link rel="stylesheet" href="{% static 'css/material.min.css' %}">
-        <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="{% static 'js/materialize.min.js' %}"></script>
+         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="{% static 'js/material.min.js' %}"></script>
+        <script src="{% static 'js/materialize.min.js' %}"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel='shortcut icon' href="{% static 'images/logo.png' %}" type='image/x-icon'/ >
     </head>
     <body>
         <div class="mdl-layout mdl-js-layout">
-            <header class="mdl-layout__header mdl-color--light-blue-600 mdl-color-text--white-600 z-depth-1">
-                <div class="mdl-layout__header-row ">
+            <header class="mdl-layout__header mdl-color--white-500 mdl-color-text--white-600">
+                <div class="mdl-layout__header-row">
                     <span class="mdl-layout-title">Home</span>
                     <div class="mdl-layout-spacer"></div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
@@ -37,11 +35,11 @@
                     </ul>
                 </div>
             </header>
-            <div class="demo-drawer mdl-layout__drawer mdl-color--white-200 mdl-color-text--blue-50 z-depth-2">
+            <div class="demo-drawer mdl-layout__drawer mdl-color--deep-purple-500 mdl-color-text--blue-50">
                 <header class="demo-drawer-header">
-                    <img src="{% static 'images/logo.png' %}" class="demo-avatar ">
+                    <img src="{% static 'images/wlogo.png' %}" class="demo-avatar">
                     <div class="demo-avatar-dropdown">
-                        <span class="mdl-color-text--cyan-500">Limber</span>
+                        <span>Limber</span>
                         <div class="mdl-layout-spacer"></div>
                         <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                         <i class="material-icons" role="presentation">arrow_drop_down</i>
@@ -53,22 +51,20 @@
                         </ul>
                     </div>
                 </header>
-                <nav class="demo-navigation mdl-navigation mdl-color--blue-700">
-                    <a class="mdl-navigation__link mdl-color-text--white" href=""> <i class="mdl-color-text--white-400 material-icons" role="presentation"> home</i>Home</a>
-                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--white-400 material-icons" role="presentation"> add</i>Icebox</a>
-                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--white-400 material-icons" role="presentation">assignment</i>On-going</a>
-                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--white-400 material-icons" role="presentation">transform</i>Backlog</a>
-                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--white-400 material-icons" role="presentation">forum</i>Done</a>
-                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--white-400 material-icons" role="presentation">flag</i>Updates</a>
+                <nav class="demo-navigation mdl-navigation mdl-color--light-blue-500">
+                    <a class="mdl-navigation__link mdl-color-text--white" href=""> <i class="mdl-color-text--indigo-400 material-icons" role="presentation">home</i>Home</a>
+                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--indigo-400 material-icons" role="presentation">add</i>Icebox</a>
+                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--indigo-400 material-icons" role="presentation">assignment</i>On-going</a>
+                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--indigo-400 material-icons" role="presentation">transform</i>Backlog</a>
+                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--indigo-400 material-icons" role="presentation">forum</i>Done</a>
+                    <a class="mdl-navigation__link mdl-color-text--white" href=""><i class="mdl-color-text--indigo-400 material-icons" role="presentation">flag</i>Updates</a>
                 </nav>
             </div>
             <main class="mdl-layout__content">
-           
-            
                 {% block content %}
                 {% endblock %}
             </main>
-            <footer class="mdl-mini-footer mdl-color--light-blue-600 z-depth-1">
+            <footer class="mdl-mini-footer mdl-color--indigo-700">
                 <div class="mdl-mini-footer__left-section">
                     <div class="mdl-logo">Limber : {{title|default:''}}</div>
                     <ul class="mdl-mini-footer__link-list">
