@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'limber.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'limber',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -98,6 +102,7 @@ USE_L10N = True
 USE_TZ = True
 
 # Parse database configuration from $DATABASE_URL
+
 
 DATABASES['default'] =  dj_database_url.config()
 
