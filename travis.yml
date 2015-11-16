@@ -1,0 +1,15 @@
+language: python
+python:
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+
+before_install:
+  - "pip install -r requirements.txt"
+script:
+  - ./manage.py test
+branches:
+  only:
+  - develop
