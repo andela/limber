@@ -3,8 +3,8 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-    user_id = models.CharField(primary_key = True, max_length = 10)
-    first_name = models.CharField(blank = False, max_length = 255)
+    user_id = models.IntegerField(primary_key = True)
+    first_name = models.CharField(max_length = 255)
     last_name = models.CharField(max_length = 255)
     email = models.CharField(max_length = 100)
     login = models.CharField(blank = False, max_length = 45)
@@ -15,12 +15,12 @@ class User(models.Model):
     country = models.CharField(max_length = 45)
 
 class Member(models.Model):
-    #org_id = models.ForeignKey(User)
-    user_id = models.ForeignKey(User)
+    org_id = models.ForeignKey(User)
+    user_id = models.IntegerField()
     user_level = models.PositiveSmallIntegerField(blank = False)
 
 class Project(models.Model):
-    project_id = models.CharField(primary_key = True, max_length = 10)
+    project_id = models.IntegerField(primary_key = True)
     owner_id = models.ForeignKey(User)
     project_name = models.CharField(blank = False, max_length = 45)
     project_desc = models.CharField(blank = False, max_length = 100)
