@@ -261,12 +261,27 @@ _:-ms-input-placeholder, :root .demo-graph {
   color: #fff;
   height: 176px;
   background: url('../images/welcome.jpg') center / cover;
-}body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-  }
+}
 
-  main {
-    flex: 1 0 auto;
-  }
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.errorlist li {
+  color: #F00;
+  display: inline;
+  margin: 0;
+}
+
+.errorlist ul { 
+  list-style: none outside none; 
+  margin:0; 
+  padding: 0; 
+  text-align: center; 
+}

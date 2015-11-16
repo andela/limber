@@ -9,26 +9,32 @@
 			<div class="mdl-card__title">
 				<h2 class="mdl-card__title-text">User Login</h2>
 			</div>
-			<div class="mdl-card__supporting-text">
-				<form action="#">
+			<form action="#" method="POST">
+				<div class="mdl-card__supporting-text">
+					{% csrf_token %}
+					{{ form.non_field_errors }}
 					<div class="mdl-textfield mdl-js-textfield mdl-cell--10-col">
-						<input class="mdl-textfield__input" type="text" id="user">
-						<label class="mdl-textfield__label" for="user">Username</label>
+						{{ form.username.errors }}
+						<!-- <input class="mdl-textfield__input" type="text" id="user"> -->
+						<label class="mdl-textfield__label" for="{{ form.username.id_for_label }}">Username</label>
+						{{ form.username }}
 					</div>
 					<div class="mdl-textfield mdl-js-textfield mdl-cell--10-col">
-						<input class="mdl-textfield__input" type="password" id="password">
-						<label class="mdl-textfield__label" for="password">Password</label>
+						<!-- <input class="mdl-textfield__input" type="password" id="password"> -->
+						{{ form.password.errors }}
+						<!-- <input class="mdl-textfield__input" type="text" id="user"> -->
+						<label class="mdl-textfield__label" for="{{ form.password.id_for_label }}">Password</label>
+						{{ form.password }}					
 					</div>
-				</form>
-			</div>
-			<div class="mdl-card__actions mdl-card--border">
-				<a class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-					Login
-				</a>
-				<a class="mdl-button mdl-button--small mdl-js-button mdl-button--raised">
-					Forgot Password?
-				</a>
-			</div>
+			
+				</div>
+				<div class="mdl-card__actions mdl-card--border">
+					<input class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" value="Login" />
+					<a class="mdl-button mdl-button">
+						Forgot Password?
+					</a>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
