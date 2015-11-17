@@ -4,14 +4,11 @@
 
 {% block content %}
 <div class="row">
-	<div class="mdl-cell mdl-cell--5-col">
-
-		<div class="mdl-card mdl-shadow--4dp centered">
-			<div class="card-image mdl-color--light-blue-600 z-depth-1">
-              <h4><img src="{% static 'images/logo.png' %}" class="cardimage right" width="125">
-              <span class="card-title white-text">Register</span></h4>
-            </div>
-			<form action="#" method="POST">
+	<div class="col s12 m6">
+		<div class="card  centered">
+			<div class="card-content cyan-text">
+				<span class="card-title ">Card Title</span>
+				<form action="#" method="POST">
 				<div class="mdl-card__supporting-text">
 					{% csrf_token %}
 					{{ form.non_field_errors }} 
@@ -21,7 +18,7 @@
 						<!-- <input class="mdl-textfield__input" type="text" id="user"> -->
 						<i class="material-icons prefix">account_circle</i>
 						{{ form.username }}
-						<label class="mdl-textfield__label" for="{{ form.username.id_for_label }}">Username</label>
+						<label class="" for="{{ form.username.id_for_label }}">Username</label>
 					</div>
 					
 					<div class="input-field ">
@@ -31,7 +28,7 @@
 						<!-- <input class="mdl-textfield__input" type="text" id="user"> -->
 						
 						{{ form.password }}	
-						<label class="mdl-textfield__label" for="{{ form.password.id_for_label }}">Password</label>				
+						<label class="" for="{{ form.password.id_for_label }}">Password</label>				
 					</div>
 			
 				</div>
@@ -41,7 +38,8 @@
 						Forgot Password?
 					</a>
 				</div>
-			</form>
+			</div>
+			
 		</div>
 	</div>
 </div>
