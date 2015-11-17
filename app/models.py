@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-    user_id = models.IntegerField(primary_key = True)
+    user_id = models.AutoField(primary_key = True)
     first_name = models.CharField(max_length = 255)
     last_name = models.CharField(max_length = 255)
     email = models.CharField(max_length = 100)
@@ -13,6 +13,9 @@ class User(models.Model):
     password = models.CharField(max_length = 45)
     city = models.CharField(max_length = 70)
     country = models.CharField(max_length = 45)
+
+    def usernames(self):
+        return '{0} {1}'.format(self.first_name, self.last_name)
 
 class Member(models.Model):
     org_id = models.ForeignKey(User)
@@ -44,4 +47,3 @@ class Task(models.Model):
     story_id = models.ForeignKey(Story)
     status = models.CharField(blank = False, max_length = 45)
     description = models.CharField(max_length = 255)
-    
