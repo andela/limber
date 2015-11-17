@@ -1,46 +1,41 @@
-{% extends 'partials/layout_basic.html' %}
-
-{% load staticfiles %}
-
-{% block content %}
+{% extends 'partials/layout_basic.html' %} {% load staticfiles %} {% block content %}
 <div class="row">
-	<div class="col s12 m6">
-		<div class="card  centered">
-			<div class="card-content cyan-text">
-				<span class="card-title ">Card Title</span>
-				<form action="#" method="POST">
-				<div class="mdl-card__supporting-text">
-					{% csrf_token %}
-					{{ form.non_field_errors }} 
-					<div class="input-field">
-					
-						{{ form.username.errors }}
-						<!-- <input class="mdl-textfield__input" type="text" id="user"> -->
-						<i class="material-icons prefix">account_circle</i>
-						{{ form.username }}
-						<label class="" for="{{ form.username.id_for_label }}">Username</label>
-					</div>
-					
-					<div class="input-field ">
-					<i class="material-icons prefix">vpn_key</i>
-						<!-- <input class="mdl-textfield__input" type="password" id="password"> -->
-						{{ form.password.errors }}
-						<!-- <input class="mdl-textfield__input" type="text" id="user"> -->
-						
-						{{ form.password }}	
-						<label class="" for="{{ form.password.id_for_label }}">Password</label>				
-					</div>
-			
-				</div>
-				<div class="mdl-card__actions mdl-card--border">
-					<input class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored light-blue darken-2 wave-green" type="submit" value="Login" />
-					<a class="mdl-button mdl-button ">
+    <div class="col s12 m6">
+        <div class="card white darken-1 centered">
+            <div class="card-action light-blue darken-2">
+                <p>&nbsp;</p>
+                <div class="card-content">
+                    <span class="card-title activator white-text text-darken-4">Login</span>
+                </div>
+            </div>
+            <div class="card-content cyan-text">
+                <form action="#" method="POST">
+                    <div class="mdl-card__supporting-text">
+                        {% csrf_token %} {{ form.non_field_errors }}
+                        <div class="input-field">
+                            {{ form.username.errors }}
+                            <!-- <input class="mdl-textfield__input" type="text" id="user"> -->
+                            <i class="material-icons prefix">account_circle</i> {{ form.username }}
+                            <label class="" for="{{ form.username.id_for_label }}">Username</label>
+                        </div>
+                        <div class="input-field ">
+                            <i class="material-icons prefix">vpn_key</i>
+                            <!-- <input class="mdl-textfield__input" type="password" id="password"> -->
+                            {{ form.password.errors }}
+                            <!-- <input class="mdl-textfield__input" type="text" id="user"> -->
+                            {{ form.password }}
+                            <label class="" for="{{ form.password.id_for_label }}">Password</label>
+                        </div>
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <input class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored light-blue darken-2 wave-green" type="submit" value="Login" />
+                        <a class="mdl-button mdl-button ">
 						Forgot Password?
 					</a>
-				</div>
-			</div>
-			
-		</div>
-	</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

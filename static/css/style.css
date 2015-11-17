@@ -25,7 +25,9 @@ body {
     border: none;
 }
 
+
 /* iOS Safari specific workaround */
+
 .demo-drawer .mdl-menu__container {
     z-index: -1;
 }
@@ -34,7 +36,9 @@ body {
     z-index: -2;
 }
 
+
 /* END iOS Safari specific workaround */
+
 .demo-drawer .mdl-menu .mdl-menu__item {
     display: -webkit-box;
     display: -webkit-flex;
@@ -357,6 +361,11 @@ main {
     box-shadow: 0 1px 0 0 #03a9f4;
 }
 
+.input-field input[type=email]:focus {
+    border-bottom: 1px solid #03a9f4;
+    box-shadow: 0 1px 0 0 #03a9f4;
+}
+
 
 /* valid color */
 
@@ -370,6 +379,11 @@ main {
     box-shadow: 0 1px 0 0 #03a9f4;
 }
 
+.input-field input[type=mail]:focus {
+    border-bottom: 1px solid #03a9f4;
+    box-shadow: 0 1px 0 0 #03a9f4;
+}
+
 
 /* invalid color */
 
@@ -379,6 +393,11 @@ main {
 }
 
 .input-field input[type=password].invalid {
+    border-bottom: 1px solid #03a9f4;
+    box-shadow: 0 1px 0 0 #03a9f4;
+}
+
+.input-field input[type=email]:focus {
     border-bottom: 1px solid #03a9f4;
     box-shadow: 0 1px 0 0 #03a9f4;
 }
