@@ -6,3 +6,10 @@ def index(request):
 		"title" : "Welcome"
 	}
 	return render(request, "index.html", content)
+
+
+def sign_up(request):
+	content = {
+		"title" : "Welcome"
+	}
+	return render(request, "index.html", content)

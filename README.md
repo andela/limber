@@ -1,4 +1,7 @@
-# Limber
+[![Quantifiedcode](https://www.quantifiedcode.com/api/v1/project/5d4f4508cf1b402f8cc818aaed29546e/badge.svg)](https://www.quantifiedcode.com/app/project/5d4f4508cf1b402f8cc818aaed29546e)
+[![Travis CI](https://travis-ci.org/andela/limber.svg?branch=develop)](https://travis-ci.org/andela/limber)
+
+# [Limber](https://limber-staging.herokuapp.com)
 A project management platform for Agile perfectionists with deadlines.
 
 ###Project dependencies###
