@@ -1,0 +1,47 @@
+{% extends 'partials/layout_basic.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+<div class="mdl-grid">
+<div class="row">
+	<div class="mdl-cell mdl-cell--5-col">
+
+		<div class="mdl-card mdl-shadow--4dp centered">
+			<div class="card-image mdl-color--light-blue-600 z-depth-1">
+              <h4><img src="{% static 'images/logo.png' %}" class="cardimage right" width="125">
+              <span class="card-title white-text">Login</span></h4>
+            </div>
+			<form action="#" method="POST">
+				<div class="mdl-card__supporting-text">
+					{% csrf_token %}
+					{{ form.non_field_errors }}
+					<div class="input-field">
+					<i class="material-icons prefix mdl-color-text--white-400">account_circle</i>
+						{{ form.username.errors }}
+						<label class="mdl-textfield__label" for="{{ form.username.id_for_label }}">Username</label>
+						{{ form.username }}
+					</div>
+					<div class="input-field">
+					<i class="material-icons prefix">vpn_key</i>
+						{{ form.password.errors }}
+						<label class="mdl-textfield__label" for="{{ form.password.id_for_label }}">Password</label>
+						{{ form.password }}					
+					</div>
+					<div class="input-field">
+					<i class="material-icons prefix">email</i>
+
+						{{ form.email.errors }}
+						<label class="mdl-textfield__label" for="{{ form.email.id_for_label }}">Email Address</label>
+						{{ form.email }}
+					</div>
+					
+				</div>
+				<div class="mdl-card__actions mdl-card--border">
+					<input class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" value="Register" />
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
