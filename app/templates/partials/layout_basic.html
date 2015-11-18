@@ -1,18 +1,25 @@
 {% load staticfiles %}
 <html>
-	<head>
-		<title>Limber &#187; {{ title | default:""}}</title>
-		<link rel="stylesheet" href="{% static 'css/material.min.css' %}">
-		<link rel="stylesheet" href="{% static 'css/style.css' %}">
-		<script src="{% static 'js/material.min.js' %}"></script>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-	</head>
-	<body>
-		<div class="mdl-layout mdl-js-layout">
-			<main class="mdl-layout__content">
-				{% block content %}
-				{% endblock %}
-			</main>
-		</div>
-	</body>
+
+<head>
+    <title>Limber &#187; {{ title | default:""}}</title>
+    <title>Limber{{title | default:''}}</title>
+    <link rel="stylesheet" href="{% static 'css/material.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="{% static 'js/materialize.min.js' %}"></script>
+    <script src="{% static 'js/material.min.js' %}"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel='shortcut icon' href="{% static 'images/logo.png' %}" type='image/x-icon' />
+</head>
+
+<body>
+    <div class="mdl-layout mdl-js-layout">
+        <main class="mdl-layout__content">
+            {% block content %} {% endblock %}
+        </main>
+    </div>
+</body>
+
 </html>
