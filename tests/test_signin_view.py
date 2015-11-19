@@ -29,7 +29,6 @@ class Test_SignIn_View(unittest.TestCase):
         user = create_user()
         new_user_params = {'username': 'wahad', 'password': 'password'}
         response = self.client.post(reverse('login'), data=new_user_params)
-        self.assertEqual(user.user_id, 1)
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Wrong Credentials.', response.content)
         self.assertNotIn(b'Welcome wahad', response.content)
