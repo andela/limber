@@ -96,7 +96,7 @@ USE_TZ = True
 if os.getenv('TRAVIS_BUILD', None):
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2'
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'limber',
             'USER': 'travis',
             'PASSWORD': '',
