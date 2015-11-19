@@ -13,3 +13,5 @@ script:
 branches:
   only:
   - develop
+env:
+  - DB=postgres
