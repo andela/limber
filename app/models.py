@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.db import models
 
 
@@ -10,7 +11,28 @@ class UserProfile(models.Model):
     country = models.CharField(max_length=45)
 
     def usernames(self):
-        return '{0}{1}'.format(self.user_name, self.email)
+        return '{0}{1}'.format(self.user.username, self.user.email)
+
+    @classmethod
+    def create_user(cls, **kwargs):
+        try:
+            if not cls.user_exists(kwargs['email']):
+                user = User.objects.create_user(
+                    kwargs['username'], kwargs['email'], kwargs['password'])
+                user_profile = UserProfile.objects.create(
+                    user=user, user_type=1)
+                # redirect user to a differnt view
+                return user_profile
+            raise IntegrityError
+        except IntegrityError:
+            return None
+
+    @classmethod
+    def user_exists(cls, email):
+        user = User.objects.filter(email=email)
+        if user and user is not None:
+            return True
+        return False
 
 
 class Member(models.Model):
