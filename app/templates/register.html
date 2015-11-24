@@ -9,6 +9,7 @@
                 </div>
             </div>
             <div class="card-content cyan-text">
+            	{{ message }}
                 <form action="#" method="POST">
 				<div class="card-text">
 					{% csrf_token %}
@@ -20,18 +21,19 @@
 						{{ form.username }}
 					</div>
 					<div class="input-field">
-					<i class="material-icons prefix">vpn_key</i>
-						{{ form.password.errors }}
-						<label class="" for="{{ form.password.id_for_label }}">Password</label>
-						{{ form.password }}					
-					</div>
-					<div class="input-field">
 					<i class="material-icons prefix">email</i>
 
 						{{ form.email.errors }}
 						<label class="" for="{{ form.email.id_for_label }}">Email Address</label>
 						{{ form.email }}
 					</div>
+					<div class="input-field">
+					<i class="material-icons prefix">vpn_key</i>
+						{{ form.password.errors }}
+						<label class="" for="{{ form.password.id_for_label }}">Password</label>
+						{{ form.password }}					
+					</div>
+					
 					
 				</div>
 				<div class="mdl-card__actions mdl-card--border">

@@ -9,6 +9,7 @@
                 </div>
             </div>
             <div class="card-content cyan-text">
+                {{ message }}
                 <form action="#" method="POST">
                     <div class="card-text">
                         {% csrf_token %} {{ form.non_field_errors }}
