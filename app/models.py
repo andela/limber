@@ -42,15 +42,15 @@ class Member(models.Model):
 
 
 class Project(models.Model):
-    project_id = models.IntegerField(primary_key=True)
+    project_id = models.AutoField(primary_key=True)
     owner_id = models.ForeignKey(UserProfile)
     project_name = models.CharField(blank=False, max_length=45)
     project_desc = models.CharField(blank=False, max_length=100)
 
 
 class Team(models.Model):
-    user_id = models.ForeignKey(UserProfile)
-    project_id = models.ForeignKey(Project)
+    user_id = models.ForeignKey(UserProfile, related_name='users')
+    project_id = models.ForeignKey(Project, related_name='projects')
     user_level = models.PositiveSmallIntegerField(blank=False)
 
 

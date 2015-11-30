@@ -17,11 +17,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from rest_framework import routers
 from app import views
+from app.serializers import TeamSerializer, ProjectSerializer
+
 
 
 router = routers.DefaultRouter()
-router.register(r'projects', views.ProjectViewSet)
-router.register(r'teams', views.TeamViewSet)
+router.register(r'projects', ProjectSerializer.ProjectViewSet)
+router.register(r'teams', TeamSerializer.TeamViewSet)
 
 
 

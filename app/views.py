@@ -4,11 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .forms import LoginForm, RegistrationForm
 from app.models import UserProfile, Project, Team
-from rest_framework import viewsets
-from rest_framework.decorators import detail_route
-from rest_framework import renderers
-from app.serializers import ProjectSerializer, TeamSerializer
-
+from serializers import ProjectSerializer, TeamSerializer
+import ipdb
 # Create your views here.
 
 
@@ -102,21 +99,3 @@ def profile(request):
         content['message'] = 'Welcome {}.'.format(
             request.user.username)
         return render(request, template, content)
-
-
-
-class ProjectViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
-    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
-    def perform_create(self, serializer):
-        serializer.save(owner_id=self.request.user.id)
-
-
-class TeamViewSet(viewsets.ModelViewSet):
-    queryset = Team.objects.all()
-    serializer_class = TeamSerializer
