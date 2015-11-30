@@ -1,11 +1,11 @@
-
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .forms import LoginForm, RegistrationForm
-from app.models import UserProfile
-
+from app.models import UserProfile, Project, Team
+from serializers import ProjectSerializer, TeamSerializer
+import ipdb
 # Create your views here.
 
 
