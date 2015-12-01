@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.db import models, IntegrityError
+from django.db import models
 
 
 class AccountManager(BaseUserManager):
@@ -25,21 +25,20 @@ class AccountManager(BaseUserManager):
 class Profile(models.Model):
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=70, unique=True)
-    user_type = models.PositiveSmallIntegerField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = 'app'
 
     @classmethod
     def create_userprofile(cls, **kwargs):
         try:
-            user = Profile.objects.create(
-                username=kwargs.get('username') ,
-                user_type=kwargs.get('user_type')
-            )
+            user = Profile.objects.create(username=kwargs.get('username'))
 
             user_profile = Account.objects.create_user(
                 kwargs.get('email'),
-                password=kwargs.get('password'),
+                password=kwargs.get(password),
                 user=user
             )
             # redirect user to a differnt view
@@ -49,16 +48,7 @@ class Profile(models.Model):
 
     @classmethod
     def create_orgprofile(cls, **kwargs):
-        try:
-
-            org = Profile.objects.create(
-                username=str(kwargs.get('username')),
-                user_type=kwargs.get('user_type')
-            )
-            # redirect user to a differnt view
-            return org
-        except IntegrityError:
-            return None
+        pass
 
 
 class Account(AbstractBaseUser):
@@ -66,9 +56,13 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=70, blank=True)
     last_name = models.CharField(max_length=70, blank=True)
     is_admin = models.BooleanField(default=False)
-    profile_id = models.ForeignKey(Profile, related_name="pro")
+    profile_id = models.ForeignKey(Profile)
     objects = AccountManager()
     USERNAME_FIELD = 'email'
+
+    class Meta:
+        app_label = 'app'
+
 
     def __unicode__(self):
         return self.email
