@@ -4,7 +4,10 @@ from app.serializers import profile_serializer
 
 
 router = routers.DefaultRouter()
-router.register(r'users', profile_serializer.ProfileViewSet)
+
+router.register(r'org_create', profile_serializer.OrgSignUpViewSet, 'org')
+router.register(r'login', profile_serializer.LoginViewSet)
+router.register(r'user_signup', profile_serializer.UserSignUpViewSet, 'user')
 
 urlpatterns= [
     url(r'^', include(router.urls))

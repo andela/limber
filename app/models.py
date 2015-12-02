@@ -22,22 +22,26 @@ class AccountManager(BaseUserManager):
         return account
 
 
-class Profile(models.Model):
+class User(models.Model):
+    """this model is to contain both user and organistation related data"""
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=70, unique=True)
+    name = models.CharField(max_length=90, unique=True, blank=True)
     user_type = models.PositiveSmallIntegerField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     @classmethod
     def create_userprofile(cls, **kwargs):
+        # Method that creates a user
         try:
-            user = Profile.objects.create(
+            user = User.objects.create(
                 username=kwargs.get('username') ,
                 user_type=kwargs.get('user_type')
             )
 
-            user_profile = Account.objects.create_user(
+            user_profile = UserAuthentication.objects.create_user(
                 kwargs.get('email'),
                 password=kwargs.get('password'),
                 user=user
@@ -49,10 +53,12 @@ class Profile(models.Model):
 
     @classmethod
     def create_orgprofile(cls, **kwargs):
+        # Method that creates an organistation
         try:
 
-            org = Profile.objects.create(
-                username=str(kwargs.get('username')),
+            org = User.objects.create(
+                username=kwargs.get('username'),
+                name=kwargs.get('name'),
                 user_type=kwargs.get('user_type')
             )
             # redirect user to a differnt view
@@ -61,12 +67,13 @@ class Profile(models.Model):
             return None
 
 
-class Account(AbstractBaseUser):
+class UserAuthentication(AbstractBaseUser):
+    # This model is to contain user related data
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=70, blank=True)
     last_name = models.CharField(max_length=70, blank=True)
     is_admin = models.BooleanField(default=False)
-    profile_id = models.ForeignKey(Profile, related_name="pro")
+    profile_id = models.ForeignKey(User, related_name="pro")
     objects = AccountManager()
     USERNAME_FIELD = 'email'
 
@@ -78,3 +85,41 @@ class Account(AbstractBaseUser):
 
     def get_short_name(self):
         return self.first_name
+
+
+
+# previous models start from here
+class Member(models.Model):
+    org_id = models.ForeignKey(User)
+    user_id = models.IntegerField()
+    user_level = models.PositiveSmallIntegerField(blank=False)
+
+
+class Project(models.Model):
+    project_id = models.IntegerField(primary_key=True)
+    owner_id = models.ForeignKey(User)
+    project_name = models.CharField(blank=False, max_length=45)
+    project_desc = models.CharField(blank=False, max_length=100)
+
+
+class Team(models.Model):
+    user_id = models.ForeignKey(User)
+    project_id = models.ForeignKey(Project)
+    user_level = models.PositiveSmallIntegerField(blank=False)
+
+
+class Story(models.Model):
+    story_id = models.IntegerField(primary_key=True)
+    project_id = models.ForeignKey(Project)
+    name = models.CharField(blank=False, max_length=45)
+    status = models.CharField(blank=False, max_length=45)
+    category = models.CharField(blank=False, max_length=100)
+    points = models.PositiveSmallIntegerField(blank=False)
+    attribute_name = models.CharField(max_length=100)
+
+
+class Task(models.Model):
+    task_id = models.IntegerField(primary_key=True)
+    story_id = models.ForeignKey(Story)
+    status = models.CharField(blank=False, max_length=45)
+    description = models.CharField(max_length=255)

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .forms import LoginForm, RegistrationForm
-from app.models import Account, Profile
+from app.models import UserAuthentication, User
 
 # Create your views here.
 

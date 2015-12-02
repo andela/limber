@@ -41,8 +41,8 @@ class Profile(models.Model):
                 password=kwargs.get(password),
                 user=user
             )
-            # redirect user to a differnt view
-            return user_profile
+
+        return user_profile
         except IntegrityError:
             return None
 
