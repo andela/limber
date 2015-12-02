@@ -65,12 +65,12 @@ def register(request):
             email = request.POST.get('email')
             password = request.POST.get('password')
             user_profile = User.create_userprofile(
-                username=username, email=email, password=password)
+                username=username, email=email, password=password, user_type=1)
             if user_profile and user_profile is not None:
-                user = authenticate(username=username, password=password)
+                user = authenticate(email=email, password=password)
                 if user:
                     login(request, user)
-                    return HttpResponseRedirect('/profile')
+                    return HttpResponseRedirect('/api')
             else:
                 content['message'] = 'User already exists.'
                 form = RegistrationForm(request.POST)
