@@ -2,6 +2,7 @@
 import unittest
 from faker import Factory
 from app.models import User, UserAuthentication
+from django.db import IntegrityError
 
 fake = Factory.create()
 
@@ -25,20 +26,20 @@ class TestUserProfileModel(unittest.TestCase):
 
     def test_user_creation_fails_when_username_is_the_same(self):
         email = fake.email()
-        user = User.create_userprofile(username=self.username, user_type=self.user_type, email=email, password=self.password)
-        self.assertEqual(user, None)
-        del user
+        with self.assertRaises(IntegrityError):
+            user = User.create_userprofile(username=self.username, user_type=self.user_type, email=email, password=self.password)
+            del user
 
     def test_user_creation_fails_when_email_is_the_same(self):
         username = fake.user_name()
-        user = User.create_userprofile(username=username,  user_type=self.user_type, email=self.email, password=self.password)
-        self.assertEqual(user, None)
-        del user
+        with self.assertRaises(IntegrityError):
+            user = User.create_userprofile(username=username,  user_type=self.user_type, email=self.email, password=self.password)
+            del user
 
     def test_user_creation_fails_when_email_and_username_is_the_same(self):
-        user_profile = User.create_userprofile(username=self.username,  user_type=self.user_type, email=self.email, password=self.password)
-        self.assertEqual(user_profile, None)
-        del user_profile
+        with self.assertRaises(IntegrityError):
+            user_profile = User.create_userprofile(username=self.username,  user_type=self.user_type, email=self.email, password=self.password)
+            del user_profile
 
     def test_user_creation_succeeds_when_correct_data_is_passed(self):
         email = fake.email()

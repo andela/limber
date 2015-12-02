@@ -26,7 +26,7 @@ class User(models.Model):
     """this model is to contain both user and organistation related data"""
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=70, unique=True)
-    name = models.CharField(max_length=90, unique=True, blank=True)
+    full_name = models.CharField(max_length=90, blank=True)
     user_type = models.PositiveSmallIntegerField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -38,21 +38,17 @@ class User(models.Model):
     @transaction.atomic
     def create_userprofile(cls, **kwargs):
         # Method that creates a user
-        try:
-            user = User.objects.create(
-                username=kwargs.get('username') ,
-                user_type=kwargs.get('user_type')
-            )
+        user = User.objects.create(
+            username=kwargs.get('username') ,
+            user_type=kwargs.get('user_type')
+        )
 
-            user_profile = UserAuthentication.objects.create_user(
-                kwargs.get('email'),
-                password=kwargs.get('password'),
-                user=user
-            )
-
-            return user_profile
-        except IntegrityError:
-            return None
+        user_profile = UserAuthentication.objects.create_user(
+            kwargs.get('email'),
+            password=kwargs.get('password'),
+            user=user
+        )
+        return user_profile
 
     @classmethod
     def create_orgprofile(cls, **kwargs):
@@ -61,11 +57,12 @@ class User(models.Model):
 
             org = User.objects.create(
                 username=kwargs.get('username'),
-                name=kwargs.get('name'),
+                full_name=kwargs.get('full_name'),
                 user_type=kwargs.get('user_type')
             )
             # redirect user to a differnt view
             return org
+
         except IntegrityError:
             return None
 

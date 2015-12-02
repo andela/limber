@@ -36,7 +36,7 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
 
         return Response({
             'status' : "Bad request",
-            'message' : "Failed to create an organisation"
+            'message' : "Failed to create user"
         },status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -47,7 +47,7 @@ class OrgSerializer(serializers.ModelSerializer):
     user_type = serializers.IntegerField(default=2, read_only=True)
     class Meta:
         model = User
-        fields = ('username', 'user_type', 'name', )
+        fields = ('username', 'user_type', 'full_name' )
         read_only_fields = ('user_type')
 
     # Add a create method
