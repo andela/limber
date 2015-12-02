@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.db import models, IntegrityError
+from django.db import models, IntegrityError, transaction
 
 
 class AccountManager(BaseUserManager):
@@ -31,8 +31,11 @@ class User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_user_name(self):
+        return self.username
 
     @classmethod
+    @transaction.atomic
     def create_userprofile(cls, **kwargs):
         # Method that creates a user
         try:
@@ -46,7 +49,7 @@ class User(models.Model):
                 password=kwargs.get('password'),
                 user=user
             )
-            # redirect user to a differnt view
+
             return user_profile
         except IntegrityError:
             return None
@@ -83,8 +86,8 @@ class UserAuthentication(AbstractBaseUser):
     def get_full_name(self):
         return ' '.join([self.first_name, self.last_name])
 
-    def get_short_name(self):
-        return self.first_name
+    def get_email(self):
+        return self.email
 
 
 

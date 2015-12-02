@@ -1,48 +1,42 @@
-from django.test import TestCase
-
-from django.contrib.auth.models import User
-
+# from django.test import TestCase
+import unittest
 from faker import Factory
-from app.models import UserProfile
+from app.models import User, UserAuthentication
 
 fake = Factory.create()
 
 
-class TestUserProfileModel(TestCase):
+class TestUserProfileModel(unittest.TestCase):
 
     def setUp(self):
         self.email = fake.email()
         self.username = fake.user_name()
         self.password = fake.password()
-        self.user = User.objects.create_user(
-            self.username, self.email, self.password)
-        self.user_profile = UserProfile.objects.create(
-            user=self.user, user_type=1)
+        self.user_type = 1
+        self.user = User.create_userprofile(username=self.username, user_type=self.user_type, email=self.email, password=self.password)
+
 
     def tearDown(self):
         del self.user
-        del self.user_profile
 
-    def test_username_method(self):
-        self.assertTrue(isinstance(self.user_profile, UserProfile))
-        self.assertEqual(self.user_profile.usernames(), '{0}{1}'.format(
-            self.user.username, self.user.email))
+    def test_get_email_method(self):
+        self.assertTrue(isinstance(self.user, UserAuthentication))
+        self.assertEqual(self.user.get_email(), '{}'.format(self.email))
 
     def test_user_creation_fails_when_username_is_the_same(self):
         email = fake.email()
-        self.user_profile = UserProfile.create_user(
-            username=self.username, email=email, password=self.password)
-        self.assertEqual(self.user_profile, None)
+        user = User.create_userprofile(username=self.username, user_type=self.user_type, email=email, password=self.password)
+        self.assertEqual(user, None)
+        del user
 
     def test_user_creation_fails_when_email_is_the_same(self):
         username = fake.user_name()
-        self.user_profile = UserProfile.create_user(
-            username=username, email=self.email, password=self.password)
-        self.assertEqual(self.user_profile, None)
+        user = User.create_userprofile(username=username,  user_type=self.user_type, email=self.email, password=self.password)
+        self.assertEqual(user, None)
+        del user
 
     def test_user_creation_fails_when_email_and_username_is_the_same(self):
-        user_profile = UserProfile.create_user(
-            username=self.username, email=self.email, password=self.password)
+        user_profile = User.create_userprofile(username=self.username,  user_type=self.user_type, email=self.email, password=self.password)
         self.assertEqual(user_profile, None)
         del user_profile
 
@@ -50,9 +44,7 @@ class TestUserProfileModel(TestCase):
         email = fake.email()
         password = fake.password()
         username = fake.user_name()
-        user_profile = UserProfile.create_user(
-            username=username, email=email, password=password)
-        self.assertTrue(isinstance(user_profile, UserProfile))
-        self.assertEqual(isinstance(user_profile, UserProfile),
-                         isinstance(self.user_profile, UserProfile))
-        del user_profile
+        user = User.create_userprofile(username=username,  user_type=self.user_type, email=email, password=password)
+        self.assertTrue(isinstance(user, UserAuthentication))
+        self.assertEqual(isinstance(user, UserAuthentication), isinstance(self.user, UserAuthentication))
+        del user
