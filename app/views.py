@@ -27,13 +27,14 @@ def user_login(request):
         form = LoginForm(request.POST)
         # check for form validation
         if form.is_valid():
-            user_name = request.POST.get('username')
+            email = request.POST.get('email')
             password = request.POST.get('password')
             # Check if a user exists
-            user = authenticate(username=user_name, password=password)
+            user = authenticate(email=email, password=password)
             if user:
                 login(request, user)
-                return HttpResponseRedirect('/profile')
+                
+                return HttpResponseRedirect('/api')
             else:
                 # user does not exist, display wrong credentials
                 form = LoginForm(request.POST)

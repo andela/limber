@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.db import models, IntegrityError
+from django.db import models, IntegrityError, transaction
 
 
 class AccountManager(BaseUserManager):
@@ -33,6 +33,7 @@ class User(models.Model):
 
 
     @classmethod
+    @transaction.atomic
     def create_userprofile(cls, **kwargs):
         # Method that creates a user
         try:
@@ -46,12 +47,14 @@ class User(models.Model):
                 password=kwargs.get('password'),
                 user=user
             )
+            
             # redirect user to a differnt view
             return user_profile
         except IntegrityError:
             return None
 
     @classmethod
+    @transaction.atomic
     def create_orgprofile(cls, **kwargs):
         # Method that creates an organistation
         try:
@@ -61,10 +64,84 @@ class User(models.Model):
                 name=kwargs.get('name'),
                 user_type=kwargs.get('user_type')
             )
-            # redirect user to a differnt view
-            return org
+            import ipdb
+            
+            user = User.objects.filter(id=kwargs.get('id')).first()
+
+            if user:
+            
+                member = Member.objects.create(org_id=org, user_id=user.id, user_level=1)
+
+                # redirect user to a differnt view
+                return org
         except IntegrityError:
             return None
+
+    @classmethod
+    def add_org_member(cls, **kwargs):
+        try:
+            user_auth = UserAuthentication.objects.filter(email=kwargs['email']).first()
+
+            is_admin = Member.objects.filter(org_id=kwargs['organisation'], user_level=1, 
+                                            user_id=user_auth.profile_id.id)
+            if is_admin:
+                user_exists = Member.objects.filter(org_id=kwargs['organisation'], user_id=kwargs['member'].profile_id.id)
+
+                if user_exists:
+                    # user already exists in org
+                    return None
+                else:
+
+                    member = Member.objects.create(org_id=kwargs['organisation'],
+                                user_id=kwargs['member'].user_id, user_level=kwargs['user_level'])
+                    return member
+
+            else:
+                return None
+            
+        except IntegrityError:
+            return None
+
+    @classmethod
+    def remove_org_member(cls, email=None, **kwargs):
+        """
+        Removes members from an organisation.
+        Checks if user is an admin. If so, the logic checks if there's at least one other admin
+        before proceeding to delete. (Orgs must have an admin at all times)
+        For non admin members, perform removal without any constraints
+        """
+        user_auth = UserAuthentication.objects.filter(email=email).first()
+
+        remover_is_admin = Member.objects.filter(org_id=kwargs['org'], user_level=1,
+                                    user_id=user_auth.profile_id.id)
+
+        if remover_is_admin:
+            removed_is_admin = Member.objects.filter(org_id=kwargs['org'], user_level=1,
+                                    user_id=kwargs['member'].user_id)
+            if removed_is_admin:
+                # check if there are other admins in the org. Do not remove if this user is the
+                # only admin
+                admin_count = Member.objects.filter(
+                                                org_id=kwargs['org'], user_level=1
+                                            ).count()
+                if admin_count > 1:
+                    removed_is_admin.delete()
+                    return True
+                elif admin_count == 1:
+                    raise Exception('org needs at least one admin')
+            else:
+                non_admin = Member.objects.filter(
+                                    org_id=kwargs['org'],user_id=kwargs['member'].user_id
+                                ).exclude(user_level=1)
+
+                if non_admin:
+                    non_admin.delete()
+                    return True
+                else:
+                    # User doesn't exist
+                    raise Exception("That user doesn't exist")
+        else:
+            raise Exception("User doesn't have sufficient rights")
 
 
 class UserAuthentication(AbstractBaseUser):
