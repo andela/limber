@@ -1,8 +1,9 @@
 # from django.test import TestCase
 import unittest
 from faker import Factory
-from app.models import User, UserAuthentication
 from django.db import IntegrityError
+
+from app.models.user import User, UserAuthentication
 
 fake = Factory.create()
 

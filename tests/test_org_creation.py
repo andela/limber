@@ -1,9 +1,7 @@
 from django.test import TestCase
 
-from django.contrib.auth.models import User
-
 from faker import Factory
-from app.models import User, UserAuthentication, Member
+from app.models.user import User, UserAuthentication, Member
 
 fake = Factory.create()
 

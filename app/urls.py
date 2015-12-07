@@ -1,12 +1,12 @@
 from django.conf.urls import include, url
 from rest_framework import routers
-from app.serializers import profile_serializer
+import viewsets
 
 
 router = routers.DefaultRouter()
 
-router.register(r'org', profile_serializer.OrgSignUpViewSet, 'org')
-router.register(r'user', profile_serializer.UserSignUpViewSet, 'user')
+router.register(r'org', viewsets.OrgSignUpViewSet, 'org')
+router.register(r'user', viewsets.UserSignUpViewSet, 'user')
 
 urlpatterns= [
     url(r'^', include(router.urls))

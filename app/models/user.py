@@ -3,6 +3,9 @@ from django.db import models, IntegrityError, transaction
 
 
 class AccountManager(BaseUserManager):
+    class Meta:
+        app_label = 'app'
+
     def create_user(self, email, password=None, **kwargs):
         if not email:
             raise ValueError('Users must have a valid email address.')
@@ -23,7 +26,12 @@ class AccountManager(BaseUserManager):
 
 
 class User(models.Model):
-    """this model is to contain both user and organistation related data"""
+    """this model is to contain both user and organistation related data
+    """
+
+    class Meta:
+        app_label = 'app'
+
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=70, unique=True)
     full_name = models.CharField(max_length=90, blank=True)
@@ -142,7 +150,12 @@ class User(models.Model):
 
 
 class UserAuthentication(AbstractBaseUser):
-    # This model is to contain user related data
+    '''This model is to contain user related data
+    '''
+
+    class Meta:
+        app_label = 'app'
+
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=70, blank=True)
     last_name = models.CharField(max_length=70, blank=True)
@@ -161,39 +174,11 @@ class UserAuthentication(AbstractBaseUser):
         return self.email
 
 
-
-# previous models start from here
 class Member(models.Model):
+    class Meta:
+        app_label = 'app'
+        
     org_id = models.ForeignKey(User)
     user_id = models.IntegerField()
     user_level = models.PositiveSmallIntegerField(blank=False)
 
-
-class Project(models.Model):
-    project_id = models.IntegerField(primary_key=True)
-    owner_id = models.ForeignKey(User)
-    project_name = models.CharField(blank=False, max_length=45)
-    project_desc = models.CharField(blank=False, max_length=100)
-
-
-class Team(models.Model):
-    user_id = models.ForeignKey(User)
-    project_id = models.ForeignKey(Project)
-    user_level = models.PositiveSmallIntegerField(blank=False)
-
-
-class Story(models.Model):
-    story_id = models.IntegerField(primary_key=True)
-    project_id = models.ForeignKey(Project)
-    name = models.CharField(blank=False, max_length=45)
-    status = models.CharField(blank=False, max_length=45)
-    category = models.CharField(blank=False, max_length=100)
-    points = models.PositiveSmallIntegerField(blank=False)
-    attribute_name = models.CharField(max_length=100)
-
-
-class Task(models.Model):
-    task_id = models.IntegerField(primary_key=True)
-    story_id = models.ForeignKey(Story)
-    status = models.CharField(blank=False, max_length=45)
-    description = models.CharField(max_length=255)
