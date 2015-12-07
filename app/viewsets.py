@@ -50,13 +50,16 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
 
 
 class TeamViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows project team members to be viewed or edited.
+    """
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows projects to be viewed or edited.
     """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer

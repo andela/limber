@@ -42,18 +42,17 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ('url', 'owner_id', 'project_name', 'project_desc')
 
     def get_owner_id(self, obj):
-        # import ipdb; ipdb.set_trace()
         return obj.owner_id.id
 
 
 class TeamSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(
         label="User",
-        queryset=User.objects.all(),
+        queryset=User.objects.filter(user_type=1),
      )
     project_id = serializers.PrimaryKeyRelatedField(
         label="Project",
-        queryset=Project.objects.select_related(),
+        queryset=Project.objects.all(),
      )
     user_level = serializers.ChoiceField([1, 2])
     class Meta:
