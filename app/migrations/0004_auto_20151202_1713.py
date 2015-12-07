@@ -7,18 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0001_initial'),
+        ('app', '0003_auto_20151202_1705'),
     ]
 
     operations = [
-        migrations.RenameField(
+        migrations.RemoveField(
             model_name='user',
-            old_name='login',
-            new_name='user_name',
+            name='name',
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='user',
-            name='user_id',
-            field=models.AutoField(serialize=False, primary_key=True),
+            name='full_name',
+            field=models.CharField(max_length=90, blank=True),
         ),
     ]
