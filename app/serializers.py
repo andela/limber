@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from app.models.user import User
 from app.models.project import Project, TeamMember
+from rest_framework.validators import UniqueTogetherValidator
 
 
 # A serializer_class for signing up a user
@@ -58,4 +59,11 @@ class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMember
         fields = ('url', 'user', 'project', 'user_level')
+        validators = [
+            UniqueTogetherValidator(
+                queryset=TeamMember.objects.all(),
+                fields=('user', 'project'),
+                message='User already exists in the list of team members for this project'
+            )
+        ]
 
