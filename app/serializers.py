@@ -36,26 +36,26 @@ class OrgSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    owner_id = serializers.SerializerMethodField()
+    owner = serializers.SerializerMethodField()
     class Meta:
         model = Project
-        fields = ('url', 'owner_id', 'project_name', 'project_desc')
+        fields = ('url', 'owner', 'project_name', 'project_desc')
 
-    def get_owner_id(self, obj):
-        return obj.owner_id.id
+    def get_owner(self, obj):
+        return obj.owner.id
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    user_id = serializers.PrimaryKeyRelatedField(
+    user = serializers.PrimaryKeyRelatedField(
         label="User",
         queryset=User.objects.filter(user_type=1),
      )
-    project_id = serializers.PrimaryKeyRelatedField(
+    project = serializers.PrimaryKeyRelatedField(
         label="Project",
         queryset=Project.objects.all(),
      )
     user_level = serializers.ChoiceField([1, 2])
     class Meta:
         model = Team
-        fields = ('url', 'user_id', 'project_id', 'user_level')
+        fields = ('url', 'user', 'project', 'user_level')
 

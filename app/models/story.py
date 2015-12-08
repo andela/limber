@@ -7,7 +7,7 @@ class Story(models.Model):
         app_label = 'app'
 
     story_id = models.AutoField(primary_key=True)
-    project_id = models.ForeignKey(Project)
+    project = models.ForeignKey(Project)
     name = models.CharField(blank=False, max_length=45)
     status = models.CharField(blank=False, max_length=45)
     category = models.CharField(blank=False, max_length=100)
@@ -20,6 +20,6 @@ class Task(models.Model):
         app_label = 'app'
 
     task_id = models.AutoField(primary_key=True)
-    story_id = models.ForeignKey(Story)
+    story = models.ForeignKey(Story)
     status = models.CharField(blank=False, max_length=45)
     description = models.CharField(max_length=255)
