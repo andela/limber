@@ -1,8 +1,11 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
 
-from serializers import OrgSerializer, UserSerializer
+from serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamSerializer
 from app.models.user import User
+from app.models.project import Project, Team
+from rest_framework.decorators import detail_route
+
 
 # A serializer_view_set class for creating an organisation
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -37,10 +40,32 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
             return Response({
                     'status': 'User Created',
                     'message': 'User Created'
-                }, 
+                },
                 status=status.HTTP_201_CREATED)
 
         return Response({
             'status' : "Bad request",
             'message' : "Failed to create user"
         },status=status.HTTP_400_BAD_REQUEST)
+
+
+class TeamViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows project team members to be viewed or edited.
+    """
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows projects to be viewed or edited.
+    """
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
+    def perform_create(self, serializer):
+        current_user = User.objects.get(id=self.request.user.id)
+        serializer.save(owner_id=current_user)

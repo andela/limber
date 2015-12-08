@@ -67,22 +67,22 @@ class User(models.Model):
             full_name=kwargs.get('full_name'),
             user_type=kwargs.get('user_type')
         )
-        
+
         # to confirm the admin exists
         user = User.objects.filter(id=kwargs.get('admin_id')).first()
         if user:
             member = Member.objects.create(org_id=org, user_id=user.id, user_level=1)
             return org
-       
+
     @classmethod
     def add_org_member(cls, **kwargs):
-        
+
         # confirm such a user exists
         user = User.objects.filter(id=kwargs['admin_id']).first()
 
         if user:
             # confirm if user is an admin in org
-            is_admin = Member.objects.filter(org_id=kwargs['organisation'], user_level=1, 
+            is_admin = Member.objects.filter(org_id=kwargs['organisation'], user_level=1,
                                         user_id=user.id)
             if is_admin:
                 user_exists = Member.objects.filter(org_id=kwargs['organisation'], user_id=kwargs['member'].profile_id.id)
@@ -100,7 +100,7 @@ class User(models.Model):
         else:
             return None
 
-        
+
 
     @classmethod
     def remove_org_member(cls, **kwargs):
@@ -177,7 +177,7 @@ class UserAuthentication(AbstractBaseUser):
 class Member(models.Model):
     class Meta:
         app_label = 'app'
-        
+
     org_id = models.ForeignKey(User)
     user_id = models.IntegerField()
     user_level = models.PositiveSmallIntegerField(blank=False)

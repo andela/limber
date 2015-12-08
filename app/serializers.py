@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from app.models.user import User
+from app.models.project import Project, Team
 
 
 # A serializer_class for signing up a user
@@ -32,3 +33,29 @@ class OrgSerializer(serializers.ModelSerializer):
     # Add a create method
     def create(self, validated_data):
         return User.create_orgprofile(**validated_data)
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    owner = serializers.SerializerMethodField()
+    class Meta:
+        model = Project
+        fields = ('url', 'owner', 'project_name', 'project_desc')
+
+    def get_owner(self, obj):
+        return obj.owner.id
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        label="User",
+        queryset=User.objects.filter(user_type=1),
+     )
+    project = serializers.PrimaryKeyRelatedField(
+        label="Project",
+        queryset=Project.objects.all(),
+     )
+    user_level = serializers.ChoiceField([1, 2])
+    class Meta:
+        model = Team
+        fields = ('url', 'user', 'project', 'user_level')
+
