@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
 
-from serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamMemberSerializer
+from .serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamMemberSerializer
 from app.models.user import User
 from app.models.project import Project, TeamMember
 from rest_framework.decorators import detail_route

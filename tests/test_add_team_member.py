@@ -20,20 +20,30 @@ class TestAddteamMember(APITestCase):
 
 		self.email = fake.email()
 		self.username = fake.user_name()
+		self.username1 = fake.user_name()
 		self.password = fake.password()
 		self.user_type = 1
 
 
-		self.user = User.create_userprofile(username=self.username,
+		self.create_user = User.create_userprofile(username=self.username,
 			user_type=self.user_type, email=self.email, password=self.password)
 
-		self.owner = User.objects.filter(username=self.username).first()
+		self.user = User.objects.filter(username=self.username).first()
 
-		self.project = Project.create_project(owner=self.owner,
+		self.project = Project.create_project(owner=self.user,
 			name=self.project_name, desc=self.project_desc)
 
 		self.team_member_data = {'project' : self.project.project_id,
-		'user_level' : 1, 'user' : self.owner.id}
+		'user_level' : 1, 'user' : self.user.id}
+
+		self.create_second_user = User.create_userprofile(username=self.username1,
+			user_type=1, email=fake.email(), password=self.password)
+
+		self.second_user = User.objects.filter(username=self.username1).first()
+
+		self.diff_team_member_data = {'project' : self.project.project_id,
+		'user_level' : 1, 'user' : self.second_user.id}
+
 
 
 
@@ -50,7 +60,7 @@ class TestAddteamMember(APITestCase):
 		response = self.client.post(url, self.team_member_data, format='json')
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 		self.assertEqual(TeamMember.objects.count(), 1)
-		self.assertEqual(TeamMember.objects.get().user, self.owner)
+		self.assertEqual(TeamMember.objects.get().user, self.user)
 
 
 	def test_adding_same_user_to_one_project_twice_fails(self):
@@ -69,16 +79,13 @@ class TestAddteamMember(APITestCase):
 		"""
 		Tests that more than one user can be added to a project.
 		"""
+
 		url = reverse('teammember-list')
 
-		second_user = User.create_userprofile(username=fake.user_name(),
-			user_type=1, email=fake.email(), password=self.password)
-
-		diff_team_member_data = {'project' : self.project.project_id,
-		'user_level' : 1, 'user' : second_user.id}
-
 		first_response = self.client.post(url, self.team_member_data, format='json')
-		second_response = self.client.post(url, diff_team_member_data, format='json')
 		self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
+
+		second_response = self.client.post(url, self.diff_team_member_data, format='json')
 		self.assertEqual(second_response.status_code, status.HTTP_201_CREATED)
+
 		self.assertEqual(TeamMember.objects.count(), 2)
