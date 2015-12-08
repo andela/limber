@@ -37,16 +37,18 @@ class OrgSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    owner = serializers.SerializerMethodField()
-    # team_members = serializers.HyperlinkedRelatedField(queryset=TeamMember.objects.all(), view_name='teammember-detail', many=True)
     team_members = serializers.SlugRelatedField(many=True, read_only=True, slug_field='user_id')
 
     class Meta:
         model = Project
         fields = ('url', 'owner', 'project_name', 'project_desc', 'team_members')
-
-    def get_owner(self, obj):
-        return obj.owner.id
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Project.objects.all(),
+                fields=('owner', 'project_name'),
+                message='User already has a project with this name'
+            )
+        ]
 
 
 

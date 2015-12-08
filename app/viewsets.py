@@ -64,8 +64,3 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
-    def perform_create(self, serializer):
-        current_user = User.objects.get(id=self.request.user.id)
-        serializer.save(owner_id=current_user)
