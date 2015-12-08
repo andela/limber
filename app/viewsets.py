@@ -1,9 +1,9 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
 
-from serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamSerializer
+from serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamMemberSerializer
 from app.models.user import User
-from app.models.project import Project, Team
+from app.models.project import Project, TeamMember
 from rest_framework.decorators import detail_route
 
 
@@ -49,12 +49,12 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
         },status=status.HTTP_400_BAD_REQUEST)
 
 
-class TeamViewSet(viewsets.ModelViewSet):
+class TeamMemberViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows project team members to be viewed or edited.
     """
-    queryset = Team.objects.all()
-    serializer_class = TeamSerializer
+    queryset = TeamMember.objects.all()
+    serializer_class = TeamMemberSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):

@@ -14,11 +14,11 @@ class Project(models.Model):
 
 
 
-class Team(models.Model):
+class TeamMember(models.Model):
 
     class Meta:
         app_label = 'app'
 
     user = models.ForeignKey(User)
-    project = models.ForeignKey(Project)
+    project = models.ForeignKey(Project, related_name='team_members')
     user_level = models.PositiveSmallIntegerField(blank=False)
