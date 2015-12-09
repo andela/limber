@@ -60,7 +60,7 @@ class User(models.Model):
 
     @classmethod
     @transaction.atomic
-    def create_orgprofile(cls, **kwargs):
+    def create_orgprofile(cls, admin_id, **kwargs):
         # Method that creates an organistation
         org = User.objects.create(
             username=kwargs.get('username'),
@@ -68,7 +68,7 @@ class User(models.Model):
             user_type=kwargs.get('user_type')
         )
         
-        user = UserAuthentication.objects.filter(id=kwargs.get('admin_id')).first()
+        user = UserAuthentication.objects.filter(id=admin_id).first()
 
         # confirm the admin exists, then add him/her as default admin
         if user:
