@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -21,15 +22,11 @@ class Migration(migrations.Migration):
                 ('last_name', models.CharField(max_length=70, blank=True)),
                 ('is_admin', models.BooleanField(default=False)),
             ],
-            options={
-                'abstract': False,
-            },
         ),
         migrations.CreateModel(
             name='Member',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('user_id', models.IntegerField()),
                 ('user_level', models.PositiveSmallIntegerField()),
             ],
         ),
@@ -75,7 +72,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('username', models.CharField(unique=True, max_length=70)),
-                ('name', models.CharField(unique=True, max_length=90, blank=True)),
+                ('full_name', models.CharField(max_length=90, blank=True)),
                 ('user_type', models.PositiveSmallIntegerField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
@@ -93,12 +90,17 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='member',
-            name='org_id',
+            name='org',
             field=models.ForeignKey(to='app.User'),
         ),
         migrations.AddField(
+            model_name='member',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
             model_name='userauthentication',
-            name='profile_id',
+            name='profile',
             field=models.ForeignKey(related_name='pro', to='app.User'),
         ),
     ]

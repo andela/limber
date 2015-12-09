@@ -12,7 +12,7 @@ class AccountManager(BaseUserManager):
 
         account = self.model(
             email=self.normalize_email(email),
-            profile_id = kwargs.get('user')
+            profile = kwargs.get('user')
         )
         account.set_password(password)
         account.save()
@@ -68,36 +68,38 @@ class User(models.Model):
             user_type=kwargs.get('user_type')
         )
         
-        # to confirm the admin exists
-        user = User.objects.filter(id=kwargs.get('admin_id')).first()
+        user = UserAuthentication.objects.filter(id=kwargs.get('admin_id')).first()
+
+        # confirm the admin exists, then add him/her as default admin
         if user:
-            member = Member.objects.create(org_id=org, user_id=user.id, user_level=1)
+            member = Member.objects.create(org=org, user=user, user_level=1)
             return org
        
     @classmethod
     def add_org_member(cls, **kwargs):
         
-        # confirm such a user exists
-        user = User.objects.filter(id=kwargs['admin_id']).first()
-
+        user = UserAuthentication.objects.filter(id=kwargs['admin_id']).first()
+        # check if user exists
         if user:
-            # confirm if user is an admin in org
-            is_admin = Member.objects.filter(org_id=kwargs['organisation'], user_level=1, 
-                                        user_id=user.id)
+            # check if the user is an admin in org
+            is_admin = Member.objects.filter(org=kwargs['organisation'], user_level=1, 
+                                        user=user)
             if is_admin:
-                user_exists = Member.objects.filter(org_id=kwargs['organisation'], user_id=kwargs['member'].profile_id.id)
+                # check if person being added already exists in the org
+                user_exists = Member.objects.filter(org=kwargs['organisation'], user=kwargs['member'])
 
                 if user_exists:
                     # user already exists as member in org
                     return None
                 else:
-
-                    member = Member.objects.create(org_id=kwargs['organisation'],
-                                user_id=kwargs['member'].profile_id.id, user_level=kwargs['user_level'])
+                    # add the person as a member in the org
+                    member = Member.objects.create(org=kwargs['organisation'],
+                                user=kwargs['member'], user_level=kwargs['user_level'])
                     return member
-
-                return None
+            # the is_admin is not an admin
+            return None
         else:
+            # user doesn't exist in the DB
             return None
 
         
@@ -111,21 +113,21 @@ class User(models.Model):
         For non admin members, perform removal without any constraints
         """
         #check if user carrying out this operation exists in DB
-        user_auth = User.objects.filter(id=kwargs['admin_id']).first()
+        user_auth = UserAuthentication.objects.filter(id=kwargs['admin_id']).first()
 
         if user_auth:
-            remover_is_admin = Member.objects.filter(org_id=kwargs['org'], user_level=1,
-                                    user_id=user_auth.id)
+            remover_is_admin = Member.objects.filter(org=kwargs['org'], user_level=1,
+                                    user=user_auth)
 
             if remover_is_admin:
                 # check if user being removed is an admin
-                removed_is_admin = Member.objects.filter(org_id=kwargs['org'], user_level=1,
-                                        user_id=kwargs['member'].profile_id.id)
+                removed_is_admin = Member.objects.filter(org=kwargs['org'], user_level=1,
+                                        user=kwargs['member'])
                 if removed_is_admin:
                     # check if there are other admins in the org. Do not remove if this user is the
                     # only admin
                     admin_count = Member.objects.filter(
-                                                    org_id=kwargs['org'], user_level=1
+                                                    org=kwargs['org'], user_level=1
                                                 ).count()
                     if admin_count > 1:
                         removed_is_admin.delete()
@@ -134,8 +136,8 @@ class User(models.Model):
                         raise Exception('org needs at least one admin')
                 else:
                     non_admin = Member.objects.filter(
-                                        org_id=kwargs['org'],user_id=kwargs['member'].profile_id.id
-                                    ).exclude(user_level=1)
+                                        org=kwargs['org'],user=kwargs['member']
+                                ).exclude(user_level=1)
 
                     if non_admin:
                         non_admin.delete()
@@ -160,7 +162,7 @@ class UserAuthentication(AbstractBaseUser):
     first_name = models.CharField(max_length=70, blank=True)
     last_name = models.CharField(max_length=70, blank=True)
     is_admin = models.BooleanField(default=False)
-    profile_id = models.ForeignKey(User, related_name="pro")
+    profile = models.ForeignKey(User, related_name="pro")
     objects = AccountManager()
     USERNAME_FIELD = 'email'
 
@@ -178,7 +180,7 @@ class Member(models.Model):
     class Meta:
         app_label = 'app'
         
-    org_id = models.ForeignKey(User)
-    user_id = models.IntegerField()
+    org = models.ForeignKey(User)
+    user = models.ForeignKey(UserAuthentication)
     user_level = models.PositiveSmallIntegerField(blank=False)
 
