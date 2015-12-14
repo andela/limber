@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
 
-from serializers import OrgSerializer, UserSerializer
+from app.serializers import OrgSerializer, UserSerializer
 from app.models.user import User
 
 # A serializer_view_set class for creating an organisation

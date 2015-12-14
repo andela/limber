@@ -1,7 +1,7 @@
 import unittest
 import json
 
-from django.test import Client
+from django.test import Client, TestCase
 
 from faker import Factory
 
@@ -11,7 +11,7 @@ fake = Factory.create()
 
 # coverage run --omit="env*","limber*" manage.py test
 
-class TestURLs(unittest.TestCase):
+class TestURLs(TestCase):
 
 	def setUp(self):
 		self.client = Client()
@@ -30,9 +30,7 @@ class TestURLs(unittest.TestCase):
 		
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertTrue(response.data.has_key('org'))
-		self.assertTrue(response.data.has_key('user'))
-
+	
 	def test_api_user_url(self):
 		email = fake.email()
 		password = fake.password()
@@ -43,8 +41,6 @@ class TestURLs(unittest.TestCase):
 
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
-		self.assertTrue(response.data.has_key('message'))
-		self.assertTrue(response.data.has_key('status'))
 		self.assertEqual(response.data.get('message'), 'User Created')
 		self.assertEqual(response.data.get('status'), 'User Created')
 		
@@ -53,8 +49,6 @@ class TestURLs(unittest.TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertTrue(response.data[0].has_key('username'))
-		self.assertTrue(response.data[0].has_key('user_type'))
 		self.assertEqual(response.data[0].get('user_type'), 1)
 
 		# test retrieval from the database
@@ -71,8 +65,6 @@ class TestURLs(unittest.TestCase):
 		
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertTrue(response.data.has_key('username'))
-		self.assertTrue(response.data.has_key('user_type'))
 		self.assertEqual(response.data.get('user_type'), 1)
 		self.assertEqual(response.data.get('username'), user.profile_id.username)
 
@@ -87,8 +79,6 @@ class TestURLs(unittest.TestCase):
 		
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertTrue(response.data.has_key('username'))
-		self.assertTrue(response.data.has_key('user_type'))
 		self.assertEqual(response.data.get('user_type'), 1)
 		self.assertEqual(response.data.get('username'), alt_username)
 		# I noticed this doesn't update the email and password from the UserAuthentication model
@@ -119,12 +109,8 @@ class TestURLs(unittest.TestCase):
 		
 		# test the POST method (authenticated)
 		response = self.client.post('/api/org/', data={'username':username, 'full_name':name, 'user_type':2})
-
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
-		self.assertTrue(response.data.has_key('user_type'))
-		self.assertTrue(response.data.has_key('username'))
-		self.assertTrue(response.data.has_key('full_name'))
 		self.assertEqual(response.data.get('user_type'), 2)
 		self.assertEqual(response.data.get('username'), username)
 		self.assertEqual(response.data.get('full_name'), name)
@@ -134,9 +120,6 @@ class TestURLs(unittest.TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertTrue(response.data[0].has_key('username'))
-		self.assertTrue(response.data[0].has_key('user_type'))
-		self.assertTrue(response.data[0].has_key('full_name'))
 		self.assertEqual(response.data[0].get('user_type'), 2)
 		self.assertEqual(response.data[0].get('username'), username)
 		self.assertEqual(response.data[0].get('full_name'), name)
@@ -156,9 +139,6 @@ class TestURLs(unittest.TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertTrue(response.data.has_key('username'))
-		self.assertTrue(response.data.has_key('user_type'))
-		self.assertTrue(response.data.has_key('full_name'))
 		self.assertEqual(response.data.get('user_type'), 2)
 		self.assertEqual(response.data.get('username'), org_db.username)
 		self.assertEqual(response.data.get('full_name'), org_db.full_name)
@@ -172,9 +152,6 @@ class TestURLs(unittest.TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertTrue(response.data.has_key('username'))
-		self.assertTrue(response.data.has_key('user_type'))
-		self.assertTrue(response.data.has_key('full_name'))
 		self.assertEqual(response.data.get('user_type'), 2)
 		self.assertEqual(response.data.get('username'), alt_username)
 		self.assertEqual(response.data.get('full_name'), alt_fullname)
