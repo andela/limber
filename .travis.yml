@@ -13,6 +13,9 @@ script:
 branches:
   only:
   - develop
+  - feature/integrate-coveralls
 env:
   global:
     - TRAVIS_BUILD=true
+after_success:
+    - coveralls
