@@ -14,8 +14,9 @@ class OrgSignUpViewSet(viewsets.ModelViewSet):
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            current_user_id = request.user.id
             # create an organisation when you call this viewset
-            User.create_orgprofile(**serializer.validated_data)
+            User.create_orgprofile(current_user_id, **serializer.validated_data)
             return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
 
         return Response({

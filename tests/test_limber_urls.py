@@ -57,16 +57,16 @@ class TestURLs(TestCase):
 		self.assertTrue(user)
 		# confirm this UserAuthentication object represents user created earlier
 		self.assertEqual(user.email, email)
-		self.assertEqual(user.profile_id.username, username)
+		self.assertEqual(user.profile.username, username)
 
 		# test the "/api/user/<user_id> url"
 		# test the GET method first
-		response = self.client.get('/api/user/' + str(user.profile_id.id) + '/')
+		response = self.client.get('/api/user/' + str(user.profile.id) + '/')
 		
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
 		self.assertEqual(response.data.get('user_type'), 1)
-		self.assertEqual(response.data.get('username'), user.profile_id.username)
+		self.assertEqual(response.data.get('username'), user.profile.username)
 
 		# then test the PUT method
 		alt_username = fake.user_name()
@@ -75,7 +75,7 @@ class TestURLs(TestCase):
 
 		# convert dictionary to json data for the put method
 		json_data = json.dumps({'username':alt_username, 'email':alt_email, 'password':alt_password})
-		response = self.client.put('/api/user/' + str(user.profile_id.id) + '/', content_type='application/json', data=json_data)
+		response = self.client.put('/api/user/' + str(user.profile.id) + '/', content_type='application/json', data=json_data)
 		
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
@@ -84,7 +84,7 @@ class TestURLs(TestCase):
 		# I noticed this doesn't update the email and password from the UserAuthentication model
 
 		# then test the DELETE method
-		response = self.client.delete('/api/user/' + str(user.profile_id.id) + '/')
+		response = self.client.delete('/api/user/' + str(user.profile.id) + '/')
 		self.assertEqual(response.status_code, 204)
 		self.assertEqual(response.status_text, 'No Content')
 		
