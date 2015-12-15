@@ -12,15 +12,16 @@ class Project(models.Model):
     project_name = models.CharField(blank=False, max_length=45)
     project_desc = models.CharField(blank=False, max_length=100)
 
+
     @classmethod
     def create_project(cls, **kwargs):
-        if cls.check_project_exists(kwargs.get('owner'), kwargs.get('name')):
+        if cls.check_project_exists(kwargs.get('owner'), kwargs.get('project_name')):
             return None
         else:
             project = Project.objects.create(
                 owner=kwargs.get('owner'),
-                project_name=kwargs.get('name'),
-                project_desc=kwargs.get('desc')
+                project_name=kwargs.get('project_name'),
+                project_desc=kwargs.get('project_desc')
                 )
             if project:
                 return project

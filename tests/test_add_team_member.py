@@ -31,7 +31,7 @@ class TestAddteamMember(APITestCase):
 		self.user = User.objects.filter(username=self.username).first()
 
 		self.project = Project.create_project(owner=self.user,
-			name=self.project_name, desc=self.project_desc)
+			project_name=self.project_name, project_desc=self.project_desc)
 
 		self.team_member_data = {'project' : self.project.project_id,
 		'user_level' : 1, 'user' : self.user.id}
@@ -44,10 +44,6 @@ class TestAddteamMember(APITestCase):
 		self.diff_team_member_data = {'project' : self.project.project_id,
 		'user_level' : 1, 'user' : self.second_user.id}
 
-
-
-
-
 	def tearDown(self):
 		del self.project
 		del self.user
@@ -56,6 +52,7 @@ class TestAddteamMember(APITestCase):
 		"""
 		Ensure a user is added in the team members list
 		"""
+
 		url = reverse('teammember-list')
 		response = self.client.post(url, self.team_member_data, format='json')
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
