@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from rest_framework import routers
-import viewsets
+from app import viewsets
 
 
 router = routers.DefaultRouter()
