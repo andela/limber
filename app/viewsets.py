@@ -1,10 +1,12 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
+
+from django.db import IntegrityError
 from django.db.models import Q
+
 from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamMemberSerializer
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
-from rest_framework.decorators import detail_route
 
 # A serializer_view_set class for creating an organisation
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -18,9 +20,14 @@ class OrgSignUpViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             current_user_id = request.user.id
             # create an organisation when you call this viewset
-            User.create_orgprofile(current_user_id, **serializer.validated_data)
-            return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
-
+            try:
+                User.create_orgprofile(current_user_id, **serializer.validated_data)
+                return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({
+                        'status' : "Organisation not created",
+                        'message' : "Organisation already exists"
+                },status=status.HTTP_400_BAD_REQUEST)
         return Response({
             'status' : "Bad request",
             'message' : "Failed to create an organisation"
@@ -36,12 +43,18 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             # create a user when you call this viewset
-            User.create_userprofile(**serializer.validated_data)
-            return Response({
-                    'status': 'User Created',
-                    'message': 'User Created'
-                },
-                status=status.HTTP_201_CREATED)
+            try:
+                User.create_userprofile(**serializer.validated_data)
+                return Response({
+                        'status': 'User Created',
+                        'message': 'User Created'
+                    }, 
+                    status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({
+                        'status' : "User not created",
+                        'message' : "User already exists"
+                },status=status.HTTP_400_BAD_REQUEST)
 
         return Response({
             'status' : "Bad request",
