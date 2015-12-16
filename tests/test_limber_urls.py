@@ -98,7 +98,6 @@ class TestURLs(TestCase):
 
 		# test the POST method (unauthenticated)
 		response = self.client.post('/api/org/', data={'username':username, 'full_name':name, 'user_type':2})
-
 		# status code 403 - access Forbidden (nobody logged in)
 		self.assertEqual(response.status_code, 403)
 		self.assertEqual(response.status_text, 'Forbidden')

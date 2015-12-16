@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.db import IntegrityError
 
 from faker import Factory
 from app.models.user import User, UserAuthentication, Member
@@ -25,6 +26,7 @@ class TestOrgCreation(TestCase):
         Checks whether created organisation is an instance of User.
         Checks for membership of default user (org admin) in the members table after the organisation is created.
         Checks that the org foreign key in Member is an organisation.
+        Checks for an IntegrityError when an organisation's username is not unique (case insensitive check)
         """
         admin_id = self.user_auth.id
 
@@ -38,6 +40,9 @@ class TestOrgCreation(TestCase):
         self.assertEqual(org_members.user_level, 1)
         # check if organisation foreign key is of user_type 2
         self.assertEqual(org_members.org.user_type, 2)
+        # expect IntegrityError when organisation is created a second time (in lowercase)
+        with self.assertRaises(IntegrityError):
+            organisation2 = User.create_orgprofile(admin_id=admin_id, username=organisation.username.lower(), full_name=organisation.full_name, user_type=2)
 
     def test_add_members_org(self):
         """
