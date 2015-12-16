@@ -38,7 +38,7 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
             # create a user when you call this viewset
             User.create_userprofile(**serializer.validated_data)
             return Response({
-                    'status': 'Created',
+                    'status': 'User Created',
                     'message': 'User Created'
                 },
                 status=status.HTTP_201_CREATED)
@@ -82,7 +82,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             # create a project when you call this viewset
             Project.create_project(**serializer.validated_data)
             return Response({
-                    'status': 'Created',
+                    'status': 'Project Created',
                     'message': 'Project Created'
                 }, status=status.HTTP_201_CREATED)
 
