@@ -3,9 +3,9 @@ from rest_framework import viewsets, renderers, status, permissions
 
 from django.db import IntegrityError
 from django.db.models import Q
-
-from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamMemberSerializer
+from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamMemberSerializer, StorySerializer
 from app.models.user import User, Member
+from app.models.story import Story
 from app.models.project import Project, TeamMember
 
 # A serializer_view_set class for creating an organisation
@@ -75,7 +75,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     API endpoint that allows projects to be viewed or edited.
     """
     serializer_class = ProjectSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         user = self.request.user
@@ -103,3 +103,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             'status' : "Bad request",
             'message' : "Failed to create an project"
         }, status=status.HTTP_400_BAD_REQUEST)
+
+class StoriesViewSet(viewsets.ModelViewSet):
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
+    permission_classes = (permissions.IsAuthenticated,)
