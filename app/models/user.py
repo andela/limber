@@ -1,8 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models, IntegrityError, transaction
 
-# from app.case_insensitive_validator import validate_case
-import model_field_custom
+from . import model_field_custom
 
 
 class AccountManager(BaseUserManager):
@@ -36,7 +35,6 @@ class User(models.Model):
         app_label = 'app'
 
     id = models.AutoField(primary_key=True)
-    # username = models.CharField(max_length=70, unique=True)
     username = model_field_custom.CharFieldCaseInsensitive(max_length=70, unique=True)
     full_name = models.CharField(max_length=90, blank=True)
     user_type = models.PositiveSmallIntegerField(blank=False)
@@ -162,7 +160,6 @@ class UserAuthentication(AbstractBaseUser):
     class Meta:
         app_label = 'app'
 
-    # email = models.EmailField(unique=True)
     email = model_field_custom.EmailFieldCaseInsensitive(unique=True)
     first_name = models.CharField(max_length=70, blank=True)
     last_name = models.CharField(max_length=70, blank=True)
