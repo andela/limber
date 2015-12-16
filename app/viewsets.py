@@ -67,7 +67,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         orgs = Member.objects.filter(user_id=user.id).values_list('org_id', flat=True)
-        users = User.objects.filter(Q(id=user.profile_id_id)| Q(id__in=orgs)).all()
+        users = User.objects.filter(Q(id=user.profile_id)| Q(id__in=orgs)).all()
         return Project.objects.filter(owner=users)
 
     def post_queryset(self):

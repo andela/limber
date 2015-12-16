@@ -60,7 +60,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 			user = self.context['request'].user
 			view = self.context['view']
 			orgs = Member.objects.filter(user_id=user.id).values_list('org_id', flat=True)
-			fields['owner'].queryset = fields['owner'].queryset.filter(Q(id=user.profile_id_id)| Q(id__in=orgs)).all()
+			fields['owner'].queryset = fields['owner'].queryset.filter(Q(id=user.profile_id)| Q(id__in=orgs)).all()
 		return fields
 
 
