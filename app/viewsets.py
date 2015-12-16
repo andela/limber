@@ -63,7 +63,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     API endpoint that allows projects to be viewed or edited.
     """
     serializer_class = ProjectSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         user = self.request.user
@@ -95,4 +95,4 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class StoriesViewSet(viewsets.ModelViewSet):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
