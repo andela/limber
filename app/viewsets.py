@@ -1,11 +1,10 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
 from django.db.models import Q
-from .serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamMemberSerializer
+from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, TeamMemberSerializer
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
 from rest_framework.decorators import detail_route
-
 
 # A serializer_view_set class for creating an organisation
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -17,8 +16,9 @@ class OrgSignUpViewSet(viewsets.ModelViewSet):
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
+            current_user_id = request.user.id
             # create an organisation when you call this viewset
-            User.create_orgprofile(**serializer.validated_data)
+            User.create_orgprofile(current_user_id, **serializer.validated_data)
             return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
 
         return Response({
