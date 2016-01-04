@@ -125,3 +125,30 @@ class StoriesViewSet(viewsets.ModelViewSet):
 class MemberViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.filter()
     serializer_class = MemberSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        This function is called when the delete http method is called on this viewset.
+        It then calls the "remove_org_member" function in User model to remove members from an Organisation.
+        The "remove_org_member" function ensures that organisations have an admin present at all times.
+        It also checks for sufficient user privileges/ rights to perform this action.
+        """
+        # id of the "remover" (current user)
+        admin_id = request.user.id
+        # the organisation from which a member is being removed
+        org = self.get_object().org
+        # the member who's being removed from the org
+        member = self.get_object().user
+
+        try:
+            User.remove_org_member(admin_id=admin_id, org=org, member=member)
+            return Response({
+                        'status' : "Member successfully removed",
+                        'message' : "Organisation member successfully removed"
+                },status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({
+                        'status' : "Member not removed",
+                        'message' : "Organisation member not removed"
+                },status=status.HTTP_400_BAD_REQUEST)

@@ -120,10 +120,10 @@ class User(models.Model):
         before proceeding to delete. (Orgs must have an admin at all times)
         For non admin members, perform removal without any constraints
         """
-
         # check if user carrying out this operation exists in DB
         user_auth = UserAuthentication.objects.filter(
-            id=kwargs['admin_id']).first()
+            id=kwargs['admin_id']
+        ).first()
 
         if user_auth:
             remover_is_admin = Member.objects.filter(
