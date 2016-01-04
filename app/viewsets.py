@@ -3,10 +3,10 @@ from rest_framework import viewsets, renderers, status, permissions
 
 from django.db import IntegrityError
 from django.db.models import Q
-
-from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, \
-    TeamMemberSerializer, StorySerializer
-
+from app.serializers import (
+    OrgSerializer, UserSerializer, ProjectSerializer,
+    TeamMemberSerializer, StorySerializer, MemberSerializer
+)
 from app.models.user import User, Member
 from app.models.story import Story
 from app.models.project import Project, TeamMember
@@ -120,3 +120,8 @@ class StoriesViewSet(viewsets.ModelViewSet):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
     permission_classes = (permissions.IsAuthenticated,)
+
+
+class MemberViewSet(viewsets.ModelViewSet):
+    queryset = Member.objects.filter()
+    serializer_class = MemberSerializer
