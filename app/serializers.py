@@ -133,7 +133,7 @@ class StorySerializer(serializers.ModelSerializer):
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ('org', 'user', 'user_level')
+        fields = ('url', 'org', 'user', 'user_level')
 
     def get_fields(self, *args, **kwargs):
         fields = super(MemberSerializer, self).get_fields(*args, **kwargs)
