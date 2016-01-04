@@ -16,6 +16,7 @@ fake = Factory.create()
 class TestAddteamMember(APITestCase):
 
 	def setUp(self):
+		"""Initialize test resources."""
 		self.project_name = fake.first_name()
 		self.project_desc = fake.sentence()
 
@@ -50,12 +51,12 @@ class TestAddteamMember(APITestCase):
 			'user_level': 1, 'user': self.second_user.id}
 
 	def tearDown(self):
+		"""Free resources and do some housekeeping after tests are run."""
 		del self.project
 		del self.user
 
 	def test_add_team_member_success(self):
-		"""Ensure a user is added in the team members list"""
-
+		"""Ensure a user is added in the team members list."""
 		url = reverse('teammember-list')
 		response = self.client.post(url, self.team_member_data, format='json')
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -74,8 +75,7 @@ class TestAddteamMember(APITestCase):
 		self.assertEqual(TeamMember.objects.count(), 1)
 
 	def test_adding_different_users_to_same_project_succeeds(self):
-		"""Tests that more than one user can be added to a project."""
-
+		"""Test that more than one user can be added to a project."""
 		url = reverse('teammember-list')
 
 		first_response = self.client.post(

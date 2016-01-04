@@ -13,8 +13,10 @@ fake = Factory.create()
 
 
 class TestURLs(TestCase):
+	"""Test app urls."""
 
 	def setUp(self):
+		"""Initialize test resources."""
 		self.client = Client()
 
 		# a user to perform requests that require authentication
@@ -25,16 +27,19 @@ class TestURLs(TestCase):
 		self.client.post('/api/user/', data=self.user)
 
 	def tearDown(self):
+		"""Free resources and do some housekeeping after tests are run."""
 		del self.client
 		del self.user
 
 	def test_api_url(self):
+		"""Test the main app urls."""
 		response = self.client.get('/api/')
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
 
 	def test_api_user_url(self):
+		"""Test urls related to a user."""
 		email = fake.email()
 		password = fake.password()
 		username = fake.user_name()
@@ -105,6 +110,7 @@ class TestURLs(TestCase):
 		self.assertFalse(user)
 
 	def test_api_org_url(self):
+		"""Test urls related to an organisation"""
 		name = fake.name()
 		username = fake.user_name()
 

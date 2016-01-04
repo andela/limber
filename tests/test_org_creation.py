@@ -10,6 +10,7 @@ fake = Factory.create()
 class TestOrgCreation(TestCase):
 
     def setUp(self):
+        """Initialize test resources."""
         self.email = fake.email()
         self.name = fake.name()
         self.username = fake.user_name()
@@ -20,10 +21,11 @@ class TestOrgCreation(TestCase):
         )
 
     def tearDown(self):
+        """Free resources and do some housekeeping after tests are run."""
         del self.user_auth
 
     def test_create_org(self):
-        """Tests for creation of organisations.
+        """Test for creation of organisations.
 
         Creates an organisation.
         Checks whether created organisation is an instance of User.
@@ -57,7 +59,7 @@ class TestOrgCreation(TestCase):
             )
 
     def test_add_members_org(self):
-        """Tests for adding members to organisations.
+        """Test for adding members to organisations.
 
         Organisation is created by user self.user_auth and members of varying
         user levels are later added.
@@ -122,8 +124,8 @@ class TestOrgCreation(TestCase):
         self.assertEqual(member_count, 3)
 
     def test_org_member_removal(self):
-        """
-        Tests the member removal process.
+        """Test the member removal process.
+
         Create organisation with self.user_auth as the admin.
         Add users to the organisation first, then later test if users can be
         removed by admin.
