@@ -1,5 +1,5 @@
-[![Quantifiedcode](https://www.quantifiedcode.com/api/v1/project/5d4f4508cf1b402f8cc818aaed29546e/badge.svg)](https://www.quantifiedcode.com/app/project/5d4f4508cf1b402f8cc818aaed29546e)
-[![Coverage Status](https://coveralls.io/repos/andela/limber/badge.svg?branch=feature/integrate-coveralls&service=github)](https://coveralls.io/github/andela/limber?branch=develop)
+[![Quantifiedcode](https://www.quantifiedcode.com/api/v1/project/5d4f4508cf1b402f8cc818aaed29546e/snapshot/origin:develop:HEAD/badge.svg)](https://www.quantifiedcode.com/app/project/5d4f4508cf1b402f8cc818aaed29546e)
+[![Coverage Status](https://coveralls.io/repos/andela/limber/badge.svg?branch=develop&service=github)](https://coveralls.io/github/andela/limber?branch=develop)
 [![Travis CI](https://travis-ci.org/andela/limber.svg?branch=develop)](https://travis-ci.org/andela/limber)
 
 # [Limber](https://limber-staging.herokuapp.com)
