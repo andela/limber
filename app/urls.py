@@ -11,11 +11,9 @@ router.register(r'project', viewsets.ProjectViewSet, 'project')
 router.register(r'team', viewsets.TeamMemberViewSet)
 
 
-urlpatterns= [
+urlpatterns = [
     url(r'^', include(router.urls))
 ]
-
-
 
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls',

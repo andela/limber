@@ -11,13 +11,16 @@ fake = Factory.create()
 
 # coverage run --omit="env*","limber*" manage.py test
 
+
 class TestURLs(TestCase):
 
 	def setUp(self):
 		self.client = Client()
 
 		# a user to perform requests that require authentication
-		self.user = {'username':fake.user_name(), 'email': fake.email(), 'password':fake.password()}
+		self.user = {
+			'username': fake.user_name(), 'email': fake.email(),
+			'password': fake.password()}
 		# store the user in the dattabase
 		self.client.post('/api/user/', data=self.user)
 
@@ -27,23 +30,25 @@ class TestURLs(TestCase):
 
 	def test_api_url(self):
 		response = self.client.get('/api/')
-		
+
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-	
+
 	def test_api_user_url(self):
 		email = fake.email()
 		password = fake.password()
 		username = fake.user_name()
 
 		# test the POST method
-		response = self.client.post('/api/user/', data={'username':username, 'password':password, 'email':email})
+		response = self.client.post(
+			'/api/user/',
+			data={'username': username, 'password': password, 'email': email})
 
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
 		self.assertEqual(response.data.get('message'), 'User Created')
 		self.assertEqual(response.data.get('status'), 'User Created')
-		
+
 		# test the GET method
 		response = self.client.get('/api/user/')
 
@@ -62,7 +67,7 @@ class TestURLs(TestCase):
 		# test the "/api/user/<user_id> url"
 		# test the GET method first
 		response = self.client.get('/api/user/' + str(user.profile.id) + '/')
-		
+
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
 		self.assertEqual(response.data.get('user_type'), 1)
@@ -74,46 +79,65 @@ class TestURLs(TestCase):
 		alt_password = fake.password()
 
 		# convert dictionary to json data for the put method
-		json_data = json.dumps({'username':alt_username, 'email':alt_email, 'password':alt_password})
-		response = self.client.put('/api/user/' + str(user.profile.id) + '/', content_type='application/json', data=json_data)
-		
+		json_data = json.dumps(
+			{'username': alt_username, 'email': alt_email,
+				'password': alt_password}
+		)
+		response = self.client.put(
+			'/api/user/' + str(user.profile.id) + '/',
+			content_type='application/json', data=json_data
+		)
+
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
 		self.assertEqual(response.data.get('user_type'), 1)
 		self.assertEqual(response.data.get('username'), alt_username)
-		# I noticed this doesn't update the email and password from the UserAuthentication model
+		# I noticed this doesn't update the email and password
+		# from the UserAuthentication model
 
 		# then test the DELETE method
 		response = self.client.delete('/api/user/' + str(user.profile.id) + '/')
 		self.assertEqual(response.status_code, 204)
 		self.assertEqual(response.status_text, 'No Content')
-		
+
 		# confirm deletion from the database end
 		user = UserAuthentication.objects.filter(email=email).first()
 		self.assertFalse(user)
-		
+
 	def test_api_org_url(self):
 		name = fake.name()
 		username = fake.user_name()
 
 		# test the POST method (unauthenticated)
-		response = self.client.post('/api/org/', data={'username':username, 'full_name':name, 'user_type':2})
+		response = self.client.post(
+			'/api/org/',
+			data={'username': username, 'full_name': name, 'user_type': 2}
+		)
 		# status code 403 - access Forbidden (nobody logged in)
 		self.assertEqual(response.status_code, 403)
 		self.assertEqual(response.status_text, 'Forbidden')
 
 		# log in
-		response = self.client.post('/api/api-auth/login/?next=/api/user/', data={'username':self.user.get('email'), 'password':self.user.get('password')})
+		response = self.client.post(
+			'/api/api-auth/login/?next=/api/user/',
+			data={
+				'username': self.user.get('email'),
+				'password': self.user.get('password')
+			}
+		)
 		self.assertEqual(response.status_code, 302)
-		
+
 		# test the POST method (authenticated)
-		response = self.client.post('/api/org/', data={'username':username, 'full_name':name, 'user_type':2})
+		response = self.client.post(
+			'/api/org/',
+			data={'username': username, 'full_name': name, 'user_type': 2}
+		)
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
 		self.assertEqual(response.data.get('user_type'), 2)
 		self.assertEqual(response.data.get('username'), username)
 		self.assertEqual(response.data.get('full_name'), name)
-		
+
 		# test the GET method
 		response = self.client.get('/api/org/')
 
@@ -146,8 +170,13 @@ class TestURLs(TestCase):
 		alt_username = fake.user_name()
 		alt_fullname = fake.name()
 
-		json_data = json.dumps({'username':alt_username, 'full_name':alt_fullname})
-		response = self.client.put('/api/org/' + str(org_db.id) + '/', content_type='application/json', data=json_data)
+		json_data = json.dumps(
+			{'username': alt_username, 'full_name': alt_fullname}
+		)
+		response = self.client.put(
+			'/api/org/' + str(org_db.id) + '/',
+			content_type='application/json', data=json_data
+		)
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
@@ -164,4 +193,3 @@ class TestURLs(TestCase):
 		org_db = User.objects.filter(username=username).first()
 		self.assertFalse(org_db)
 
-		

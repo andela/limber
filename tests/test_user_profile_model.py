@@ -32,8 +32,8 @@ class TestUserProfileModel(unittest.TestCase):
             del user
 
     def test_user_creation_fails_when_username_is_the_same_diff_case(self):
-        """
-        Testing for case insensitivity.
+        """Testing for case insensitivity.
+
         Checks for IntegrityErrors when username of same value (but different alphabet case)
         is used.
         """
@@ -49,8 +49,8 @@ class TestUserProfileModel(unittest.TestCase):
             del user
 
     def test_user_creation_fails_when_email_is_the_same_diff_case(self):
-        """
-        Testing for case insensitivity.
+        """Testing for case insensitivity.
+
         Checks for IntegrityErrors when email of same value (but different alphabet case)
         is used.
         """
