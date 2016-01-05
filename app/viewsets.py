@@ -5,8 +5,10 @@ from django.db import IntegrityError
 from django.db.models import Q
 
 from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, \
-    TeamMemberSerializer
+    TeamMemberSerializer, StorySerializer
+
 from app.models.user import User, Member
+from app.models.story import Story
 from app.models.project import Project, TeamMember
 
 
@@ -34,9 +36,9 @@ class OrgSignUpViewSet(viewsets.ModelViewSet):
                     'message': "Organisation already exists"
                 }, status=status.HTTP_400_BAD_REQUEST)
         return Response({
-            'status' : "Bad request",
-            'message' : "Failed to create an organisation"
-        },status=status.HTTP_400_BAD_REQUEST)
+            'status': "Bad request",
+            'message': "Failed to create an organisation"
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserSignUpViewSet(viewsets.ModelViewSet):
@@ -78,7 +80,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     """API endpoint that allows projects to be viewed or edited."""
 
     serializer_class = ProjectSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         user = self.request.user
@@ -110,3 +112,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
             'status': "Bad request",
             'message': "Failed to create project"
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StoriesViewSet(viewsets.ModelViewSet):
+    """Viewset for project stories."""
+
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
+    permission_classes = (permissions.IsAuthenticated,)

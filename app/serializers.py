@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from itertools import chain
 from django.db.models import Q
-
+from app.models.story import Story
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
 from rest_framework.validators import UniqueTogetherValidator
@@ -94,3 +94,12 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 				message='User exists in the list of team members for this project'
 			)
 		]
+
+
+class StorySerializer(serializers.ModelSerializer):
+	"""Serializer class for project stories"""
+
+	class Meta:
+		model = Story
+		fields = '__all__'
+

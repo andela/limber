@@ -7,12 +7,12 @@ class Story(models.Model):
     """Project story model."""
 
     story_id = models.AutoField(primary_key=True)
-    project = models.ForeignKey(Project)
+    project = models.ForeignKey(Project, related_name="stories")
     name = models.CharField(blank=False, max_length=45)
     status = models.CharField(blank=False, max_length=45)
     category = models.CharField(blank=False, max_length=100)
     points = models.PositiveSmallIntegerField(blank=False)
-    attribute_name = models.CharField(max_length=100)
+    stage = models.CharField(max_length=100)
 
     class Meta:
         app_label = 'app'
