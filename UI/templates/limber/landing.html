@@ -1,0 +1,24 @@
+{% extends 'partials/layout.html' %}
+
+{% block content %}
+
+<div ng-controller="LandingController">
+    <nav>
+        <div class="nav-wrapper blue darken-3">
+            <a href="#" class="brand-logo">Limber</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="login.html">login</a></li>
+                <li><a href="signup.html">Signup</a></li>
+            </ul>
+        </div>
+    </nav>
+    <strong>
+        {% verbatim %}
+            {{ message }}
+        {% endverbatim %}
+    </strong>
+    <div class="progress">
+        <div class="indeterminate"></div>
+    </div>
+</div>
+{% endblock %}
