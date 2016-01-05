@@ -14,6 +14,7 @@ fake = Factory.create()
 
 
 class TestAddteamMember(APITestCase):
+	"""Test project team methods."""
 
 	def setUp(self):
 		"""Initialize test resources."""

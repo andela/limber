@@ -42,17 +42,6 @@ class OrgSerializer(serializers.ModelSerializer):
 		return User.create_orgprofile(**validated_data)
 
 
-class UserlistingSerialization(serializers.RelatedField):
-	def to_representation(self, value):
-		return '{}'.format(value.id)
-
-	def display_value(self, value):
-		return '{}'.format(value.username)
-
-	def to_internal_value(self, value):
-		return int(value)
-
-
 class ProjectSerializer(serializers.ModelSerializer):
 	"""Serializer class to be used for projects."""
 
@@ -60,6 +49,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 		many=True, read_only=True, slug_field='user_id')
 
 	def get_fields(self, *args, **kwargs):
+		"""Method to filter the choices presented for project owner."""
 		fields = super(ProjectSerializer, self).get_fields(*args, **kwargs)
 		if self.context:
 			user = self.context['request'].user
@@ -82,7 +72,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 		]
 
 	def create(self, validated_data):
-		"""Modify default method to create project."""
+		"""Customize default method to create project."""
 		return Project.create_project(**validated_data)
 
 
@@ -104,4 +94,3 @@ class TeamMemberSerializer(serializers.ModelSerializer):
 				message='User exists in the list of team members for this project'
 			)
 		]
-

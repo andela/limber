@@ -9,6 +9,7 @@ fake = Factory.create()
 
 
 class TestUserProfileModel(unittest.TestCase):
+    """Test user model methods."""
 
     def setUp(self):
         """Initialize test resources."""

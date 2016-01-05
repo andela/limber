@@ -2,6 +2,7 @@ import unittest
 
 
 class TestUserManagement(unittest.TestCase):
+	"""Test user related methods"""
 
 	def setUp(self):
 		"""Initialize test resources."""

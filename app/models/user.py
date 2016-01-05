@@ -5,10 +5,13 @@ from . import model_field_custom
 
 
 class AccountManager(BaseUserManager):
+    """Manager class for the customer user model."""
+
     class Meta:
         app_label = 'app'
 
     def create_user(self, email, password=None, **kwargs):
+        """Override the default create_user() method."""
         if not email:
             raise ValueError('Users must have a valid email address.')
 
@@ -21,6 +24,7 @@ class AccountManager(BaseUserManager):
         return account
 
     def create_superuser(self, email, password, **kwargs):
+        """Override the default create_superuser() method."""
         account = self.create_user(email, password, **kwargs)
         account.is_admin = True
         account.save()
@@ -42,6 +46,7 @@ class User(models.Model):
         app_label = 'app'
 
     def get_user_name(self):
+        """Return the user's username"""
         return self.username
 
     @classmethod
@@ -106,13 +111,12 @@ class User(models.Model):
             # user doesn't exist in the DB
             return None
 
-
-
     @classmethod
     def remove_org_member(cls, **kwargs):
         """Removes members from an organisation.
 
-        Checks if user is an admin. If so, the logic checks if there's at least one other admin
+        Checks if user is an admin. If so, the logic checks if there's at
+        least one other admin
         before proceeding to delete. (Orgs must have an admin at all times)
         For non admin members, perform removal without any constraints
         """
@@ -175,9 +179,11 @@ class UserAuthentication(AbstractBaseUser):
         return self.email
 
     def get_full_name(self):
+        """Return user's full names."""
         return ' '.join([self.first_name, self.last_name])
 
     def get_email(self):
+        """Return user email."""
         return self.email
 
 

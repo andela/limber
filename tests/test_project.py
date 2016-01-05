@@ -8,6 +8,7 @@ fake = Factory.create()
 
 
 class TestProject(TestCase):
+	"""Test project related methods."""
 
 	def setUp(self):
 		"""Initialize test resources."""

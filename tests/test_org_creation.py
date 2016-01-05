@@ -8,6 +8,7 @@ fake = Factory.create()
 
 
 class TestOrgCreation(TestCase):
+    """Test organisation related methods."""
 
     def setUp(self):
         """Initialize test resources."""
