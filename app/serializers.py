@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from itertools import chain
 from django.db.models import Q
-from app.models.story import Story
+from app.models.story import Story, Task
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
 from rest_framework.validators import UniqueTogetherValidator
@@ -105,40 +105,46 @@ class StorySerializer(serializers.ModelSerializer):
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.filter(user_type=1),
-    )
-    user_level = serializers.ChoiceField([1, 2])
+	user = serializers.PrimaryKeyRelatedField(
+		queryset=User.objects.filter(user_type=1),
+	)
+	user_level = serializers.ChoiceField([1, 2])
 
-    class Meta:
-        model = TeamMember
-        fields = ('url', 'user', 'project', 'user_level')
-        validators = [
-            UniqueTogetherValidator(
-                queryset=TeamMember.objects.all(),
-                fields=('user', 'project'),
-                message='User already exists in the list of team ' +
-                        'members for this project'
-            )
-        ]
+	class Meta:
+		model = TeamMember
+		fields = ('url', 'user', 'project', 'user_level')
+		validators = [
+			UniqueTogetherValidator(
+				queryset=TeamMember.objects.all(),
+				fields=('user', 'project'),
+				message='User already exists in the list of team ' +
+				'members for this project'
+			)
+		]
 
 
 class StorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Story
-        fields = '__all__'
+	class Meta:
+		model = Story
+		fields = '__all__'
 
 
 # A serializer to add members to an existing org
 class MemberSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Member
-        fields = ('url', 'org', 'user', 'user_level')
+	class Meta:
+		model = Member
+		fields = ('url', 'org', 'user', 'user_level')
 
-    def get_fields(self, *args, **kwargs):
-        fields = super(MemberSerializer, self).get_fields(*args, **kwargs)
-        if self.context:
-            fields['org'].queryset = fields['org'].queryset.filter(
-                user_type=2
-            ).all()
-        return fields
+	def get_fields(self, *args, **kwargs):
+		fields = super(MemberSerializer, self).get_fields(*args, **kwargs)
+		if self.context:
+			fields['org'].queryset = fields['org'].queryset.filter(
+				user_type=2
+			).all()
+		return fields
+
+
+class TaskSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Task
+		fields = '__all__'
