@@ -2,9 +2,9 @@ from django.db import models
 
 from .project import Project
 
+
 class Story(models.Model):
-    class Meta:
-        app_label = 'app'
+    """Project story model."""
 
     story_id = models.AutoField(primary_key=True)
     project = models.ForeignKey(Project, related_name="stories")
@@ -14,12 +14,17 @@ class Story(models.Model):
     points = models.PositiveSmallIntegerField(blank=False)
     stage = models.CharField(max_length=100)
 
-
-class Task(models.Model):
     class Meta:
         app_label = 'app'
+
+
+class Task(models.Model):
+    """Project tasks model."""
 
     task_id = models.AutoField(primary_key=True)
     story = models.ForeignKey(Story)
     status = models.CharField(blank=False, max_length=45)
     description = models.CharField(max_length=255)
+
+    class Meta:
+        app_label = 'app'

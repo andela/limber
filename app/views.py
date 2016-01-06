@@ -10,7 +10,8 @@ from app.models import UserAuthentication, User
 
 
 def index(request):
-    user_session = request.session.get('user_id', None)
+    """Homepage."""
+    user_session = request.session.get('user_id')
     if user_session and user_session is not None:
         return HttpResponseRedirect('/profile')
     content = {
@@ -20,7 +21,7 @@ def index(request):
 
 
 def user_login(request):
-
+    """Process user login."""
     template = "login.html"
     content = {}
     if request.method == 'POST':
@@ -52,7 +53,8 @@ def user_login(request):
 
 
 def register(request):
-    user_session = request.session.get('user_id', None)
+    """Process user registration."""
+    user_session = request.session.get('user_id')
     if user_session and user_session is not None:
         return HttpResponseRedirect('/profile')
 
@@ -87,13 +89,14 @@ def register(request):
 
 
 def user_logout(request):
+    """User logout."""
     logout(request)
     return HttpResponseRedirect('/')
 
 
-# Profile view
 @login_required(login_url='/login')
 def profile(request):
+    """Profile view."""
     content = {}
 
     template = 'profile.html'

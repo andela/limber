@@ -13,11 +13,9 @@ router.register(r'story', viewsets.StoriesViewSet,'story')
 
 
 
-urlpatterns= [
+urlpatterns = [
     url(r'^', include(router.urls))
 ]
-
-
 
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls',
