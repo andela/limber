@@ -65,7 +65,7 @@ ROOT_URLCONF = 'limber.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'UI/templates'), os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'public/templates'), os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,7 +131,7 @@ STATIC_ROOT = 'staticfiles'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "UI/static"),
+    os.path.join(BASE_DIR, "public/static"),
 )
 
 AUTH_USER_MODEL = 'app.UserAuthentication'

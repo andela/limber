@@ -12,11 +12,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
-        <div class="container">
-            {% block content %}
+        {% block content %}
 
-            {% endblock %}
-        </div>
+        {% endblock %}
     </body>
     <script type="text/javascript" src="{% static 'scripts/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'scripts/materialize.min.js' %}"></script>
