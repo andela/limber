@@ -54,9 +54,10 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
             try:
                 User.create_userprofile(**serializer.validated_data)
                 return Response({
-                    'status': 'User Created',
-                    'message': 'User Created'
-                }, status=status.HTTP_201_CREATED)
+                        'status': 'User Created',
+                        'message': 'User Created'
+                    },
+                    status=status.HTTP_201_CREATED)
             except IntegrityError:
                 return Response({
                     'status': "User not created",
@@ -128,8 +129,8 @@ class MemberViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
-        """
-        This function is called when the delete http method is called on this viewset.
+        """This function is called when the delete http method is called on this viewset.
+
         It then calls the "remove_org_member" function in User model to remove members from an Organisation.
         The "remove_org_member" function ensures that organisations have an admin present at all times.
         It also checks for sufficient user privileges/ rights to perform this action.

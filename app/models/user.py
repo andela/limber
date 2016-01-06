@@ -84,13 +84,12 @@ class User(models.Model):
 
     @classmethod
     def add_org_member(cls, **kwargs):
-        """Method to add a user to an organisation as a member."""
         user = UserAuthentication.objects.filter(id=kwargs['admin_id']).first()
         # check if user exists
         if user:
             # check if the user is an admin in org
-            is_admin = Member.objects.filter(
-                org=kwargs['organisation'], user_level=1, user=user)
+            is_admin = Member.objects.filter(org=kwargs['organisation'], user_level=1,
+                                        user=user)
             if is_admin:
                 # check if person being added already exists in the org
                 user_exists = Member.objects.filter(
@@ -188,7 +187,8 @@ class UserAuthentication(AbstractBaseUser):
 
 
 class Member(models.Model):
-    """Model for organisation members"""
+    class Meta:
+        app_label = 'app'
 
     org = models.ForeignKey(User)
     user = models.ForeignKey(UserAuthentication)
