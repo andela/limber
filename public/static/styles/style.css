@@ -1,0 +1,70 @@
+.cool_background {
+  background: url(../images/bgpattern.png) repeat center center fixed;
+  min-height: 700px;
+  color: #fff;
+  position: relative;
+}
+
+.cool_background > nav {
+  background: transparent;
+}
+
+#back_margin{
+    margin: 0px;
+    padding: 0px;
+}
+
+#nav-mobile > li > a{
+    border: 1px solid #2196f3;
+    background: transparent;
+}
+
+#nav-mobile > li > a:hover{
+    background: #2196f3;
+}
+
+
+.cool_background > div{
+    position: absolute;
+    /*text-align: center;*/
+    margin: 0px;
+    top: 50%;
+    left: 50%;
+    /*margin-right: -50%;*/
+    transform: translate(-50%, -50%);
+}
+
+#animation-class p {
+    font-size: 30px;
+}
+
+.logo{
+    position: absolute;
+    color: #fff;
+    display: inline-block;
+    font-size: 2.1rem;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.typed-cursor{
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}

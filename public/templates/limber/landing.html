@@ -1,8 +1,135 @@
 {% extends 'partials/layout.html' %}
 
-{% block content %}
+{% load staticfiles %}
 
-<div ng-controller="LandingController">
-    
+{% block content %}
+<div class="row" ng-controller="LandingController">
+    <div class="col s12" id="back_margin">
+        <div class="cool_background">
+
+            <!-- Navigation Bar -->
+            <nav class="container z-depth-0 ">
+                <div class="nav-wrapper">
+                    <a href="#" class="logo">Limber</a>
+                    <ul id="nav-mobile" class="right">
+                        <li ><a href="signup.html" class="btn">Signup</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navigation Bar -->
+
+            <!-- Animation Section -->
+            <div class="row" id="animation-class">
+                <div class="center">
+                    <h1>Limber</h1>
+                    <p>A project management tool for perfectionists with deadlines</p>
+                    <p>Use limber for <span class="animation"></span></p>
+                </div>
+            </div>
+            <!-- End Animation Section -->
+
+        </div>
+        <!-- Middle content box -->
+        <div class="row">
+            <div class="container">
+                <h4 class="center">Features</h4>
+                <div class="row">
+                    <div class="col s4" id="landing_image1">
+                        <div class="container">
+                            <img src="{% static 'images/planning.jpg' %}" class="img-landing circle responsive-img" alt="Ist image" />
+                        </div>
+                    </div>
+                    <div class="col s8">
+                        <h5>Task Planning</h5>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s8">
+                        <h5> Task Iterations</h5>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </p>
+                    </div>
+                    <div class="col s4">
+                        <div class="container">
+                            <img src="{% static 'images/iterration.png' %}" class="img-landing circle responsive-img" alt="2nd image" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col s4">
+                        <div class="container">
+                            <img src="{% static 'images/delivery.png' %}" class="img-landing circle responsive-img" alt="3rd image" />
+                        </div>
+                    </div>
+                    <div class="col s8">
+                        <h5>Task Delivery</h5>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- 3rd  content box -->
+        <div class="row center">
+            <div class="container">
+                <h3 >Testimonials</h3>
+
+                <div class="blue">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </div>
+
+                <div class="blue">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </div>
+
+                <div class="blue">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- invitation form -->
+        <div class="container">
+            <form class="col s8 offset-s2" action="#" method="post">
+                <p class="center">
+                    Subscribe below to get notified when released
+                </p>
+                <div class="col s3">
+                    <input type="text" id="name" placeholder="Name">
+                </div>
+                <div class="col s6">
+                    <input type="email" id="email" placeholder="Email address">
+                </div>
+                <div class="col s3 ">
+                    <input type="button"  value="Join the revolution" class="btn blue">
+                </div>
+            </form>
+        </div>
+
+    </div>
 </div>
+<footer>
+<div class="container s3">
+    <span>Made with &hearts; in Comoros</span>
+</div>
+</footer>
 {% endblock %}

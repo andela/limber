@@ -5,12 +5,12 @@
 # [Limber](https://limber-staging.herokuapp.com)
 A project management platform for Agile perfectionists with deadlines.
 
-###Project dependencies###
+### Project dependencies
 - [Python](https://www.python.org/downloads/)
 - [Virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/install.html)
 - [Postgresql](http://www.postgresql.org/download/)
 
-###Setting up###
+### Setting up
 
 To run __Limber__ locally after installing the project dependencies, follow the following steps:
 
@@ -46,7 +46,7 @@ $ workon <env-name>
 
 6 . Open http://127.0.0.1:8000 on your favorite web browser
 
-####Running tests####
+#### Running tests
 
 To run the project tests
 ```shell
