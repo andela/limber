@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.db.models import Q
 from app.serializers import (
 	OrgSerializer, UserSerializer, ProjectSerializer,
-	TeamMemberSerializer, StorySerializer, MemberSerializer
+	TeamMemberSerializer, StorySerializer, MemberSerializer, TaskSerializer
 )
 from app.models.user import User, Member
 from app.models.story import Story, Task
