@@ -9,19 +9,21 @@ from app.models.user import User, UserAuthentication
 
 fake = Factory.create()
 
-# coverage run --omit="env*","limber*" manage.py test
 
 
 class TestURLs(TestCase):
-	"""Test app urls."""
+	"""Test all the urls in Limber app."""
 
 	def setUp(self):
-		"""Initialize test resources."""
+		"""initialize test resources."""
 		self.client = Client()
 
 		# a user to perform requests that require authentication
-
-		self.user = {'username':fake.user_name(), 'email': fake.email(), 'password':fake.password()}
+		self.user = {
+			'username': fake.user_name(),
+			'email': fake.email(),
+			'password': fake.password()
+		}
 		# create the user in the database
 		self.client.post('/api/user/', data=self.user)
 
@@ -31,18 +33,14 @@ class TestURLs(TestCase):
 		del self.user
 
 	def test_api_url(self):
-		"""
-		Tests the '/api/' url.
-		"""
+		"""Test the '/api/' url."""
 		response = self.client.get('/api/')
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
 
 	def test_api_user_url(self):
-		"""
-		Tests the '/api/user/' url.
-		"""
+		"""Test the '/api/user/' url."""
 		email = fake.email()
 		password = fake.password()
 		username = fake.user_name()
@@ -50,7 +48,8 @@ class TestURLs(TestCase):
 		# test the POST method
 		response = self.client.post(
 			'/api/user/',
-			data={'username': username, 'password': password, 'email': email})
+			data={'username': username, 'password': password, 'email': email}
+		)
 
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
@@ -88,12 +87,16 @@ class TestURLs(TestCase):
 
 		# convert dictionary to json data for the put method
 		json_data = json.dumps(
-			{'username': alt_username, 'email': alt_email,
-				'password': alt_password}
+			{
+				'username': alt_username,
+				'email': alt_email,
+				'password': alt_password
+			}
 		)
 		response = self.client.put(
 			'/api/user/' + str(user.profile.id) + '/',
-			content_type='application/json', data=json_data
+			content_type='application/json',
+			data=json_data
 		)
 
 		self.assertEqual(response.status_code, 200)
@@ -113,9 +116,7 @@ class TestURLs(TestCase):
 		self.assertFalse(user)
 
 	def test_api_org_url(self):
-		"""
-		Tests the '/api/org' url.
-		"""
+		"""Test the '/api/org' url."""
 		name = fake.name()
 		username = fake.user_name()
 
@@ -141,7 +142,11 @@ class TestURLs(TestCase):
 		# test the POST method (authenticated)
 		response = self.client.post(
 			'/api/org/',
-			data={'username': username, 'full_name': name, 'user_type': 2}
+			data={
+				'username': username,
+				'full_name': name,
+				'user_type': 2
+			}
 		)
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
@@ -181,12 +186,11 @@ class TestURLs(TestCase):
 		alt_username = fake.user_name()
 		alt_fullname = fake.name()
 
-		json_data = json.dumps(
-			{'username': alt_username, 'full_name': alt_fullname}
-		)
+		json_data = json.dumps({'username': alt_username, 'full_name': alt_fullname})
 		response = self.client.put(
 			'/api/org/' + str(org_db.id) + '/',
-			content_type='application/json', data=json_data
+			content_type='application/json',
+			data=json_data
 		)
 
 		self.assertEqual(response.status_code, 200)
@@ -205,41 +209,60 @@ class TestURLs(TestCase):
 		self.assertFalse(org_db)
 
 	def test_api_member_url(self):
-		"""
-		Tests the '/api/member'.
-		"""
+		"""Test the '/api/member' url."""
 		# test unauthenticated GET request
 		response = self.client.get('/api/member/')
-		self.assertTrue('Authentication credentials were not provided' in response.data.get('detail'))
+		self.assertTrue(
+			'Authentication credentials were not provided'
+			in response.data.get('detail')
+		)
 		self.assertEqual(response.status_code, 403)
 		self.assertEqual(response.status_text, 'Forbidden')
 
 		# test unauthenticated POST request
 		response = self.client.post('/api/member/')
-		self.assertTrue('Authentication credentials were not provided' in response.data.get('detail'))
+		self.assertTrue(
+			'Authentication credentials were not provided'
+			in response.data.get('detail')
+		)
 		self.assertEqual(response.status_code, 403)
 		self.assertEqual(response.status_text, 'Forbidden')
 
 		# test unauthenticated DELETE request
 		response = self.client.delete('/api/member/')
-		self.assertTrue('Authentication credentials were not provided' in response.data.get('detail'))
+		self.assertTrue(
+			'Authentication credentials were not provided'
+			in response.data.get('detail')
+		)
 		self.assertEqual(response.status_code, 403)
 		self.assertEqual(response.status_text, 'Forbidden')
 
 		# test unauthenticated PUT request
 		response = self.client.put('/api/member/')
-		self.assertTrue('Authentication credentials were not provided' in response.data.get('detail'))
+		self.assertTrue(
+			'Authentication credentials were not provided'
+			in response.data.get('detail')
+		)
 		self.assertEqual(response.status_code, 403)
 		self.assertEqual(response.status_text, 'Forbidden')
 
 		# test a successful post request
 		# first login user
-		response = self.client.post('/api/api-auth/login/?next=/api/user/', data={'username': self.user.get('email'), 'password': self.user.get('password')})
+		response = self.client.post(
+			'/api/api-auth/login/?next=/api/user/',
+			data={
+				'username': self.user.get('email'),
+				'password': self.user.get('password')
+			}
+		)
 		# create an organisation to which members will be added
 		# the creator will be the default admin
 		org_name = fake.name()
 		org_username = fake.user_name()
-		response = self.client.post('/api/org/', data={'username': org_username, 'full_name': org_name})
+		response = self.client.post(
+			'/api/org/',
+			data={'username': org_username, 'full_name': org_name}
+		)
 
 		# retrieve the org object from the DB using the id in the response
 		# then compare org.full_name with org_name
@@ -270,28 +293,39 @@ class TestURLs(TestCase):
 
 		# get the user's username from the response
 		# then use that username to fetch a user object from the DB
-		# this user object's id will be supplied as a foreign key to the user table when adding this member
+		# this user object's id will be supplied as a foreign key
+		# to the user table when adding this member
 		response = self.client.get('/api/user/')
 		user2_username = response.data[1].get('username')
 		user_object_fk = User.objects.filter(username=user2_username)
 		user_object = UserAuthentication.objects.get(profile=user_object_fk)
 
 		# add user2 to the organisation as an admin (user_level 1)
-		response = self.client.post('/api/member/', data={'org': org_object.id, 'user': user_object.id, 'user_level': 1})
+		response = self.client.post(
+			'/api/member/',
+			data={'org': org_object.id, 'user': user_object.id, 'user_level': 1}
+		)
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
 		# View the new member.
 		response = self.client.get('/api/member/2/')
 		# ensure the user id in the response is the user id in the object
 		self.assertEqual(response.data.get('user'), user_object.id)
-		# ensure the organisation id in the response is the organisation id in the object
+		# ensure the organisation id in the response
+		# is the organisation id in the object
 		self.assertEqual(response.data.get('org'), org_object.id)
 		# ensure a user level of 1
 		self.assertEqual(response.data.get('user_level'), 1)
 
 		# test the PUT method to update member's user level in the org
-		json_data = json.dumps({'org': org_object.id, 'user': user_object.id, 'user_level': 3})
-		response = self.client.put('/api/member/2/', content_type='application/json', data=json_data)
+		json_data = json.dumps(
+			{'org': org_object.id, 'user': user_object.id, 'user_level': 3}
+		)
+		response = self.client.put(
+			'/api/member/2/',
+			content_type='application/json',
+			data=json_data
+		)
 		self.assertEqual(response.data.get('user_level'), 3)
 		self.assertNotEqual(response.data.get('user_level'), 1)
 
