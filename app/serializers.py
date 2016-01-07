@@ -106,8 +106,8 @@ class StorySerializer(serializers.ModelSerializer):
 
 class OrgInviteSerilizer (serializers.ModelSerializer):
 	''' Serializer for Invitation of Members to Organisations '''
-	code = serializers.CharField(required=False, read_only=True)
-
+	code = serializers.CharField(required=False, read_only=True,)
+	
 	class Meta:
 	    model = OrgInvites
 	    fields = ('url','code','email', 'org', 'uid', 'accept')

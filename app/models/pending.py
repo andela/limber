@@ -8,9 +8,8 @@ from .user import User, UserAuthentication
 from . import model_field_custom
 import hashlib
 import random
-
-
-
+from django.contrib.sites.models import Site
+from django.conf.urls import url
 
 class OrgInvites(models.Model):
 	'''
@@ -32,7 +31,7 @@ class OrgInvites(models.Model):
 
 	def create_hash(self):
 		# create hash 
-		salt = hashlib.sha1(str(random.random())).hexdigest()[:10]
+		salt = hashlib.sha1(str(random.random())).hexdigest()[:1]
 		email = self.email
 		if isinstance(email, unicode):
 			email = email.encode('utf-8')
@@ -43,6 +42,7 @@ class OrgInvites(models.Model):
 	# over ride the save() to include hash value before saving
 	# check if invitee is already a member
 	# check if the row with this hash already exists.
+		
 		if not self.pk:
 			self.code = self.create_hash()
 			self.send_email_notifictaion()
@@ -50,16 +50,19 @@ class OrgInvites(models.Model):
 
 	def send_email_notifictaion(self):
 		# Create Email notification
+		#https://docs.djangoproject.com/en/dev/ref/contrib/sites/
+		current_site = Site.objects.get_current()
+		link = current_site.name +'/api/orginvite/'+ self.code
 		subject = 'Limber: Organisation invitations' 
 		message = 'You been Invited to ' + self.org.username + \
-		' Your activation code is' + self.code
+				  ' organisation. Your activation code is '\
+				  'http://'+ link 
 		from_email = settings.EMAIL_HOST_USER
-		to_list = [self.email, settings.EMAIL_HOST_USER,'alexmuturi@gmail.com']
+		to_list = [ settings.EMAIL_HOST_USER]
 		send_mail(subject, message, from_email, to_list, fail_silently=False)
 
 	def email_is_member(self, email):
 		user = member.objects.filter(email=email)
-
 		if user:
 			return True
 		return user

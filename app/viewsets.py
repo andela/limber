@@ -114,7 +114,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 
 class StoriesViewSet(viewsets.ModelViewSet):
-    """Viewset for project stories."""
+    """ Viewset for project stories """
     queryset = Story.objects.all()
     serializer_class = StorySerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -124,3 +124,24 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
     queryset = OrgInvites.objects.all()
     serializer_class = OrgInviteSerilizer
     permission_classes = (permissions.IsAuthenticated,)
+
+
+    def get_queryset(self):
+        print self.kwargs.get('pk')
+        obj = OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') )|Q(uid=self.request.user.id))
+        return obj
+       
+
+    def create(self,request):
+        #irestrict ID of creator to the  
+        request.data['uid'] = request.user.id
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            invite = OrgInvites.objects.create(**serializer.validated_data)
+            return Response({
+                'status': 'Invitation Created',
+                'Code': invite.code
+            }, status=status.HTTP_201_CREATED)
+
+        
+

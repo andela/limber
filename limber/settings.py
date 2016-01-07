@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'app',
     'rest_framework',
 )
@@ -144,3 +145,4 @@ AUTH_USER_MODEL = 'app.UserAuthentication'
 #         'LOCATION': '127.0.0.1:6000',
 #     }
 # }
+SITE_ID = 1
