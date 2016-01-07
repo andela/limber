@@ -42,8 +42,6 @@ class OrgInvites(models.Model):
 	def save(self, *args, **kwargs):
 	# over ride the save() to include hash value before saving
 	# check if invitee is already a member
-		# if self.email_is_member:
-		# 	return 'Email already belongs to an existing Member'
 	# check if the row with this hash already exists.
 		if not self.pk:
 			self.code = self.create_hash()

@@ -115,12 +115,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 class StoriesViewSet(viewsets.ModelViewSet):
     """Viewset for project stories."""
-
     queryset = Story.objects.all()
     serializer_class = StorySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
 class OrgInvitesViewset(viewsets.ModelViewSet):
+    """ Handles Invitation of Members to Organisation"""
     queryset = OrgInvites.objects.all()
     serializer_class = OrgInviteSerilizer
     permission_classes = (permissions.IsAuthenticated,)
