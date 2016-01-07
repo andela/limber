@@ -1,15 +1,14 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
-
 from django.db import IntegrityError
 from django.db.models import Q
-
 from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, \
-    TeamMemberSerializer, StorySerializer
-
+    TeamMemberSerializer, StorySerializer,OrgInviteSerilizer
 from app.models.user import User, Member
 from app.models.story import Story
 from app.models.project import Project, TeamMember
+from app.models.pending import OrgInvites
+
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -119,4 +118,9 @@ class StoriesViewSet(viewsets.ModelViewSet):
 
     queryset = Story.objects.all()
     serializer_class = StorySerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+class OrgInvitesViewset(viewsets.ModelViewSet):
+    queryset = OrgInvites.objects.all()
+    serializer_class = OrgInviteSerilizer
     permission_classes = (permissions.IsAuthenticated,)

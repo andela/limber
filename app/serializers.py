@@ -4,6 +4,7 @@ from django.db.models import Q
 from app.models.story import Story
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
+from app.models.pending import OrgInvites
 from rest_framework.validators import UniqueTogetherValidator
 
 
@@ -103,3 +104,9 @@ class StorySerializer(serializers.ModelSerializer):
 		model = Story
 		fields = '__all__'
 
+class OrgInviteSerilizer (serializers.ModelSerializer):
+	code = serializers.CharField(required=False, read_only=True)
+
+	class Meta:
+	    model = OrgInvites
+	    fields = ('url','code','email', 'org', 'uid', 'accept')
