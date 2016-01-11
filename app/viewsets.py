@@ -8,7 +8,7 @@ from app.models.user import User, Member
 from app.models.story import Story
 from app.models.project import Project, TeamMember
 from app.models.pending import OrgInvites
-
+from limber.settings import ALLOWED_HOSTS
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -133,6 +133,7 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
        
 
     def create(self,request):
+        
         #irestrict ID of creator to the  
         request.data['uid'] = request.user.id
         serializer = self.serializer_class(data=request.data)

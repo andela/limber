@@ -10,7 +10,7 @@ import hashlib
 import random
 from django.contrib.sites.models import Site
 from django.conf.urls import url
-
+from limber.settings import ALLOWED_HOSTS
 class OrgInvites(models.Model):
 	'''
 		Model Handles pending invitations. and sends an email 
@@ -27,6 +27,7 @@ class OrgInvites(models.Model):
 	accept = models.PositiveSmallIntegerField(
 	    blank=False, choices=Accepted_status, default=0)
 	uid = models.ForeignKey(UserAuthentication)
+	
     # Create hash code for the link
 
 	def create_hash(self):
@@ -36,13 +37,13 @@ class OrgInvites(models.Model):
 		if isinstance(email, unicode):
 			email = email.encode('utf-8')
 		activation_key = hashlib.sha1(salt+email).hexdigest()
-		return activation_key  # os.urandom(32).encode('hex')
+		return activation_key  
 
 	def save(self, *args, **kwargs):
 	# over ride the save() to include hash value before saving
 	# check if invitee is already a member
 	# check if the row with this hash already exists.
-		
+		import ipdb; ipdb.set_trace()
 		if not self.pk:
 			self.code = self.create_hash()
 			self.send_email_notifictaion()
@@ -51,14 +52,14 @@ class OrgInvites(models.Model):
 	def send_email_notifictaion(self):
 		# Create Email notification
 		#https://docs.djangoproject.com/en/dev/ref/contrib/sites/
-		current_site = Site.objects.get_current()
-		link = current_site.name +'/api/orginvite/'+ self.code
+		current_site = Site.objects.get_current().domain #Site.objects.get_current()
+		link = ALLOWED_HOSTS[0]+'/api/orginvite/'+ self.code
 		subject = 'Limber: Organisation invitations' 
 		message = 'You been Invited to ' + self.org.username + \
 				  ' organisation. Your activation code is '\
 				  'http://'+ link 
 		from_email = settings.EMAIL_HOST_USER
-		to_list = [ settings.EMAIL_HOST_USER]
+		to_list = [self.email, settings.EMAIL_HOST_USER]
 		send_mail(subject, message, from_email, to_list, fail_silently=False)
 
 	def email_is_member(self, email):
