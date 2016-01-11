@@ -3,10 +3,10 @@ from rest_framework import viewsets, renderers, status, permissions
 
 from django.db import IntegrityError
 from django.db.models import Q
-
-from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, \
-    TeamMemberSerializer, StorySerializer
-
+from app.serializers import (
+    OrgSerializer, UserSerializer, ProjectSerializer,
+    TeamMemberSerializer, StorySerializer, MemberSerializer
+)
 from app.models.user import User, Member
 from app.models.story import Story
 from app.models.project import Project, TeamMember
@@ -54,9 +54,10 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
             try:
                 User.create_userprofile(**serializer.validated_data)
                 return Response({
-                    'status': 'User Created',
-                    'message': 'User Created'
-                }, status=status.HTTP_201_CREATED)
+                        'status': 'User Created',
+                        'message': 'User Created'
+                    },
+                    status=status.HTTP_201_CREATED)
             except IntegrityError:
                 return Response({
                     'status': "User not created",
@@ -120,3 +121,35 @@ class StoriesViewSet(viewsets.ModelViewSet):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
     permission_classes = (permissions.IsAuthenticated,)
+
+
+class MemberViewSet(viewsets.ModelViewSet):
+    queryset = Member.objects.filter()
+    serializer_class = MemberSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def destroy(self, request, *args, **kwargs):
+        """This function is called when the delete http method is called on this viewset.
+
+        It then calls the "remove_org_member" function in User model to remove members from an Organisation.
+        The "remove_org_member" function ensures that organisations have an admin present at all times.
+        It also checks for sufficient user privileges/ rights to perform this action.
+        """
+        # id of the "remover" (current user)
+        admin_id = request.user.id
+        # the organisation from which a member is being removed
+        org = self.get_object().org
+        # the member who's being removed from the org
+        member = self.get_object().user
+
+        try:
+            User.remove_org_member(admin_id=admin_id, org=org, member=member)
+            return Response({
+                        'status' : "Member successfully removed",
+                        'message' : "Organisation member successfully removed"
+                },status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({
+                        'status' : "Member not removed",
+                        'message' : "Organisation member not removed"
+                },status=status.HTTP_400_BAD_REQUEST)

@@ -12,7 +12,10 @@ class CharFieldCaseInsensitive(models.CharField):
 		This is meant to cater for case insensitivity in databases such as
 		PostgreSQL.
 		"""
-		return value.lower()
+		if value is not None:
+			value = value.lower()
+
+		return value
 
 
 class EmailFieldCaseInsensitive(models.EmailField):
@@ -26,4 +29,7 @@ class EmailFieldCaseInsensitive(models.EmailField):
 		This is meant to cater for case insensitivity in databases such as
 		PostgreSQL.
 		"""
-		return value.lower()
+		if value is not None:
+			value = value.lower()
+
+		return value

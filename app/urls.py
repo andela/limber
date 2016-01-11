@@ -7,6 +7,7 @@ router = routers.DefaultRouter()
 
 router.register(r'org', viewsets.OrgSignUpViewSet, 'org')
 router.register(r'user', viewsets.UserSignUpViewSet, 'user')
+router.register(r'member', viewsets.MemberViewSet, 'member')
 router.register(r'project', viewsets.ProjectViewSet, 'project')
 router.register(r'team', viewsets.TeamMemberViewSet)
 router.register(r'story', viewsets.StoriesViewSet,'story')

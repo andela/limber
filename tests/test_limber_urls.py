@@ -9,21 +9,21 @@ from app.models.user import User, UserAuthentication
 
 fake = Factory.create()
 
-# coverage run --omit="env*","limber*" manage.py test
-
 
 class TestURLs(TestCase):
-	"""Test app urls."""
+	"""Test all the urls in Limber app."""
 
 	def setUp(self):
-		"""Initialize test resources."""
+		"""initialize test resources."""
 		self.client = Client()
 
 		# a user to perform requests that require authentication
 		self.user = {
-			'username': fake.user_name(), 'email': fake.email(),
-			'password': fake.password()}
-		# store the user in the dattabase
+			'username': fake.user_name(),
+			'email': fake.email(),
+			'password': fake.password()
+		}
+		# create the user in the database
 		self.client.post('/api/user/', data=self.user)
 
 	def tearDown(self):
@@ -32,14 +32,14 @@ class TestURLs(TestCase):
 		del self.user
 
 	def test_api_url(self):
-		"""Test the main app urls."""
+		"""Test the '/api/' url."""
 		response = self.client.get('/api/')
 
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
 
 	def test_api_user_url(self):
-		"""Test urls related to a user."""
+		"""Test the '/api/user/' url."""
 		email = fake.email()
 		password = fake.password()
 		username = fake.user_name()
@@ -47,7 +47,8 @@ class TestURLs(TestCase):
 		# test the POST method
 		response = self.client.post(
 			'/api/user/',
-			data={'username': username, 'password': password, 'email': email})
+			data={'username': username, 'password': password, 'email': email}
+		)
 
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
@@ -85,12 +86,16 @@ class TestURLs(TestCase):
 
 		# convert dictionary to json data for the put method
 		json_data = json.dumps(
-			{'username': alt_username, 'email': alt_email,
-				'password': alt_password}
+			{
+				'username': alt_username,
+				'email': alt_email,
+				'password': alt_password
+			}
 		)
 		response = self.client.put(
 			'/api/user/' + str(user.profile.id) + '/',
-			content_type='application/json', data=json_data
+			content_type='application/json',
+			data=json_data
 		)
 
 		self.assertEqual(response.status_code, 200)
@@ -110,7 +115,7 @@ class TestURLs(TestCase):
 		self.assertFalse(user)
 
 	def test_api_org_url(self):
-		"""Test urls related to an organisation"""
+		"""Test the '/api/org' url."""
 		name = fake.name()
 		username = fake.user_name()
 
@@ -136,7 +141,11 @@ class TestURLs(TestCase):
 		# test the POST method (authenticated)
 		response = self.client.post(
 			'/api/org/',
-			data={'username': username, 'full_name': name, 'user_type': 2}
+			data={
+				'username': username,
+				'full_name': name,
+				'user_type': 2
+			}
 		)
 		self.assertEqual(response.status_code, 201)
 		self.assertEqual(response.status_text, 'Created')
@@ -176,12 +185,11 @@ class TestURLs(TestCase):
 		alt_username = fake.user_name()
 		alt_fullname = fake.name()
 
-		json_data = json.dumps(
-			{'username': alt_username, 'full_name': alt_fullname}
-		)
+		json_data = json.dumps({'username': alt_username, 'full_name': alt_fullname})
 		response = self.client.put(
 			'/api/org/' + str(org_db.id) + '/',
-			content_type='application/json', data=json_data
+			content_type='application/json',
+			data=json_data
 		)
 
 		self.assertEqual(response.status_code, 200)
@@ -198,4 +206,3 @@ class TestURLs(TestCase):
 		# confirm deletion from the database end
 		org_db = User.objects.filter(username=username).first()
 		self.assertFalse(org_db)
-
