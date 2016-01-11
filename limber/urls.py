@@ -19,4 +19,5 @@ from app import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^api/', include('app.urls')),
+    url(r'^signup/', views.signup, name='signup'),
 ]
