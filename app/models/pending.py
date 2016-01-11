@@ -4,13 +4,16 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models, IntegrityError, transaction
-from .user import User, UserAuthentication
+from rest_framework.response import Response
+from .user import User, UserAuthentication, Member
 from . import model_field_custom
 import hashlib
 import random
 from django.contrib.sites.models import Site
 from django.conf.urls import url
 from limber.settings import ALLOWED_HOSTS
+
+
 class OrgInvites(models.Model):
 	'''
 		Model Handles pending invitations. and sends an email 
@@ -45,11 +48,14 @@ class OrgInvites(models.Model):
 	# check if the row with this hash already exists.
 		
 		if not self.pk:
-			self.code = self.create_hash()
-			self.send_email_notifictaion()
-		super(OrgInvites, self).save(*args, **kwargs)
+			if self.send_email_notifictaion() == 1:
+
+				self.code = self.create_hash()
+			
+				super(OrgInvites, self).save(*args, **kwargs)
 
 	def send_email_notifictaion(self):
+		
 		# Create Email notification
 		#https://docs.djangoproject.com/en/dev/ref/contrib/sites/
 		current_site = Site.objects.get_current()
@@ -59,12 +65,16 @@ class OrgInvites(models.Model):
 				  ' organisation. Your activation code is '\
 				  'http://'+ link 
 		from_email = settings.EMAIL_HOST_USER
-		to_list = [self.email, settings.EMAIL_HOST_USER]
-		send_mail(subject, message, from_email, to_list, fail_silently=False)
-
-	def email_is_member(self, email):
-		user = member.objects.filter(email=email)
+		to_list = [self.email]
+		success = send_mail(subject, message, from_email, to_list, fail_silently=False)
+		return success
+	def email_is_member(self):
+		
+		#Check if emain belongs to a user
+		userid = UserAuthentication.objects.filter(email=self.email)
+		#check if user is a member of org
+		user = Member.objects.filter(user=userid, org=self.org)
 		if user:
 			return True
-		return user
+		return Response(user)
 

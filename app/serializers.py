@@ -112,6 +112,16 @@ class OrgInviteSerilizer (serializers.ModelSerializer):
 	
 	class Meta:
 	    model = OrgInvites
+	    fields = ('email','code','org','accept','uid')
+	    validators = [
+			UniqueTogetherValidator(
+				queryset=OrgInvites.objects.all(),
+				fields=('email', 'org'),
+				message='email Already exist'
+			)
+		]
+
+	    
 # A serializer to add members to an existing org
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
