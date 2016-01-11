@@ -53,7 +53,7 @@ class OrgInvites(models.Model):
 		# Create Email notification
 		#https://docs.djangoproject.com/en/dev/ref/contrib/sites/
 		current_site = Site.objects.get_current()
-		link = '{0}/api/orginvite/{1}'.format( current_site ,self.code)
+		link = '{0}/api/orginvite/{1}'.format( current_site, self.code)
 		subject = 'Limber: Organisation invitations' 
 		message = 'You been Invited to ' + self.org.username + \
 				  ' organisation. Your activation code is '\

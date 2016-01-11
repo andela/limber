@@ -20,8 +20,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('HOST_EMAIL')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PWD')
 EMAIL_PORT = 587
-# Comment this to to send email over the net
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# unComment this to to send email over the net
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

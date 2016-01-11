@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from itertools import chain
 from django.db.models import Q
-from app.models.story import Story
+from app.models.story import Story, Task
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
 from app.models.pending import OrgInvites
@@ -105,15 +105,13 @@ class StorySerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
+
 class OrgInviteSerilizer (serializers.ModelSerializer):
 	''' Serializer for Invitation of Members to Organisations '''
 	code = serializers.CharField(required=False, read_only=True,)
 	
 	class Meta:
 	    model = OrgInvites
-
-
-
 # A serializer to add members to an existing org
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
@@ -127,4 +125,9 @@ class MemberSerializer(serializers.ModelSerializer):
                 user_type=2
             ).all()
         return fields
+
+class TaskSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Task
+		fields = '__all__'
 
