@@ -1,10 +1,11 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from itertools import chain
 from django.db.models import Q
 from app.models.story import Story, Task
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
-from rest_framework.validators import UniqueTogetherValidator
+from app.models.invite import ProjectInvite
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -147,4 +148,10 @@ class MemberSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Task
+		fields = '__all__'
+
+
+class ProjectInviteSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ProjectInvite
 		fields = '__all__'

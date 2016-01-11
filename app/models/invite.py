@@ -3,7 +3,7 @@ from .project import Project
 from .user import UserAuthentication
 
 
-class ProjectInvites(models.Model):
+class ProjectInvite(models.Model):
 	"""Project invite model."""
 	id = models.AutoField(primary_key=True)
 	email = models.EmailField(blank=False)

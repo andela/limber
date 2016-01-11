@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='ProjectInvites',
+            name='ProjectInvite',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('email', models.EmailField(max_length=254)),

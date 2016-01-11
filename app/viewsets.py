@@ -5,11 +5,13 @@ from django.db import IntegrityError
 from django.db.models import Q
 from app.serializers import (
 	OrgSerializer, UserSerializer, ProjectSerializer,
-	TeamMemberSerializer, StorySerializer, MemberSerializer, TaskSerializer
+	TeamMemberSerializer, StorySerializer, MemberSerializer,
+	TaskSerializer, ProjectInviteSerializer
 )
 from app.models.user import User, Member
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
+from app.models.invite import ProjectInvite
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -159,4 +161,10 @@ class MemberViewSet(viewsets.ModelViewSet):
 class TaskViewSet(viewsets.ModelViewSet):
 	queryset = Task.objects.all()
 	serializer_class = TaskSerializer
+	permission_classes = (permissions.IsAuthenticated,)
+
+
+class ProjectInviteViewSet(viewsets.ModelViewSet):
+	queryset = ProjectInvite.objects.all()
+	serializer_class = ProjectInviteSerializer
 	permission_classes = (permissions.IsAuthenticated,)
