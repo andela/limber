@@ -43,7 +43,7 @@ class OrgInvites(models.Model):
 	# over ride the save() to include hash value before saving
 	# check if invitee is already a member
 	# check if the row with this hash already exists.
-		import ipdb; ipdb.set_trace()
+		
 		if not self.pk:
 			self.code = self.create_hash()
 			self.send_email_notifictaion()
@@ -52,8 +52,8 @@ class OrgInvites(models.Model):
 	def send_email_notifictaion(self):
 		# Create Email notification
 		#https://docs.djangoproject.com/en/dev/ref/contrib/sites/
-		current_site = Site.objects.get_current().domain #Site.objects.get_current()
-		link = ALLOWED_HOSTS[0]+'/api/orginvite/'+ self.code
+		current_site = Site.objects.get_current()
+		link = '{0}/api/orginvite/{1}'.format( current_site ,self.code)
 		subject = 'Limber: Organisation invitations' 
 		message = 'You been Invited to ' + self.org.username + \
 				  ' organisation. Your activation code is '\

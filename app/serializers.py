@@ -104,10 +104,27 @@ class StorySerializer(serializers.ModelSerializer):
 		model = Story
 		fields = '__all__'
 
+
 class OrgInviteSerilizer (serializers.ModelSerializer):
 	''' Serializer for Invitation of Members to Organisations '''
 	code = serializers.CharField(required=False, read_only=True,)
 	
 	class Meta:
 	    model = OrgInvites
-	    fields = ('url','code','email', 'org', 'uid', 'accept')
+
+
+
+# A serializer to add members to an existing org
+class MemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ('url', 'org', 'user', 'user_level')
+
+    def get_fields(self, *args, **kwargs):
+        fields = super(MemberSerializer, self).get_fields(*args, **kwargs)
+        if self.context:
+            fields['org'].queryset = fields['org'].queryset.filter(
+                user_type=2
+            ).all()
+        return fields
+
