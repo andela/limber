@@ -9,7 +9,6 @@ python:
 before_install:
   - "pip install -r requirements.txt"
 script:
-  - ./manage.py test
   - coverage run --omit="*virtualenv*","limber*","app/migrations/*" manage.py test
 branches:
   only:
