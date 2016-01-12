@@ -7,7 +7,7 @@ from app.serializers import OrgSerializer, UserSerializer, ProjectSerializer, \
 from app.models.user import User, Member, UserAuthentication
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
-from app.models.pending import OrgInvites
+from app.models.orginvitation import OrgInvites
 from limber.settings import ALLOWED_HOSTS
 
 
