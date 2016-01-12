@@ -1,6 +1,7 @@
+/*these are styles to the backgroud area of the header*/
 .cool_background {
   background: url(../images/bgpattern.png) repeat center center fixed;
-  min-height: 700px;
+  min-height: 580px;
   color: #fff;
   position: relative;
 }
@@ -8,21 +9,6 @@
 .cool_background > nav {
   background: transparent;
 }
-
-#back_margin{
-    margin: 0px;
-    padding: 0px;
-}
-
-#nav-mobile > li > a{
-    border: 1px solid #2196f3;
-    background: transparent;
-}
-
-#nav-mobile > li > a:hover{
-    background: #2196f3;
-}
-
 
 .cool_background > div{
     position: absolute;
@@ -34,6 +20,59 @@
     transform: translate(-50%, -50%);
 }
 
+#back_margin{
+    margin: 0px;
+    padding: 0px;
+}
+
+
+
+/*these are styles to the testimonials section*/
+#testmonials {
+    background: url(../images/bgpattern.png) repeat center center fixed;
+    min-height: 150px;
+    color: #fff;
+}
+
+#testmonials .slides{
+    background: transparent;
+}
+
+/*these are styles to the invintations section*/
+#invitation {
+    background: #f5f5f5;
+    margin-top: -20px;
+    padding: 50px 0px;
+}
+
+#invitation h5 {
+    padding-bottom: 30px;
+}
+
+#invitation form {
+    padding-left: -40px;
+}
+
+
+
+/*these are styles to the Navigation section*/
+#nav-mobile > li > a{
+    border: 1px solid #2196f3;
+    background: #2196f3;
+}
+
+#nav-mobile > li > a:hover{
+    background: #2196f3;
+}
+
+
+/*Footer Styles*/
+#footer {
+    min-height: 50px;
+}
+
+
+/*Styles for the typing animation*/
 #animation-class p {
     font-size: 30px;
 }
@@ -73,3 +112,37 @@
     50% { opacity:0; }
     100% { opacity:1; }
 }
+
+
+.form_for_auth {
+    border: 1px solid #ccc;
+    -webkit-border-radius: 3px; 
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.form_for_auth form{
+    padding: 20px;
+}
+
+.form_for_auth form .row{
+    margin-bottom: 0px;
+}
+
+.mainform {
+    margin-top: 10%;
+}
+
+.input-field input{
+    border: 1px solid #ccc;
+    -webkit-border-radius: 3px; 
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 0px 5px;
+}
+
+
+
+
+
+

@@ -3,13 +3,92 @@
 {% load staticfiles %}
 
 {% block content %}
-<div class="container" ng-controller="SignupController">
-    <form  ng-submit="submitForm()" novalidate>
-        {% csrf_token %}
-        Username: <input type="text" ng-model="user.username">
-        Email: <input type="text" name="email" ng-model="user.email">
-        Password: <input type="password" name="password" ng-model="user.password">
-        <input type="submit" value="Sign Up">
-    </form>
+<div class="row" >
+
+	<div class="container">
+	<div class="row">
+		<div class="container mainform">
+			<h4 class="center">Limber</h4>
+			<div class="row">
+				<div class="container">
+					<div class="form_for_auth">
+						<div class="row">
+							
+							<div class="col s12">
+							  <ul class="tabs">
+							    <li class="tab col s3"><a class="blue-text active" href="#signup">Sign Up</a></li>
+							    <li class="tab col s3"><a class="blue-text" href="#login">Log In</a></li>
+							  </ul>
+							</div>
+
+							<div id="signup" class="col s12" ng-controller="SignupController">
+								<form  ng-submit="submitForm()" novalidate>
+									{% csrf_token %}
+									<div class="row">
+									    <div class="input-field col s12">
+									        <input id="name" type="text" ng-model="user.username" placeholder="Enter username">
+									    </div>
+									</div>
+
+									<div class="row">
+									    <div class="input-field col s12">
+									        <input type="email" ng-model="user.email" placeholder="Enter Email Address">
+									    </div>
+									</div>
+
+									<div class="row">
+									    <div class="input-field col s12">
+									        <input type="password" ng-model="user.password" placeholder="Enter Password" class="validate">
+									    </div>
+									</div>
+								    
+								    <div class="row">
+								    	<div class="container center">
+								    		<button class="btn blue" type="submit" name="action">Sign Up</button>
+								    	</div>
+								    </div>
+								</form>
+							</div>
+
+							<div id="login" class="col s12" >
+								<form  ng-submit="submitForm()" novalidate>
+								    {% csrf_token %}
+
+									<div class="row">
+									    <div class="input-field col s12">
+									        <input type="email" ng-model="user.username" placeholder="Enter Email Address" class="validate">
+									    </div>
+									</div>
+
+									<div class="row">
+									    <div class="input-field col s12">
+									        <input type="password" ng-model="user.password" placeholder="Enter Password" class="validate">
+									    </div>
+									</div>
+
+									<div class="row">
+									    <div class="input-field col s12">
+									        <input type="password" ng-model="user.confirm_password" placeholder="Confirm Password" class="validate">
+									    </div>
+									</div>
+								    
+								    <div class="row">
+								    	<div class="container center">
+								    		<button class="btn blue" type="submit" name="action">Log In</button>
+								    	</div>
+								    </div>
+								    
+								    
+								</form>
+							</div>
+
+						</div>
+				</div>
+			</div>		
+		</div>
+		</div>
+		</div>
+	</div>
+    
 </div>
 {% endblock %}
