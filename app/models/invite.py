@@ -1,4 +1,8 @@
+import requests
+import os
+
 from django.db import models
+
 from .project import Project
 from .user import UserAuthentication
 
@@ -23,3 +27,22 @@ class ProjectInvite(models.Model):
 		default=PENDING
 	)
 	uid = models.ForeignKey(UserAuthentication)
+
+	@classmethod
+	def send_invite_email(cls, request, **kwargs):
+		"""Method to send emails containing project invite codes
+			to invitees through email."""
+
+		data = dict()
+		data['from'] = request.user.email
+		data['to'] = kwargs['email']
+		data['subject'] = 'Invitation to collaborate on project ' +
+		str(kwargs['project'].project_name)
+		data['text'] = 'Welcome message. Also include an invite code within this.'
+
+		response = requests.post(
+			'https://api.mailgun.net/v3/mail.limberapp.xyz/messages',
+			auth=('api', os.environ.get('MAILGUN_KEY')),
+			data=data
+		)
+		return response
