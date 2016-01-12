@@ -12,7 +12,11 @@ router.register(r'project', viewsets.ProjectViewSet, 'project')
 router.register(r'team', viewsets.TeamMemberViewSet)
 router.register(r'story', viewsets.StoriesViewSet, 'story')
 router.register(r'task', viewsets.TaskViewSet, 'task')
-router.register(r'project-invites', viewsets.ProjectInviteViewSet, 'project-invites')
+router.register(
+	r'project-invites',
+	viewsets.ProjectInviteViewSet,
+	'project-invites'
+)
 
 
 urlpatterns = [

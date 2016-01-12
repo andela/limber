@@ -170,25 +170,32 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 	permission_classes = (permissions.IsAuthenticated,)
 
 	def create(self, request):
-		"""Create invite request and send email to invitee."""
+		"""Create ProjectInvite instance, send the email then save."""
 		try:
 			serializer = self.serializer_class(data=request.data)
 
 			if serializer.is_valid():
-				ProjectInvite.send_invite_email(
-					request=request,
-					**serializer.validated_data
+				# create project invite instance
+				project_invite = ProjectInvite(
+					email=serializer.validated_data.get('email'),
+					project=serializer.validated_data.get('project'),
+					uid=request.user,
 				)
+				# send the email invite
+				project_invite.send_invite_email()
+				# save this invite to DB
+				project_invite.save()
+
 				return Response(
 					{
 						'status': 'email sent',
-						'message': 'An invitation email has been sent to so and so'
+						'message': 'An invitation email has been sent'
 					}, status=status.HTTP_200_OK
 				)
 		except:
 			return Response(
 				{
 					'status': 'email not sent',
-					'message': 'An invitation email has not been sent to so and so'
+					'message': 'Email invitation failed'
 				}, status=status.HTTP_400_BAD_REQUEST
 			)
