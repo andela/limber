@@ -39,7 +39,7 @@ class TestUrls(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.status_text, 'OK')
 
-    def test_api_stories(self):
+    def test_creat_user(self):
         # Generate credentials
         email = fake.email()
         password = fake.password()
@@ -69,16 +69,20 @@ class TestUrls(TestCase):
         response = self.client.get('/api/orginvite/')
         self.assertEqual(response.status_text, 'OK')
         self.assertEqual(response.status_code, 200)
+      
 
         # Create Invitation
+        email = fake.email()
         current_user = UserAuthentication.objects.first()
         dummy_org = User.objects.first()
-        data = {"email": fake.email(), "uid": current_user.id, "org": dummy_org.id}
+        data = {"email": email , "uid": current_user.id, "org": dummy_org.id}
         response = self.client.post('/api/orginvite/', data)
         self.assertEqual(response.status_code, 201)
-        # Test to confirm message was sent using django.core.mail.outbox
-        self.assertEqual(len(mail.outbox), 1)
-        # Verify that the subject of the first message is correct.
-        self.assertEqual(mail.outbox[0].subject, 'Limber: Organisation invitations')
+
+        # check if same info can be posted twice
+        response = self.client.post('/api/orginvite/', data)
+        self.assertEqual(response.status_code, 400)
+
+        
 
 

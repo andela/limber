@@ -112,9 +112,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 			'message': "Failed to create project"
 		}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class StoriesViewSet(viewsets.ModelViewSet):
-
     """ Viewset for project stories """
     queryset = Story.objects.all()
     serializer_class = StorySerializer
@@ -127,11 +125,12 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        print self.kwargs.get('pk')
+        # Override the GET method query to only show logged in user
         obj = OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') )|Q(uid=self.request.user.id))
         return obj
        
     def create(self,request):
+
         #restrict ID of creator to the  
         request.data['uid'] = request.user.id
         serializer = self.serializer_class(data=request.data)
@@ -142,13 +141,17 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
             return Response({
                 'error': 'Member already belongs to Organisation',
             }, status.HTTP_400_BAD_REQUEST)
-        
         if serializer.is_valid():
             invite = OrgInvites.objects.create(**serializer.validated_data)
+            if invite is not None:
+                return Response({
+                    'status': invite.send_email_notification(),
+                    'code': invite.create_hash(),
+                }, status=status.HTTP_201_CREATED)
             return Response({
-                'status': serializer.source,
-                'code': invite.code
-            }, status=status.HTTP_201_CREATED)
+                    'message': 'Mail notification was not sent',
+                    
+                }, status=status.HTTP_201_CREATED)
         return Response(
             serializer.errors
            
