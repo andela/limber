@@ -24,7 +24,7 @@ class OrgInvites(models.Model):
         (1, 'Accepted'),
         (2, 'rejected')
     )
-	email = model_field_custom.EmailFieldCaseInsensitive(unique=True)
+	email = model_field_custom.EmailFieldCaseInsensitive(blank=False)
 	code = models.CharField(primary_key=True, max_length=255, blank=True)
 	org = models.ForeignKey(User, related_name="invites")
 	accept = models.PositiveSmallIntegerField(

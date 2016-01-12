@@ -115,9 +115,9 @@ class OrgInviteSerilizer (serializers.ModelSerializer):
 	    fields = ('email','code','org','accept','uid')
 	    validators = [
 			UniqueTogetherValidator(
-				queryset=OrgInvites.objects.all(),
+				queryset=OrgInvites.objects.filter(accept=0),
 				fields=('email', 'org'),
-				message='email Already exist'
+				message='Invitation  Already exist'
 			)
 		]
 

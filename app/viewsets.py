@@ -140,7 +140,7 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
         user = Member.objects.filter(user=userid, org=request.data['org'])
         if user:
             return Response({
-                'status': 'Member already belongs to Organisation',
+                'error': 'Member already belongs to Organisation',
             }, status.HTTP_400_BAD_REQUEST)
         
         if serializer.is_valid():
