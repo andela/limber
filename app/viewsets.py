@@ -173,7 +173,6 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 		"""Create ProjectInvite instance, send the email then save."""
 		try:
 			serializer = self.serializer_class(data=request.data)
-
 			if serializer.is_valid():
 				# create project invite instance
 				project_invite = ProjectInvite(
@@ -191,6 +190,12 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 						'message': 'An invitation email has been sent'
 					}, status=status.HTTP_200_OK
 				)
+			return Response(
+				{
+					'status': 'Bad request',
+					'message': 'Invalid data'
+				}, status=status.HTTP_400_BAD_REQUEST
+			)
 		except Exception as e:
 			return Response(
 				{
@@ -198,27 +203,3 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 					'message': 'Failed to create email invitation'
 				}, status=status.HTTP_400_BAD_REQUEST
 			)
-
-	# def update(self, request, pk=None):
-	# 	"""Update a ProjectInvite that has already been sent."""
-	#
-	# 	try:
-	# 		serializer = self.serializer_class(data=request.data)
-	# 		if serializer.is_valid():
-	# 			project_invite = ProjectInvite.objects.get(pk=pk)
-	# 			project_invite.accept = serializer.validated_data.get('accept')
-	# 			project_invite.save()
-
-	# 			return Response(
-	# 				{
-	# 					'status': 'Invite updated',
-	# 					'message': 'Invite has been updated'
-	# 				}, status=status.HTTP_200_OK
-	# 			)
-	# 	except Exception as e:
-	# 		return Response(
-	# 			{
-	# 				'status': 'Bad request',
-	# 				'message': 'Failed to update email invitation'
-	# 			}, status=status.HTTP_400_BAD_REQUEST
-	# 		)
