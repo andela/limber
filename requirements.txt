@@ -4,6 +4,7 @@ decorator==4.0.4
 dj-database-url==0.3.0
 dj-static==0.0.6
 Django==1.8.6
+django-mailgun==0.8.0
 django-toolbelt==0.0.1
 djangorestframework==3.3.1
 factory-boy==2.6.0
