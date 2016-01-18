@@ -1,33 +1,11 @@
-// angular.module('limberApp').controller('SignupController', function($scope, $http, $location, $window) {
-
-//     $scope.user = {};
-
-//     $scope.submitForm = function() {
-//         $http({
-//             method  : 'POST',
-//             url     : '/api/user/',
-//             data    : $scope.user,
-//             headers : {'Content-Type': 'application/json'}
-//         })
-//         .then(function successCallback(response) {
-//             $window.location.href = '/api/api-auth/login/';
-//         }, function errorCallback(response) {
-//             // $window.location.href = '/signup'
-//             console.log($scope.user)
-//         });
-//         // console.log($scope.user)
-//     };
-
-
-// });
 angular.module('limberApp', ['ngResource', 'ngCookies']).
-    config(['$httpProvider', function($httpProvider){
-        // django and angular both support csrf tokens. This tells
-        // angular which cookie to add to what header.
-        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-        // console.log($scope)
-    }]).
+    // config(['$httpProvider', function($httpProvider){
+    //     // django and angular both support csrf tokens. This tells
+    //     // angular which cookie to add to what header.
+    //     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    //     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    //     // console.log($scope)
+    // }]).
     factory('api', function($resource){
         // function add_auth_header(data, headersGetter){
         //     var headers = headersGetter();
@@ -49,14 +27,15 @@ angular.module('limberApp', ['ngResource', 'ngCookies']).
             })
         };
     }).
-    controller('authController', function($scope, api, $cookies) {
+    controller('authController', function($scope, api, $cookies, $location, $window) {
 
         $scope.login = function(){
-            dt = {email: $scope.username, password: $scope.password};
-            api.auth.login(dt).
+            // dt = {email: $scope.username, password: $scope.password};
+            api.auth.login($scope.user).
                 $promise.
                     then(function(data){
                         $cookies.put('token', data.token);
+                        // $window.location.href = '/api/user'
                     }).
                     catch(function(data){
                         console.log(data);
@@ -71,12 +50,15 @@ angular.module('limberApp', ['ngResource', 'ngCookies']).
             });
         };
         $scope.register = function(){
-            dt = {email: $scope.email, username: $scope.username, password: $scope.password};
-            api.users.create(dt).
+            // dt = {email: $scope.email, username: $scope.username, password: $scope.password};
+            api.users.create($scope.signup).
                 $promise.
-                    then($scope.login).
+                    then(function(data){
+                        console.log(data);
+                        // $window.location.href = '/api'
+                    }).
                     catch(function(data){
-                        alert(data.data.username);
+                        console.log(data);
                     });
             };
     });
