@@ -23,6 +23,12 @@
 
 							<div id="signup" class="col s12" >
 					            <form ng-submit="register()" novalidate>
+									<div ng-if="confirmmessage != ''">
+										{% verbatim %}
+										{{confirmmessage}}
+										{% endverbatim%}
+
+									 </div>
 									{% csrf_token %}
 					                <div class="row">
 					                    <div class="input-field col s12">
@@ -58,7 +64,7 @@
 									{% csrf_token %}
 					                <div class="row">
 					                    <div class="input-field col s12">
-					                        <input type="email" ng-model="user.username" placeholder="Enter Email Address" class="validate">
+					                        <input type="email" ng-model="user.email" placeholder="Enter Email Address" class="validate">
 					                    </div>
 					                </div>
 
