@@ -1,4 +1,4 @@
-angular.module('limberApp', ['ngResource', 'ngCookies']).
+angular.module('limberApp').
     // config(['$httpProvider', function($httpProvider){
     //     // django and angular both support csrf tokens. This tells
     //     // angular which cookie to add to what header.

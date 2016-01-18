@@ -1,1 +1,1 @@
-angular.module('limberApp', []);
+angular.module('limberApp', ['ngResource', 'ngCookies']);
