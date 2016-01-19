@@ -7,10 +7,11 @@ from app.serializers import (
 	TeamMemberSerializer, StorySerializer, MemberSerializer,
 	TaskSerializer, ProjectInviteSerializer,OrgInviteSerilizer
 )
-from app.models.user import User, Member
+from app.models.user import User, Member,UserAuthentication
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
 from app.models.invite import ProjectInvite
+from app.models.org_invite import OrgInvites
 
 
 
@@ -148,7 +149,7 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
             invite = OrgInvites.objects.create(**serializer.validated_data)
             if invite is not None:
                 return Response({
-                    'status': invite.send_email_notification(),
+                    'status': "email Created",
                     'code': invite.create_hash(),
                 }, status=status.HTTP_201_CREATED)
             return Response({

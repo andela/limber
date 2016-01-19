@@ -14,12 +14,12 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import dj_database_url
 # Email notification settings
-SITE_ID = '1'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.environ.get('HOST_EMAIL')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PWD')
-EMAIL_PORT = 587
+# SITE_ID = '1'
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = os.environ.get('HOST_EMAIL')
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PWD')
+# EMAIL_PORT = 587
 # unComment this to to send email over the net
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

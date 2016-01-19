@@ -21,7 +21,7 @@ class OrgInvites(models.Model):
             Model Handles pending invitations. and sends an email 
             to the invitee.
     '''
-    Accepted_status = (
+    ACCEPTED_STATUS = (
         (0, 'Pending'),
         (1, 'Accepted'),
         (2, 'rejected')
@@ -30,7 +30,7 @@ class OrgInvites(models.Model):
     code = models.CharField(primary_key=True, max_length=255, blank=True)
     org = models.ForeignKey(User, related_name="invites")
     accept = models.PositiveSmallIntegerField(
-        blank=False, choices=Accepted_status, default=0)
+        blank=False, choices=ACCEPTED_STATUS, default=0)
     uid = models.ForeignKey(UserAuthentication)
 
 
@@ -55,7 +55,7 @@ class OrgInvites(models.Model):
             super(OrgInvites, self).save(*args, **kwargs)
 
     def send_email_notification(self):
-
+        
         # Create Email notification
         # https://docs.djangoproject.com/en/dev/ref/contrib/sites/
         current_site = Site.objects.get_current()
@@ -64,6 +64,7 @@ class OrgInvites(models.Model):
         message = 'You been Invited to ' + self.org.username + \
             ' organisation. Your activation code is '\
             'http://' + link
+
         from_email = settings.EMAIL_HOST_USER
         to_list = [self.email]
         # success = send_mail(
@@ -75,4 +76,4 @@ class OrgInvites(models.Model):
                   "to": to_list,
                   "subject": subject,
                   "text": message})
-        return res.status_code
+        return res
