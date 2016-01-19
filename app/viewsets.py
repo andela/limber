@@ -9,6 +9,7 @@ from app.serializers import (
 	TaskSerializer, ProjectInviteSerializer, OrgInviteSerilizer
 
 )
+from django.shortcuts import get_object_or_404
 from app.models.user import User, Member, UserAuthentication
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
@@ -52,25 +53,89 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
 	serializer_class = UserSerializer
 
 	def create(self, request):
-		"""Define customizations during user creation."""
+		"""Create user and add him/her to project members table if query parameter
+		exists. Simply create user if query parameter doesn't exist."""
+		if request.query_params:
+			try:
+				invite_code = request.query_params.get('invite', None)
+				if invite_code:
+					# confirm validity of invite code supplied
+					pi_object = get_object_or_404(ProjectInvite, pk=invite_code)
+					if pi_object:
+						# email in invite object should be email from request
+						if pi_object.email == request.data.get('email'):
+							# create the user in the system
+							self.signup_user(request)
+							# add the user as a member on the project
+							user_auth = UserAuthentication.objects.get(
+								email=pi_object.email
+							)
+							team = TeamMember(
+								user=user_auth.profile,
+								project=pi_object.project,
+								user_level=2
+							)
+							team.save()
+							# update invites table
+							pi_object.accept = ProjectInvite.ACCEPTED
+							pi_object.save()
+							return Response(
+								{
+									'status': 'Invitation successful',
+									'message': 'New user created and added to project'
+								}, status=status.HTTP_201_CREATED
+							)
+						else:
+							raise Exception('Attempt to sign up uninvited user!')
+			except IntegrityError:
+				return Response(
+					{
+						'status': "User not created",
+						'message': "User already exists"
+					}, status=status.HTTP_400_BAD_REQUEST
+				)
+			except Exception:
+				return Response(
+					{
+						'status': "Bad request",
+						'message': "Failed to create user"
+					}, status=status.HTTP_400_BAD_REQUEST
+				)
+
+		else:
+			try:
+				self.signup_user(request)
+				return Response(
+					{
+						'status': 'User Created',
+						'message': 'User Created'
+					}, status=status.HTTP_201_CREATED
+				)
+			except IntegrityError:
+				return Response(
+					{
+						'status': "User not created",
+						'message': "User already exists"
+					}, status=status.HTTP_400_BAD_REQUEST
+				)
+			except Exception:
+				return Response(
+					{
+						'status': "Bad request",
+						'message': "Failed to create user"
+					}, status=status.HTTP_400_BAD_REQUEST
+				)
+
+	def signup_user(self, request):
+		"""Create new user with username, email and password."""
 		serializer = self.serializer_class(data=request.data)
 		if serializer.is_valid():
 			try:
 				User.create_userprofile(**serializer.validated_data)
-				return Response({
-					'status': 'User Created',
-					'message': 'User Created'
-				}, status=status.HTTP_201_CREATED)
 			except IntegrityError:
-				return Response({
-					'status': "User not created",
-					'message': "User already exists"
-				}, status=status.HTTP_400_BAD_REQUEST)
-
-		return Response({
-			'status': "Bad request",
-			'message': "Failed to create user"
-		}, status=status.HTTP_400_BAD_REQUEST)
+				raise IntegrityError('User already exists')
+		else:
+			raise Exception('Invalid data')
 
 
 class TeamMemberViewSet(viewsets.ModelViewSet):
