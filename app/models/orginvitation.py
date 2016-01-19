@@ -33,7 +33,6 @@ class OrgInvites(models.Model):
         blank=False, choices=Accepted_status, default=0)
     uid = models.ForeignKey(UserAuthentication)
 
-    #37, 42-46, 55-56
 
 # Create hash code for the link
     def create_hash(self):

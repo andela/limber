@@ -64,13 +64,10 @@ class TestUrls(TestCase):
                                     data={'username': self.user.get('email'),
                                           'password': self.user.get('password')})
         self.assertEqual(response.status_code, 302)
-
         # Check if logged in user can access page
         response = self.client.get('/api/orginvite/')
         self.assertEqual(response.status_text, 'OK')
         self.assertEqual(response.status_code, 200)
-      
-
         # Create Invitation
         email = fake.email()
         current_user = UserAuthentication.objects.first()
