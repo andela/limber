@@ -15,10 +15,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserAuthentication',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(null=True, verbose_name='last login', blank=True)),
-                ('email', app.models.model_field_custom.EmailFieldCaseInsensitive(unique=True, max_length=254)),
+                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
+                ('email', app.models.model_field_custom.EmailFieldCaseInsensitive(max_length=254, unique=True)),
                 ('first_name', models.CharField(max_length=70, blank=True)),
                 ('last_name', models.CharField(max_length=70, blank=True)),
                 ('is_admin', models.BooleanField(default=False)),
@@ -27,16 +27,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Member',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
                 ('user_level', models.PositiveSmallIntegerField()),
-            ],
-        ),
-        migrations.CreateModel(
-            name='OrgInvites',
-            fields=[
-                ('email', app.models.model_field_custom.EmailFieldCaseInsensitive(max_length=254)),
-                ('code', models.CharField(max_length=255, serialize=False, primary_key=True, blank=True)),
-                ('accept', models.PositiveSmallIntegerField(default=0, choices=[(0, b'Pending'), (1, b'Accepted'), (2, b'rejected')])),
             ],
         ),
         migrations.CreateModel(
@@ -52,7 +44,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('email', models.EmailField(max_length=254)),
                 ('invite_code', models.CharField(max_length=100, serialize=False, primary_key=True)),
-                ('accept', models.PositiveSmallIntegerField(default=0, choices=[(0, b'Pending'), (1, b'Accepted'), (2, b'Rejected')])),
+                ('accept', models.PositiveSmallIntegerField(default=0, choices=[(0, 'Pending'), (1, 'Accepted'), (2, 'Rejected')])),
                 ('project', models.ForeignKey(to='app.Project')),
                 ('uid', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
@@ -81,7 +73,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TeamMember',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
                 ('user_level', models.PositiveSmallIntegerField()),
                 ('project', models.ForeignKey(related_name='team_members', to='app.Project')),
             ],
@@ -90,7 +82,7 @@ class Migration(migrations.Migration):
             name='User',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
-                ('username', app.models.model_field_custom.CharFieldCaseInsensitive(unique=True, max_length=70)),
+                ('username', app.models.model_field_custom.CharFieldCaseInsensitive(max_length=70, unique=True)),
                 ('full_name', models.CharField(max_length=90, blank=True)),
                 ('user_type', models.PositiveSmallIntegerField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
@@ -106,16 +98,6 @@ class Migration(migrations.Migration):
             model_name='project',
             name='owner',
             field=models.ForeignKey(to='app.User'),
-        ),
-        migrations.AddField(
-            model_name='orginvites',
-            name='org',
-            field=models.ForeignKey(related_name='invites', to='app.User'),
-        ),
-        migrations.AddField(
-            model_name='orginvites',
-            name='uid',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='member',
