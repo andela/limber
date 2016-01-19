@@ -75,4 +75,4 @@ class OrgInvites(models.Model):
                   "to": to_list,
                   "subject": subject,
                   "text": message})
-        return res.status_code
+        return res
