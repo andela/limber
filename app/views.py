@@ -7,3 +7,6 @@ def index(request):
 
 def signup(request):
     return render(request, 'limber/signup.html')
+
+def dashboard(request):
+    return render(request, 'limber/dashboard.html')

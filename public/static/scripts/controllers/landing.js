@@ -1,4 +1,4 @@
-angular.module('limberApp').controller('LandingController', function($scope){
+app.controller('LandingController', function($scope){
     $(".animation").typed({
         strings: ["agile software development", "taking your girlfriend to shop", "better project management."],
         typeSpeed: 70,
@@ -6,4 +6,10 @@ angular.module('limberApp').controller('LandingController', function($scope){
         cursorChar: " | "
      });
      $('.slider').slider({height: 120, indicators: false, interval : 2000});
+});
+
+
+app.controller('DashCtrl', function($scope, $cookies, AuthService){
+    $scope.project = AuthService.projects.getProjects();
+    console.log($scope.project);
 });
