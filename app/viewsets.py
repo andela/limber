@@ -1,18 +1,18 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
+
 from django.db import IntegrityError
 from django.db.models import Q
 from app.serializers import (
 	OrgSerializer, UserSerializer, ProjectSerializer,
 	TeamMemberSerializer, StorySerializer, MemberSerializer,
-	TaskSerializer, ProjectInviteSerializer,OrgInviteSerilizer
+	TaskSerializer, ProjectInviteSerializer
 )
 from app.models.user import User, Member,UserAuthentication
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
 from app.models.invite import ProjectInvite
 from app.models.org_invite import OrgInvites
-
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -116,7 +116,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
 			'message': "Failed to create project"
 		}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class StoriesViewSet(viewsets.ModelViewSet):
+
     """ Viewset for project stories """
     queryset = Story.objects.all()
     serializer_class = StorySerializer
@@ -160,6 +162,7 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
             serializer.errors
            
         , status=status.HTTP_400_BAD_REQUEST)
+
 
 class MemberViewSet(viewsets.ModelViewSet):
 	queryset = Member.objects.filter()
@@ -240,4 +243,3 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 					'message': 'Failed to create email invitation'
 				}, status=status.HTTP_400_BAD_REQUEST
 			)
-
