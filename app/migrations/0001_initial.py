@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import app.models.model_field_custom
 from django.conf import settings
 
 
@@ -14,10 +15,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserAuthentication',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(null=True, verbose_name='last login', blank=True)),
-                ('email', models.EmailField(unique=True, max_length=254)),
+                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
+                ('email', app.models.model_field_custom.EmailFieldCaseInsensitive(max_length=254, unique=True)),
                 ('first_name', models.CharField(max_length=70, blank=True)),
                 ('last_name', models.CharField(max_length=70, blank=True)),
                 ('is_admin', models.BooleanField(default=False)),
@@ -26,7 +27,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Member',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
                 ('user_level', models.PositiveSmallIntegerField()),
             ],
         ),
@@ -39,6 +40,16 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='ProjectInvite',
+            fields=[
+                ('email', models.EmailField(max_length=254)),
+                ('invite_code', models.CharField(max_length=100, serialize=False, primary_key=True)),
+                ('accept', models.PositiveSmallIntegerField(default=0, choices=[(0, 'Pending'), (1, 'Accepted'), (2, 'Rejected')])),
+                ('project', models.ForeignKey(to='app.Project')),
+                ('uid', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Story',
             fields=[
                 ('story_id', models.AutoField(serialize=False, primary_key=True)),
@@ -46,8 +57,8 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(max_length=45)),
                 ('category', models.CharField(max_length=100)),
                 ('points', models.PositiveSmallIntegerField()),
-                ('attribute_name', models.CharField(max_length=100)),
-                ('project', models.ForeignKey(to='app.Project')),
+                ('stage', models.CharField(max_length=100)),
+                ('project', models.ForeignKey(related_name='stories', to='app.Project')),
             ],
         ),
         migrations.CreateModel(
@@ -62,7 +73,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TeamMember',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),
                 ('user_level', models.PositiveSmallIntegerField()),
                 ('project', models.ForeignKey(related_name='team_members', to='app.Project')),
             ],
@@ -71,7 +82,7 @@ class Migration(migrations.Migration):
             name='User',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
-                ('username', models.CharField(unique=True, max_length=70)),
+                ('username', app.models.model_field_custom.CharFieldCaseInsensitive(max_length=70, unique=True)),
                 ('full_name', models.CharField(max_length=90, blank=True)),
                 ('user_type', models.PositiveSmallIntegerField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),

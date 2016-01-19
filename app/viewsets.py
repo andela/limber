@@ -5,11 +5,13 @@ from django.db import IntegrityError
 from django.db.models import Q
 from app.serializers import (
 	OrgSerializer, UserSerializer, ProjectSerializer,
-	TeamMemberSerializer, StorySerializer, MemberSerializer, TaskSerializer
+	TeamMemberSerializer, StorySerializer, MemberSerializer,
+	TaskSerializer, ProjectInviteSerializer
 )
 from app.models.user import User, Member
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
+from app.models.invite import ProjectInvite
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -148,7 +150,7 @@ class MemberViewSet(viewsets.ModelViewSet):
 			return Response({
 				'status': "Member successfully removed",
 				'message': "Organisation member successfully removed"
-			}, status=status.HTTP_400_BAD_REQUEST)
+			}, status=status.HTTP_200_OK)
 		except Exception:
 			return Response({
 				'status': "Member not removed",
@@ -160,3 +162,44 @@ class TaskViewSet(viewsets.ModelViewSet):
 	queryset = Task.objects.all()
 	serializer_class = TaskSerializer
 	permission_classes = (permissions.IsAuthenticated,)
+
+
+class ProjectInviteViewSet(viewsets.ModelViewSet):
+	queryset = ProjectInvite.objects.all()
+	serializer_class = ProjectInviteSerializer
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def create(self, request):
+		"""Create ProjectInvite instance, send the email then save."""
+		try:
+			serializer = self.serializer_class(data=request.data)
+			if serializer.is_valid():
+				# create project invite instance
+				project_invite = ProjectInvite(
+					email=serializer.validated_data.get('email'),
+					project=serializer.validated_data.get('project'),
+					uid=request.user
+				)
+
+				project_invite.send_invite_email()
+				project_invite.save()
+
+				return Response(
+					{
+						'status': 'email sent',
+						'message': 'An invitation email has been sent'
+					}, status=status.HTTP_200_OK
+				)
+			return Response(
+				{
+					'status': 'Bad request',
+					'message': 'Invalid data'
+				}, status=status.HTTP_400_BAD_REQUEST
+			)
+		except Exception as e:
+			return Response(
+				{
+					'status': 'Bad request',
+					'message': 'Failed to create email invitation'
+				}, status=status.HTTP_400_BAD_REQUEST
+			)
