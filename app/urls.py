@@ -17,6 +17,9 @@ router.register(
 	viewsets.ProjectInviteViewSet,
 	'project-invites'
 )
+router.register(r'orginvite', viewsets.OrgInvitesViewset)
+
+
 
 
 urlpatterns = [

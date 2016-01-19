@@ -1,17 +1,18 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, renderers, status, permissions
-
 from django.db import IntegrityError
 from django.db.models import Q
 from app.serializers import (
 	OrgSerializer, UserSerializer, ProjectSerializer,
 	TeamMemberSerializer, StorySerializer, MemberSerializer,
-	TaskSerializer, ProjectInviteSerializer
+	TaskSerializer, ProjectInviteSerializer,OrgInviteSerilizer
 )
-from app.models.user import User, Member
+from app.models.user import User, Member,UserAuthentication
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
 from app.models.invite import ProjectInvite
+from app.models.orginvitation import OrgInvites
+
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -115,14 +116,50 @@ class ProjectViewSet(viewsets.ModelViewSet):
 			'message': "Failed to create project"
 		}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class StoriesViewSet(viewsets.ModelViewSet):
-	"""Viewset for project stories."""
+    """ Viewset for project stories """
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
-	queryset = Story.objects.all()
-	serializer_class = StorySerializer
-	permission_classes = (permissions.IsAuthenticated,)
+class OrgInvitesViewset(viewsets.ModelViewSet):
+    """ Handles Invitation of Members to Organisation"""
+    queryset = OrgInvites.objects.all()
+    serializer_class = OrgInviteSerilizer
+    permission_classes = (permissions.IsAuthenticated,)
 
+    def get_queryset(self):
+        # Override the GET method query to only show logged in user
+        obj = OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') )|Q(uid=self.request.user.id))
+        return obj
+       
+    def create(self,request):
+
+        #restrict ID of creator to the  
+        request.data['uid'] = request.user.id
+        serializer = self.serializer_class(data=request.data)
+        #Check if emain belongs to an existing user
+        userid = UserAuthentication.objects.filter(email=request.data['email'])
+        user = Member.objects.filter(user=userid, org=request.data['org'])
+        if user:
+            return Response({
+                'error': 'Member already belongs to Organisation',
+            }, status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            invite = OrgInvites.objects.create(**serializer.validated_data)
+            if invite is not None:
+                return Response({
+                    'status': invite.send_email_notification().text,
+                    'code': invite.create_hash(),
+                }, status=status.HTTP_201_CREATED)
+            return Response({
+                    'message': 'Mail notification was not sent',
+                    
+                }, status=status.HTTP_201_CREATED)
+        return Response(
+            serializer.errors
+           
+        , status=status.HTTP_400_BAD_REQUEST)
 
 class MemberViewSet(viewsets.ModelViewSet):
 	queryset = Member.objects.filter()
@@ -203,3 +240,4 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 					'message': 'Failed to create email invitation'
 				}, status=status.HTTP_400_BAD_REQUEST
 			)
+
