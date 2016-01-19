@@ -6,7 +6,7 @@ from django.db.models import Q
 from app.serializers import (
 	OrgSerializer, UserSerializer, ProjectSerializer,
 	TeamMemberSerializer, StorySerializer, MemberSerializer,
-	TaskSerializer, ProjectInviteSerializer
+	TaskSerializer, ProjectInviteSerializer,OrgInviteSerilizer
 )
 from app.models.user import User, Member,UserAuthentication
 from app.models.story import Story, Task

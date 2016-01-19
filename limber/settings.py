@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get('SECRET')
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+SITE_ID =1
 
 # Application definition
 
@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
@@ -55,6 +56,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    
 )
 
 
