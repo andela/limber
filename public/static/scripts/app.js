@@ -8,3 +8,13 @@ app.config(function ($httpProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
     $locationProvider.hashPrefix('!');
 });
+
+app.run(function ( $cookies, $window) {
+	
+        
+        var token = $cookies.get("token");
+		if(!token) {
+			$window.location.href = '/';
+		}
+
+});

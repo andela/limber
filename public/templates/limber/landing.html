@@ -3,21 +3,20 @@
 {% load staticfiles %}
 
 {% block content %}
+<body>
 <div class="row" ng-controller="LandingController">
     <div class="col s12" id="back_margin">
         <div class="cool_background">
-
             <!-- Navigation Bar -->
             <nav class="container z-depth-0 ">
                 <div class="nav-wrapper">
                     <a href="#" class="logo">Limber</a>
                     <ul id="nav-mobile" class="right">
-                        <li ><a href="/signup" class="btn">Signup</a></li>
+                        <li><a href="/signup" class="btn">Signup</a></li>
                     </ul>
                 </div>
             </nav>
             <!-- End Navigation Bar -->
-
             <!-- Animation Section -->
             <div class="row" id="animation-class">
                 <div class="center">
@@ -27,7 +26,6 @@
                 </div>
             </div>
             <!-- End Animation Section -->
-
         </div>
         <!-- Middle content box -->
         <div class="row">
@@ -46,7 +44,6 @@
                         </p>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col s8">
                         <h5> Task Iterations</h5>
@@ -60,8 +57,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="row">
                     <div class="col s4">
                         <div class="container">
@@ -75,17 +70,12 @@
                         </p>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
-
         <!-- 3rd  content box -->
         <div class="row" id="testmonials">
             <div class="container">
                 <!-- <h3 >Testimonials</h3> -->
-
                 <div class="slider container center">
                     <ul class="slides">
                         <li>
@@ -95,46 +85,50 @@
                         </li>
                         <li>
                             <p>
-                                hvgvmasdc ithcvhjsdavcgshcvhkcvdcvwchs cgycvwocvwecoeyvc  d ityeveuver v4 fyrbveq svtvrev c evrv c cvdsc errvy rr trvrh vce cyrvryvr cr crovrv er v eryverybvr4v  vyrobvur erhulf oaubver fr yobvr ebyer 4t tbvr ve geobugeigbejlhg5 gf fsubaerfb4hg eqhru vreupberf gyubfef
+                                hvgvmasdc ithcvhjsdavcgshcvhkcvdcvwchs cgycvwocvwecoeyvc d ityeveuver v4 fyrbveq svtvrev c evrv c cvdsc errvy rr trvrh vce cyrvryvr cr crovrv er v eryverybvr4v vyrobvur erhulf oaubver fr yobvr ebyer 4t tbvr ve geobugeigbejlhg5 gf fsubaerfb4hg eqhru vreupberf gyubfef
                             </p>
                         </li>
                         <li>
                             <p>
-                                ukvhfvboufbver rhvbvlvbaj.bfe whbvrv uhbvl erfn huv bevberubvr verh veoyubve r voel verbvoablef rf hbqbfh;qpfyubvrejverhvbupveriuveruivheriuhvureihvsdiverh vhrvubiubvrbyurbvrbverurverberuivueifhferiofehjfbherveruihfregbibuerv v yubveirubferhvuerf34 fyufvbuerhfre v uerf ervurvberubuerv 4v eruigberf erfeiruger4tvv  v uerbfeurgerg  geruibgbreigr guergrgiourtehs
+                                ukvhfvboufbver rhvbvlvbaj.bfe whbvrv uhbvl erfn huv bevberubvr verh veoyubve r voel verbvoablef rf hbqbfh;qpfyubvrejverhvbupveriuveruivheriuhvureihvsdiverh vhrvubiubvrbyurbvrbverurverberuivueifhferiofehjfbherveruihfregbibuerv v yubveirubferhvuerf34 fyufvbuerhfre v uerf ervurvberubuerv 4v eruigberf erfeiruger4tvv v uerbfeurgerg geruibgbreigr guergrgiourtehs
                             </p>
                         </li>
                     </ul>
                 </div>
             </div>
-
         </div>
-
         <div class="row" id="invitation">
-            <!-- invitation form -->
-            <h5 class="center">
-                Subscribe below to get notified when released
-            </h5>
-            <form class="col s8 offset-s2" action="#" method="post">
+            <div class="container">
                 <div class="row">
-                    <div class="col s4">
-                        <input type="text" id="name" placeholder="Name">
-                    </div>
-                    <div class="col s5">
-                        <input type="email" id="email" placeholder="Email address">
-                    </div>
-                    <div class="col s1 ">
-                        <input type="button"  value="Join the revolution" class="btn blue">
+                    <div class="row">
+                        <div class="container">
+                            <h5 class="center">
+                                Subscribe below to get notified when released
+                            </h5>
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field col m5 s12">
+                                        <input placeholder="Full Name: John Kamau" id="name" type="text" class="validate">
+                                    </div>
+                                    <div class="input-field col m5 s12">
+                                        <input id="email" placeholder="Email: user@mail.com" type="text" class="validate">
+                                    </div>
+                                    <div class="input-field col m2 s12">
+                                        <input type="button" value="Subscribe" class="btn blue">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-
-
     </div>
 </div>
 <footer class="row" id="footer">
-<div class="container s3 center">
-    <span>Made with &hearts; By Team Limber</span>
-</div>
+    <div class="container s3 center">
+        <span>Made with &hearts; By Team Limber</span>
+    </div>
 </footer>
+
 {% endblock %}
