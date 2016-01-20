@@ -243,10 +243,7 @@ class StoriesViewSet(viewsets.ModelViewSet):
 	permission_classes = (permissions.IsAuthenticated,)
 
 
-
 class OrgInvitesViewset(viewsets.ModelViewSet):
-<<<<<<< HEAD
-
 	""" Handles Invitation of Members to Organisation"""
 	queryset = OrgInvites.objects.all()
 	serializer_class = OrgInviteSerilizer
@@ -414,8 +411,12 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 			)
 
 	def retrieve(self, request, pk=None):
-		"""Retrieve the ProjectInvite object from the database when a get request
-			is sent to '/api/project-invites/<project_invite_id>' url.
+		"""Retrieve the ProjectInvite object from the database, then direct to
+		either signup or signin depending on whether the invited user exists in
+		the system.
+
+		This get request is processed when the user chooses to accept a project
+		invitation.
 		"""
 		# Handle the edge case where the ProjectInvite doesn't exist in the DB
 		# Return a 404 response if it doesn't exist
@@ -427,7 +428,6 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 					'detail': 'Not found.'
 				}, status=status.HTTP_404_NOT_FOUND
 			)
-
 		# check if email in invite belongs to user who already exists
 		try:
 			user = UserAuthentication.objects.get(email=project_invite.email)
@@ -446,3 +446,37 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 					'message': 'User does not exist in the system'
 				}, status=status.HTTP_404_NOT_FOUND
 			)
+
+	def update(self, request, pk=None):
+		"""Retrieve the ProjectInvite object from the database then update the
+		accept status of this object.
+
+		This put request is processed when the user chooses to reject a project
+		invitation.
+		"""
+		# Handle the edge case where the ProjectInvite doesn't exist in the DB
+		# Return a 404 response if it doesn't exist
+		serializer = self.serializer_class(data=request.data)
+		if serializer.is_valid():
+			try:
+				project_invite = ProjectInvite.objects.get(pk=pk)
+			except ProjectInvite.DoesNotExist:
+				return Response(
+					{
+						'detail': 'Not found.'
+					}, status=status.HTTP_404_NOT_FOUND
+				)
+			project_invite.accept = ProjectInvite.REJECTED
+			project_invite.save()
+			return Response(
+				{
+					'status': 'Invite updated',
+					'message': 'Accept status updated'
+				}
+			)
+		return Response(
+			{
+				'status': 'Bad request',
+				'message': 'Invalid data'
+			}, status=status.HTTP_400_BAD_REQUEST
+		)
