@@ -4,4 +4,7 @@
 from .user import User, UserAuthentication, Member
 from .project import Project, TeamMember
 from .story import Story, Task
+
+from .org_invite import  OrgInvites
+
 from .invite import ProjectInvite

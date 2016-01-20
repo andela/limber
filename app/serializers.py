@@ -5,7 +5,10 @@ from django.db.models import Q
 from app.models.story import Story, Task
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
+from app.models.org_invite import OrgInvites
+from rest_framework.validators import UniqueTogetherValidator
 from app.models.invite import ProjectInvite
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -105,45 +108,36 @@ class StorySerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
-class TeamMemberSerializer(serializers.ModelSerializer):
-	user = serializers.PrimaryKeyRelatedField(
-		queryset=User.objects.filter(user_type=1),
-	)
-	user_level = serializers.ChoiceField([1, 2])
 
+class OrgInviteSerilizer (serializers.ModelSerializer):
+	''' Serializer for Invitation of Members to Organisations '''
+	code = serializers.CharField(required=False, read_only=True,)
+	
 	class Meta:
-		model = TeamMember
-		fields = ('url', 'user', 'project', 'user_level')
-		validators = [
+	    model = OrgInvites
+	    fields = ('email','code','org','accept','uid')
+	    validators = [
 			UniqueTogetherValidator(
-				queryset=TeamMember.objects.all(),
-				fields=('user', 'project'),
-				message='User already exists in the list of team ' +
-				'members for this project'
+				queryset=OrgInvites.objects.filter(accept=0),
+				fields=('email', 'org'),
+				message='Invitation  Already exist'
 			)
 		]
 
-
-class StorySerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Story
-		fields = '__all__'
-
-
+	    
 # A serializer to add members to an existing org
 class MemberSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Member
-		fields = ('url', 'org', 'user', 'user_level')
+    class Meta:
+        model = Member
+        fields = ('url', 'org', 'user', 'user_level')
 
-	def get_fields(self, *args, **kwargs):
-		fields = super(MemberSerializer, self).get_fields(*args, **kwargs)
-		if self.context:
-			fields['org'].queryset = fields['org'].queryset.filter(
-				user_type=2
-			).all()
-		return fields
-
+    def get_fields(self, *args, **kwargs):
+        fields = super(MemberSerializer, self).get_fields(*args, **kwargs)
+        if self.context:
+            fields['org'].queryset = fields['org'].queryset.filter(
+                user_type=2
+            ).all()
+        return fields
 
 class TaskSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -155,3 +149,4 @@ class ProjectInviteSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = ProjectInvite
 		fields = ('email', 'project', 'accept')
+
