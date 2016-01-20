@@ -9,12 +9,15 @@ app.config(function ($httpProvider, $locationProvider) {
     $locationProvider.hashPrefix('!');
 });
 
-app.run(function ( $cookies, $window) {
-	
-        
-        var token = $cookies.get("token");
-		if(!token) {
-			$window.location.href = '/';
-		}
-
+app.run(function($cookies, AuthService) {
+    cookie = $cookies.get('token')
+    AuthService.verify.token({'token': cookie})
+    .$promise.then(function  (data) {
+        // console.log(data)
+    }).
+    catch(function(response) {
+        if (response.status == 400) {
+           $cookies.remove('token')
+        };
+    });
 });

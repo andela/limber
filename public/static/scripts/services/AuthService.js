@@ -6,7 +6,7 @@ app.factory('sessionInjector', function ($cookies) {
             if (token) {
                 config.headers['Authorization'] = "JWT " + token;
             }
-            
+
             console.log(config);
             return config;
         }
@@ -21,6 +21,13 @@ app.factory('AuthService', function ($resource) {
             },
             logout: {
                 method: 'DELETE'
+            }
+        }, {
+            stripTrailingSlashes: false
+        }),
+        verify: $resource('/api/api-token-verify/', {}, {
+            token: {
+                method: 'POST'
             }
         }, {
             stripTrailingSlashes: false
