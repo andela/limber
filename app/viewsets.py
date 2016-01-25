@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import viewsets, renderers, status, permissions
+from rest_framework import viewsets, renderers, status, permissions,mixins
 
 from django.db import IntegrityError
 from django.db.models import Q
@@ -124,19 +124,64 @@ class StoriesViewSet(viewsets.ModelViewSet):
     serializer_class = StorySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-class OrgInvitesViewset(viewsets.ModelViewSet):
+class OrgInvitesViewset(mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet):
     """ Handles Invitation of Members to Organisation"""
     queryset = OrgInvites.objects.all()
     serializer_class = OrgInviteSerilizer
     permission_classes = (permissions.IsAuthenticated,)
 
+
+
     def get_queryset(self):
         # Override the GET method query to only show logged in user
-        obj = OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') )|Q(uid=self.request.user.id))
+        obj = OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') )|Q(uid=self.request.user.id)).first()
         return obj
-       
-    def create(self,request):
 
+    def retrieve(self,request,pk=None):
+        	import ipdb; ipdb.set_trace()
+        	query =OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') ),Q(uid=self.request.user.id))
+        	vals = query.values()
+        	if len(vals)< 1:
+        		return Response({
+                'Error': 'Invalid Code',
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        	email = vals[0]['email']
+
+        	serializer = self.serializer_class(query, many=True)
+        	if 'register' in request.query_params:
+        		#check if email belongs to a registered user 
+        		try:
+        			import ipdb;ipdb.set_trace()
+        			user = UserAuthentication.objects.get(email=email)
+        			if User.email == email:
+        				org = vals[0]['org']
+        				org = User.objects.get(id=org)
+    					
+        				data = {'org':org.id,'user':user.id}
+        				member = Member.objects.all()
+        			# check if he is current logged in user
+        			return Response({
+                					'Message': 'Please Login',
+            							}, status.HTTP_200_OK)
+        		except UserAuthentication.DoesNotExist:
+        		# Else send user to sign 
+        			return Response({
+                'message': 'please Signup then try again',
+            }, status.HTTP_428_PRECONDITION_REQUIRED)
+        		
+
+        	
+        	
+        	return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+        	  
+    def create(self,request):
+    	import ipdb; ipdb.set_trace()
         #restrict ID of creator to the  
         request.data['uid'] = request.user.id
         serializer = self.serializer_class(data=request.data)
@@ -162,6 +207,17 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
             serializer.errors
            
         , status=status.HTTP_400_BAD_REQUEST)
+
+        
+		# '''- request updates the table 
+		# 	- requests uses post to determine if the user has accepted or rejected the invite
+		# 	-  before updating the task checks if the user is a member and if he is the current logged in 
+		# 	- if not logged send to sign in 
+		# 	- check if logged in user == invited user again 
+		# 	- if user is true register
+
+	
+			
 
 
 class MemberViewSet(viewsets.ModelViewSet):

@@ -44,6 +44,8 @@ class User(models.Model):
 
     class Meta:
         app_label = 'app'
+    def __str__(self):
+        return self.username
 
     def get_user_name(self):
         """Return the user's username"""

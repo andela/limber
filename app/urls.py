@@ -1,7 +1,7 @@
 from django.conf.urls import include, url
 from rest_framework import routers
 from app import viewsets
-
+from app import views
 
 router = routers.DefaultRouter()
 
@@ -21,7 +21,8 @@ router.register(
 
 
 urlpatterns = [
-    url(r'^', include(router.urls))
+    url(r'^', include(router.urls)),
+    url(r'^org_registration', views.register_member_to_org)
 ]
 
 urlpatterns += [

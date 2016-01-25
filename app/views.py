@@ -5,8 +5,27 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .forms import LoginForm, RegistrationForm
 from app.models import UserAuthentication, User
+import requests
 
 # Create your views here.
+def register_member_to_org(request):
+    #import ipdb; ipdb.set_trace()
+
+    if request.method == "GET":
+        if 'code' in request.GET:
+            code = request.GET.get('code')
+            import ipdb; ipdb.set_trace()
+            response = requests.get("http://127.0.0.1:8000/api/orginvite/{}/?register=".format(code))
+            if response.status_code == 200:
+                return HttpResponseRedirect('/profile')
+            if response.status_code == 428 :
+                return HttpResponseRedirect('/register/')
+                
+            if response.status_code == 403:
+                return HttpResponseRedirect("/login/?next=/api/org_registration/?code={}".format(code))
+
+            return HttpResponseRedirect('/profile')
+
 
 
 def index(request):
@@ -33,8 +52,13 @@ def user_login(request):
             # Check if a user exist
 
             user = authenticate(email=email, password=password)
+         
+            
             if user:
                 login(request, user)
+                if 'next' in request.GET:
+                    return HttpResponseRedirect('{}'.format(request.GET.get("next")))
+                
 
                 return HttpResponseRedirect('/api')
             else:
@@ -49,7 +73,7 @@ def user_login(request):
         content['title'] = 'Login'
         content['form'] = form
 
-    return render(request, template, content)
+    return render(request, 'login.html', content)
 
 
 def register(request):

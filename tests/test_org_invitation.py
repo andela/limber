@@ -80,5 +80,7 @@ class TestUrls(TestCase):
         self.assertEqual(response.status_code, 201)
 
         # check if same info can be posted twice
+        import ipdb ; ipdb.set_trace()
         response = self.client.post('/api/orginvite/', data)
         self.assertEqual(response.status_code, 400)
+
