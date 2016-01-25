@@ -1,6 +1,6 @@
 from django.db import models
 
-from .user import User
+from .user import User, UserAuthentication
 
 
 class Project(models.Model):
@@ -46,7 +46,7 @@ class Project(models.Model):
 class TeamMember(models.Model):
     """Team member's model."""
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserAuthentication)
     project = models.ForeignKey(Project, related_name='team_members')
     user_level = models.PositiveSmallIntegerField(blank=False)
 

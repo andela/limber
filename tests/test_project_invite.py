@@ -241,7 +241,10 @@ class TestProjectInvite(TestCase):
 		)
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertEqual(new_status[0], response.data.get('accept'))
+		self.assertEqual(
+			new_status[0],
+			response.data.get('accept')
+		)
 
 	def test_authenticated_unsuccessful_put(self):
 		""" Test an authenticated put request to '/api/project-invites/<inv_code>/'
@@ -272,7 +275,7 @@ class TestProjectInvite(TestCase):
 		)
 		# create the '/api/project-invites/<inv_code>/' url
 		url += project_invite_obj.invite_code + '/'
-		# create put request to change accept status to invalid option
+		# create put request to change accept status to invalid option (email)
 		new_status = fake.email()
 		json_data = json.dumps(
 			{
@@ -286,12 +289,11 @@ class TestProjectInvite(TestCase):
 			data=json_data,
 			content_type='application/json'
 		)
-		# import ipdb; ipdb.set_trace()
 		self.assertEqual(response.status_code, 400)
 		self.assertEqual(response.status_text, 'Bad Request')
 		self.assertTrue(
-			'Invalid data' in
-			response.data.get('message')
+			'not a valid choice' in
+			response.data.get('accept')[0]
 		)
 
 	def test_authenticated_delete(self):
