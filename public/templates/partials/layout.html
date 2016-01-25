@@ -11,8 +11,13 @@
         <link type="text/css" rel="stylesheet" href="{% static 'styles/style.css' %}"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <base href="/">
+        <style type="text/css">
+            [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+              display: none !important;
+            }
+        </style>
     </head>
-    
+
         {% block content %}
 
         {% endblock %}
