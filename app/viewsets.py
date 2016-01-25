@@ -87,6 +87,7 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
 							)
 						else:
 							raise Exception('Attempt to sign up uninvited user!')
+					raise Exception()
 			except IntegrityError:
 				return Response(
 					{
@@ -143,6 +144,46 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
 
 	queryset = TeamMember.objects.all()
 	serializer_class = TeamMemberSerializer
+
+	def create(self, request):
+		"""Define customizations during addition of members to a project."""
+		request.query_params.get('invite')
+		if invite_code:
+			# requests from user who has been invited to project
+			# request parameter supplied during redirect after user has logged in
+			pi = get_object_or_404(ProjectInvite, pk=invite_code)
+
+			if isinstance(ProjectInvite, pi):
+				user_auth = UserAuthentication.objects.get(email=pi.email)
+				serializer = self.serializer_class(
+					user=user_auth, project=pi.project, user_level=0
+				)
+				if serializer.is_valid():
+					team_member = TeamMember(**serializer.validated_data)
+					team_member.save()
+					return Response(
+						{
+							'status': 'Invitation successful',
+							'message': 'Invited user added to project'
+						}, status=status.HTTP_201_CREATED
+					)
+				return Response(
+					{
+						'status': 'Invalid data',
+						'message': 'Invalid data provided'
+					}, status=status.HTTP_400_BAD_REQUEST
+				)
+			return Response(
+				{
+					'status': 'Object not found',
+					'message': 'Project invite not found'
+				}, status=status.HTTP_404_NOT_FOUND
+			)
+		else:
+			serializer = self.serializer_class(data=request.data)
+			if serializer.is_valid():
+				team_member = TeamMember(**serializer.validated_data)
+				team_member.save()
 
 
 class PersonalProjectViewSet(viewsets.ReadOnlyModelViewSet):
@@ -219,7 +260,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 		return Project.objects.filter(owner=users)
 
 	def create(self, request):
-		"""Define customizations during user creation."""
+		"""Define customizations during project creation."""
 		serializer = self.serializer_class(data=request.data)
 
 		if serializer.is_valid():
@@ -411,15 +452,16 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 			)
 
 	def retrieve(self, request, pk=None):
-		"""Retrieve the ProjectInvite object from the database, then direct to
-		either signup or signin depending on whether the invited user exists in
-		the system.
+		"""Retrieve ProjectInvite object from database when its id is specified.
 
-		This get request is processed when the user chooses to accept a project
-		invitation.
+		Check if email in invite object belongs to a user in the system. If it does,
+		add that user as a project member of the project in the invite object.
+
+		If the email in the invite has no associated user in the system, return a
+		response indicating that the invited user doesn't exist in the system.
 		"""
 		# Handle the edge case where the ProjectInvite doesn't exist in the DB
-		# Return a 404 response if it doesn't exist
+		# (Return a 404 response code if it doesn't exist)
 		try:
 			project_invite = ProjectInvite.objects.get(pk=pk)
 		except ProjectInvite.DoesNotExist:
@@ -430,8 +472,9 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 			)
 		# check if email in invite belongs to user who already exists
 		try:
-			user = UserAuthentication.objects.get(email=project_invite.email)
+			user_auth = UserAuthentication.objects.get(email=project_invite.email)
 			# user already exists in system
+
 			return Response(
 				{
 					'status': 'User found',
@@ -446,37 +489,3 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 					'message': 'User does not exist in the system'
 				}, status=status.HTTP_404_NOT_FOUND
 			)
-
-	def update(self, request, pk=None):
-		"""Retrieve the ProjectInvite object from the database then update the
-		accept status of this object.
-
-		This put request is processed when the user chooses to reject a project
-		invitation.
-		"""
-		# Handle the edge case where the ProjectInvite doesn't exist in the DB
-		# Return a 404 response if it doesn't exist
-		serializer = self.serializer_class(data=request.data)
-		if serializer.is_valid():
-			try:
-				project_invite = ProjectInvite.objects.get(pk=pk)
-			except ProjectInvite.DoesNotExist:
-				return Response(
-					{
-						'detail': 'Not found.'
-					}, status=status.HTTP_404_NOT_FOUND
-				)
-			project_invite.accept = ProjectInvite.REJECTED
-			project_invite.save()
-			return Response(
-				{
-					'status': 'Invite updated',
-					'message': 'Accept status updated'
-				}
-			)
-		return Response(
-			{
-				'status': 'Bad request',
-				'message': 'Invalid data'
-			}, status=status.HTTP_400_BAD_REQUEST
-		)
