@@ -124,7 +124,7 @@
     padding: 20px;
 }
 
-.form_for_auth form .row{
+.form_for_auth .row{
     margin-bottom: 0px;
 }
 
@@ -142,6 +142,7 @@ h5 {
     -moz-border-radius: 3px;
     border-radius: 3px;
     padding: 0px 5px;
+    box-sizing: border-box;
 }
 
 

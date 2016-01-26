@@ -17,9 +17,6 @@ app.factory('AuthService', function ($resource) {
         auth: $resource('/api/api-token-auth/', {}, {
             login: {
                 method: 'POST'
-            },
-            logout: {
-                method: 'DELETE'
             }
         }, {
             stripTrailingSlashes: false

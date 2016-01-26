@@ -17,43 +17,45 @@
 
 							<div class="col s12">
 							  <ul class="tabs">
-							    <li class="tab col s3"><a class="blue-text active" href="#signup">Sign Up</a></li>
+							    <li class="tab col s3"><a class="active blue-text" href="#signup">Sign Up</a></li>
 							    <li class="tab col s3"><a class="blue-text " href="#login">Log In</a></li>
 							  </ul>
 							</div>
 
 							<div id="signup" class="col s12" >
-					            <form ng-submit="register()" novalidate>
-									<div ng-if="confirmmessage != ''">
-										{% verbatim %}
-										{{confirmmessage}}
-										{% endverbatim%}
+								<div ng-if="signupmsg" class="center green-text">
+									[[ signupmsg ]]
+								</div>
+								<div ng-if="signuperror" class="center red-text">
+									[[ signuperror ]]
+								</div>
+					            <form ng-submit="register()">
 
-									 </div>
+
 									{% csrf_token %}
 					                <div class="row">
 					                    <div class="input-field col s12">
-					                        <input id="name" type="text" ng-model="signup.username" placeholder="Enter username">
+					                        <input required id="name" type="text" ng-model="signup.username" placeholder="Username" />
 					                    </div>
 					                </div>
 
 					                <div class="row">
 					                    <div class="input-field col s12">
-					                        <input type="email" ng-model="signup.email" placeholder="Enter Email address" class="validate">
+					                        <input required type="email" ng-model="signup.email" placeholder="Email Address" class="validate" />
 					                    </div>
 					                </div>
 
 					                <div class="row">
 					                    <div class="input-field col s6">
-					                        <input type="password" ng-model="signup.password" placeholder="Enter password">
+					                        <input required type="password" ng-model="signup.password" placeholder="Password" />
 					                    </div>
 					                    <div class="input-field col s6">
-					                        <input type="password" ng-model="signup.confirm_password" placeholder="Confirm Password">
+					                        <input required type="password" ng-model="signup.confirm_password" placeholder="Confirm Password" />
 					                    </div>
 					                </div>
 
 					                <div class="row">
-					                    <div class="container center">
+					                    <div class="input-field center">
 					                        <button class="btn blue" type="submit" name="action">sign up</button>
 					                    </div>
 					                </div>
@@ -61,22 +63,25 @@
 					        </div>
 
 					        <div id="login" class="col s12" >
-					            <form ng-submit="login()" novalidate>
+					        <div ng-if="loginmsg" class="center red-text">
+									[[ loginmsg ]]
+								</div>
+					            <form ng-submit="login()">
 									{% csrf_token %}
 					                <div class="row">
 					                    <div class="input-field col s12">
-					                        <input type="email" ng-model="user.email" placeholder="Enter Email Address" class="validate">
+					                        <input required type="email" ng-model="user.email" placeholder="Email Address" class="validate" />
 					                    </div>
 					                </div>
 
 					                <div class="row">
 					                    <div class="input-field col s12">
-					                        <input type="password" ng-model="user.password" placeholder="Enter Password">
+					                        <input required type="password" ng-model="user.password" placeholder="Password" />
 					                    </div>
 					                </div>
 
 					                <div class="row">
-					                    <div class="container center">
+					                    <div class="input-field center">
 					                        <button class="btn blue" type="submit" name="action">Log In</button>
 					                    </div>
 					                </div>

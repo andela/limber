@@ -7,10 +7,13 @@ app.controller('LandingController', function($scope){
      });
      $('.slider').slider({height: 120, indicators: false, interval : 2000});
 
-     
+
 });
 
 
 app.controller('DashCtrl', function($scope, $cookies, AuthService){
-    //
+    $scope.logout = function() {
+        $cookies.remove('token');
+        $scope.user = undefined;
+    };
 });

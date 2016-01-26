@@ -134,10 +134,10 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
         # Override the GET method query to only show logged in user
         obj = OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') )|Q(uid=self.request.user.id))
         return obj
-       
+
     def create(self,request):
 
-        #restrict ID of creator to the  
+        #restrict ID of creator to the
         request.data['uid'] = request.user.id
         serializer = self.serializer_class(data=request.data)
         #Check if emain belongs to an existing user
@@ -156,11 +156,11 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
                 }, status=status.HTTP_201_CREATED)
             return Response({
                     'message': 'Mail notification was not sent',
-                    
+
                 }, status=status.HTTP_201_CREATED)
         return Response(
             serializer.errors
-           
+
         , status=status.HTTP_400_BAD_REQUEST)
 
 
