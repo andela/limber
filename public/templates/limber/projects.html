@@ -8,25 +8,16 @@
     <div id="dash_wrapper" class="col s12">
         <div class="col l3 m6 s12">
             <div class="row">
-                <div class="card white">
+                <div class="card white" ng-controller="ProjectCtrl">
                     <div class="card-content">
-                        <h5>Projects <span class="right"><a ><i class="material-icons">more_vert</i></a></span></h5>
+                        <h5>Projects
+                          <span class="right"><a class="modal-trigger" data-target="newproject"><i class="material-icons">add</i></a></span>
+                        <!-- Modal Structure -->
+                        </h5>
                         <ul class="collection">
-                            <li class="collection-item">
-                            	<h6>Project 1</h6>
-                            	<p>yadi yadi yada</p>
-                            </li>
-                            <li class="collection-item">
-                            	<h6>Project 2</h6>
-                            	<p>yadi yadi yada</p>
-                            </li>
-                            <li class="collection-item">
-                            	<h6>Project 3</h6>
-                            	<p>yadi yadi yada</p>
-                            </li>
-                            <li class="collection-item">
-                            	<h6>Project </h6>
-                            	<p>yadi yadi yada</p>
+                            <li class="collection-item" ng-repeat="project in projects">
+                            	<h6>[[project.project_name]]</h6>
+                            	<p>[[project.project_desc]]</p>
                             </li>
                         </ul>
                     </div>
@@ -38,7 +29,7 @@
                 <div class="card white">
                     <div class="card-content">
 
-                        <h5>Organisations <span class="right"><a ><i class="material-icons">more_vert</i></a></span></h5>
+                        <h5>Organisations <span class="right"><a ><i class="material-icons">add</i></a></span></h5>
                         <ul class="collection">
                             <li class="collection-item">
                             	<h6>Project 1</h6>
@@ -66,7 +57,6 @@
                 <div class="card white">
                     <div class="card-content">
                         <h6>Activities</h6>
-                        Hi {{ data.resp }}
                     </div>
                 </div>
             </div>
@@ -74,6 +64,14 @@
     </div>
 </div>
 
-
+<div id="newproject" class="modal">
+  <div class="modal-content">
+    <h4>Add Project</h4>
+    <p>A bunch of text</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+  </div>
+</div>
 
 {% endblock %}

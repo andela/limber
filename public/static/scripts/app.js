@@ -1,9 +1,12 @@
-var app = angular.module('limberApp', ['ngResource', 'ngCookies']);
+var app = angular.module('limberApp', [ 'ngResource', 'ngCookies']);
 
-app.config(function ($httpProvider, $locationProvider) {
+app.config(function ($httpProvider, $locationProvider, $interpolateProvider) {
+
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     $httpProvider.interceptors.push('sessionInjector');
+
+    $interpolateProvider.startSymbol('[[').endSymbol(']]');
 
     $locationProvider.html5Mode(true);
     $locationProvider.hashPrefix('!');

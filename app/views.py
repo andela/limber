@@ -45,3 +45,17 @@ def dashboard(request):
         return HttpResponseRedirect('/signup/')
 
     return render(request, 'limber/projects.html', {'data': data})
+
+def create_project(request):
+    cookie = request.COOKIES.has_key('token')
+    data = {}
+    if cookie:
+        try:
+            token = request.COOKIES.get('token')
+            data['resp'] = utils.jwt_decode_handler(token)
+        except jwt.ExpiredSignatureError:
+            return HttpResponseRedirect('/')
+    else:
+        return HttpResponseRedirect('/signup/')
+
+    return render(request, 'limber/create_project.html', {'data': data})

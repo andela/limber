@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^api/', include('app.urls')),
     url(r'^signup/', views.signup, name='signup'),
     url(r'^dashboard/', views.dashboard, name='dashboard'),
+    url(r'^projects/', views.create_project, name='create_project'),
 ]

@@ -7,7 +7,6 @@ app.factory('sessionInjector', function ($cookies) {
                 config.headers['Authorization'] = "JWT " + token;
             }
 
-            console.log(config);
             return config;
         }
     };
@@ -40,6 +39,8 @@ app.factory('AuthService', function ($resource) {
             stripTrailingSlashes: false
         }),
         projects: $resource('/api/project/', {}, {
+            // method to consume the api route to Projects
+            // it returns an array of projects
             getProjects: {
                 method: 'GET',
                 isArray: true

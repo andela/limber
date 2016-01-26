@@ -26,7 +26,6 @@
 }
 
 
-
 /*these are styles to the testimonials section*/
 #testmonials {
     background: url(../images/bgpattern.png) repeat center center fixed;
@@ -116,7 +115,7 @@
 
 .form_for_auth {
     border: 1px solid #ccc;
-    -webkit-border-radius: 3px; 
+    -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
@@ -129,13 +128,17 @@
     margin-bottom: 0px;
 }
 
+h5 {
+    font-size: 1.3rem;
+}
+
 .mainform {
     margin-top: 10%;
 }
 
 .input-field input{
     border: 1px solid #ccc;
-    -webkit-border-radius: 3px; 
+    -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
     padding: 0px 5px;
@@ -150,5 +153,5 @@
     font-size: 15px;
 }
 
-
-
+.dropdown-content {
+    top: auto !important
