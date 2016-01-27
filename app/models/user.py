@@ -47,6 +47,9 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
+    def __str__(self):
+        return self.username
+
     def get_user_name(self):
         """Return the user's username"""
         return self.username
@@ -86,6 +89,7 @@ class User(models.Model):
 
     @classmethod
     def add_org_member(cls, **kwargs):
+
         user = UserAuthentication.objects.filter(id=kwargs['admin_id']).first()
         # check if user exists
         if user:
@@ -198,3 +202,4 @@ class Member(models.Model):
 
     class Meta:
         app_label = 'app'
+

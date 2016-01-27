@@ -14,6 +14,9 @@ class Project(models.Model):
     class Meta:
         app_label = 'app'
 
+    def __str__(self):
+        return self.project_name
+
     @classmethod
     def create_project(cls, **kwargs):
         """Custom method to add project."""

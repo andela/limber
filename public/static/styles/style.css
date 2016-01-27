@@ -1,0 +1,158 @@
+/*these are styles to the backgroud area of the header*/
+.cool_background {
+  background: url(../images/bgpattern.png) repeat center center fixed;
+  min-height: 580px;
+  color: #fff;
+  position: relative;
+}
+
+.cool_background > nav {
+  background: transparent;
+}
+
+.cool_background > div{
+    position: absolute;
+    /*text-align: center;*/
+    margin: 0px;
+    top: 50%;
+    left: 50%;
+    /*margin-right: -50%;*/
+    transform: translate(-50%, -50%);
+}
+
+#back_margin{
+    margin: 0px;
+    padding: 0px;
+}
+
+
+/*these are styles to the testimonials section*/
+#testmonials {
+    background: url(../images/bgpattern.png) repeat center center fixed;
+    min-height: 150px;
+    color: #fff;
+}
+
+#testmonials .slides{
+    background: transparent;
+}
+
+/*these are styles to the invintations section*/
+#invitation {
+    background: #f5f5f5;
+    margin-top: -20px;
+    padding: 50px 0px;
+}
+
+#invitation h5 {
+    padding-bottom: 30px;
+}
+
+#invitation form {
+    padding-left: -40px;
+}
+
+
+
+/*these are styles to the Navigation section*/
+#nav-mobile > li > a{
+    border: 1px solid #2196f3;
+    background: #2196f3;
+}
+
+#nav-mobile > li > a:hover{
+    background: #2196f3;
+}
+
+
+/*Footer Styles*/
+#footer {
+    min-height: 50px;
+}
+
+
+/*Styles for the typing animation*/
+#animation-class p {
+    font-size: 1.5em;
+}
+
+.slider p {
+    font-style: italic;
+    font-size: 1.1em;
+}
+
+.logo{
+    position: absolute;
+    color: #fff;
+    display: inline-block;
+    font-size: 2.1rem;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.typed-cursor{
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+
+
+.form_for_auth {
+    border: 1px solid #ccc;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.form_for_auth form{
+    padding: 20px;
+}
+
+.form_for_auth .row{
+    margin-bottom: 0px;
+}
+
+h5 {
+    font-size: 1.3rem;
+}
+
+.mainform {
+    margin-top: 10%;
+}
+
+.input-field input{
+    border: 1px solid #ccc;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 0px 5px;
+    box-sizing: border-box;
+}
+
+
+.collection p{
+    font-size: 12px;
+}
+
+.collection h6{
+    font-size: 15px;
+}
+
+.dropdown-content {
+    top: auto !important

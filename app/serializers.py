@@ -115,6 +115,7 @@ class StorySerializer(serializers.ModelSerializer):
 
 class OrgInviteSerilizer (serializers.ModelSerializer):
 
+
     ''' Serializer for Invitation of Members to Organisations '''
     code = serializers.CharField(required=False, read_only=True,)
 

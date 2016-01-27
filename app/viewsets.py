@@ -140,6 +140,7 @@ class OrgInvitesViewset(mixins.RetrieveModelMixin,
         obj = OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') )|Q(uid=self.request.user.id)).first()
         return obj
 
+
     def retrieve(self,request,pk=None):
         	import ipdb; ipdb.set_trace()
         	query =OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') ),Q(uid=self.request.user.id))
@@ -201,11 +202,11 @@ class OrgInvitesViewset(mixins.RetrieveModelMixin,
                 }, status=status.HTTP_201_CREATED)
             return Response({
                     'message': 'Mail notification was not sent',
-                    
+
                 }, status=status.HTTP_201_CREATED)
         return Response(
             serializer.errors
-           
+
         , status=status.HTTP_400_BAD_REQUEST)
 
         
