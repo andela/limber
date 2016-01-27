@@ -1,5 +1,7 @@
 from django.conf.urls import include, url
 from rest_framework import routers
+from rest_framework.authtoken import views
+
 from app import viewsets
 
 
@@ -27,4 +29,7 @@ urlpatterns = [
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
+    url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
+    url(r'^api-token-verify/', 'rest_framework_jwt.views.verify_jwt_token'),
+
 ]

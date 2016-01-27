@@ -1,0 +1,67 @@
+{% extends 'partials/dashboard.html' %}
+
+{% load staticfiles %}
+
+{% block dashboard %}
+<body class="grey lighten-3" ng-cloak>
+    <div class="row">
+        <div id="dash_wrapper" class="container">
+            <div class="row" ng-controller="ProjectCtrl">
+                <div class="col s12">
+                    <h5>Personal Projects
+                      <span class="right"><a class="modal-trigger" data-target="newproject"><i class="material-icons">add</i></a></span>
+                  </h5>
+                  <div class="col s12 m4 l3" ng-repeat="project in projects">
+                    <div class="card">
+                        <div class="card-content">
+                            <a class="card-title">
+                                [[project.project_name]]
+                            </a>
+                            <div>
+                                [[project.project_desc]]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12">
+            <h5>ORG 1
+                  <span class="right"><a class="modal-trigger" data-target="newproject"><i class="material-icons">add</i></a></span>
+              </h5>
+              <div class="col s12 m4 l3" ng-repeat="project in projects">
+                <div class="card">
+                    <div class="card-content">
+                        <a class="card-title">
+                            [[project.project_name]]
+                        </a>
+                        <div>
+                            [[project.project_desc]]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   <div class="col s12">
+    <div class="row">
+        <div class="card white">
+            <div class="card-content">
+                <h6>Activities</h6>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<div id="newproject" class="modal">
+  <div class="modal-content">
+    <h4>Add Project</h4>
+    <p>A bunch of text</p>
+</div>
+<div class="modal-footer">
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+</div>
+</div>
+
+{% endblock %}

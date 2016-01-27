@@ -1,106 +1,61 @@
 
-from django.http import HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from .forms import LoginForm, RegistrationForm
-from app.models import UserAuthentication, User
-
-# Create your views here.
+import jwt
+from rest_framework_jwt import utils
+from django.http import HttpResponseRedirect
 
 
 def index(request):
-    """Homepage."""
-    user_session = request.session.get('user_id')
-    if user_session and user_session is not None:
-        return HttpResponseRedirect('/profile')
-    content = {
-        'title': 'Welcome'
-    }
-    return render(request, 'index.html', content)
+    cookie = request.COOKIES.has_key('token')
+    if cookie:
+        try:
+            token = request.COOKIES.get('token')
+            resp = utils.jwt_decode_handler(token)
+            return HttpResponseRedirect('/dashboard/')
+        except:
+            pass
+            # return HttpResponseRedirect('/')
+
+    return render(request, 'limber/landing.html')
 
 
-def user_login(request):
-    """Process user login."""
-    template = "login.html"
-    content = {}
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        # check for form validation
-        if form.is_valid():
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            # Check if a user exist
+def signup(request):
+    cookie = request.COOKIES.has_key('token')
+    if cookie:
+        try:
+            token = request.COOKIES.get('token')
+            resp = utils.jwt_decode_handler(token)
+            return HttpResponseRedirect('/dashboard/')
+        except:
+            return HttpResponseRedirect('/')
 
-            user = authenticate(email=email, password=password)
-            if user:
-                login(request, user)
-
-                return HttpResponseRedirect('/api')
-            else:
-                # user does not exist, display wrong credentials
-                form = LoginForm(request.POST)
-                content['title'] = 'Login'
-                content['form'] = form
-                content['message'] = "Wrong Credentials."
-
-    elif request.method == 'GET':
-        form = LoginForm()
-        content['title'] = 'Login'
-        content['form'] = form
-
-    return render(request, template, content)
+    return render(request, 'limber/signup.html')
 
 
-def register(request):
-    """Process user registration."""
-    user_session = request.session.get('user_id')
-    if user_session and user_session is not None:
-        return HttpResponseRedirect('/profile')
+def dashboard(request):
+    cookie = request.COOKIES.has_key('token')
+    data = {}
+    if cookie:
+        try:
+            token = request.COOKIES.get('token')
+            data['resp'] = utils.jwt_decode_handler(token)
+        except jwt.ExpiredSignatureError:
+            return HttpResponseRedirect('/')
+    else:
+        return HttpResponseRedirect('/signup/')
 
-    template = "register.html"
-    content = {}
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            username = request.POST.get('username')
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            user_profile = User.create_userprofile(
-                username=username, email=email, password=password)
-            if user_profile and user_profile is not None:
-                user = authenticate(email=email, password=password)
-                if user:
-                    login(request, user)
-                    return HttpResponseRedirect('/api')
-            else:
-                content['message'] = 'User already exists.'
-                form = RegistrationForm(request.POST)
-                content['title'] = 'Register'
-                content['form'] = form
+    return render(request, 'limber/projects.html', {'data': data})
 
-    elif request.method == 'GET':
-        # if the request method is GET
-        form = RegistrationForm()
-        content['title'] = 'Register'
-        content['form'] = form
+def create_project(request):
+    cookie = request.COOKIES.has_key('token')
+    data = {}
+    if cookie:
+        try:
+            token = request.COOKIES.get('token')
+            data['resp'] = utils.jwt_decode_handler(token)
+        except jwt.ExpiredSignatureError:
+            return HttpResponseRedirect('/')
+    else:
+        return HttpResponseRedirect('/signup/')
 
-    return render(request, template, content)
-
-
-def user_logout(request):
-    """User logout."""
-    logout(request)
-    return HttpResponseRedirect('/')
-
-
-@login_required(login_url='/login')
-def profile(request):
-    """Profile view."""
-    content = {}
-
-    template = 'profile.html'
-    if request.method == 'GET':
-        content['message'] = 'Welcome {}.'.format(
-            request.user.email)
-        return render(request, template, content)
+    return render(request, 'limber/create_project.html', {'data': data})

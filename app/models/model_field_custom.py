@@ -33,3 +33,4 @@ class EmailFieldCaseInsensitive(models.EmailField):
 			value = value.lower()
 
 		return value
+
