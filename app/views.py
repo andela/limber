@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 from .forms import LoginForm, RegistrationForm
 from app.models import UserAuthentication, User
@@ -15,7 +14,7 @@ def register_member_to_org(request):
         if 'code' in request.GET:
             code = request.GET.get('code')
             import ipdb; ipdb.set_trace()
-            response = requests.get("http://127.0.0.1:8000/api/orginvite/{}/?register=".format(code))
+            response = requests.get("http://127.0.0.1:8000/api/orginvite/{}/?register=1".format(code))
             if response.status_code == 200:
                 return HttpResponseRedirect('/profile')
             if response.status_code == 428 :
@@ -26,6 +25,8 @@ def register_member_to_org(request):
 
             return HttpResponseRedirect('/profile')
 
+def comfirm_view(request):
+    return render(request, 'limber/comfirmation_page.html')
 
 
 def index(request):
@@ -84,4 +85,3 @@ def create_project(request):
         return HttpResponseRedirect('/signup/')
 
     return render(request, 'limber/create_project.html', {'data': data})
-

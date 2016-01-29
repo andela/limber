@@ -1,14 +1,14 @@
 from rest_framework.response import Response
-from rest_framework import viewsets, renderers, status, permissions,mixins
+from rest_framework import viewsets, status, permissions, mixins
 
 from django.db import IntegrityError
 from django.db.models import Q
 from app.serializers import (
-	OrgSerializer, UserSerializer, ProjectSerializer,
-	TeamMemberSerializer, StorySerializer, MemberSerializer,
-	TaskSerializer, ProjectInviteSerializer,OrgInviteSerilizer
+    OrgSerializer, UserSerializer, ProjectSerializer,
+    TeamMemberSerializer, StorySerializer, MemberSerializer,
+    TaskSerializer, ProjectInviteSerializer, OrgInviteSerilizer
 )
-from app.models.user import User, Member,UserAuthentication
+from app.models.user import User, Member, UserAuthentication
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
 from app.models.invite import ProjectInvite
@@ -16,105 +16,109 @@ from app.models.org_invite import OrgInvites
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
-	"""This is to be used to signup an organisation."""
 
-	queryset = User.objects.filter(user_type=2)
-	serializer_class = OrgSerializer
-	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    """This is to be used to signup an organisation."""
 
-	def create(self, request):
-		"""Define customizations during org creation."""
-		serializer = self.serializer_class(data=request.data)
-		if serializer.is_valid():
-			current_user_id = request.user.id
-			# create an organisation when you call this viewset
-			try:
-				User.create_orgprofile(
-					current_user_id, **serializer.validated_data)
-				return Response(
-					serializer.validated_data, status=status.HTTP_201_CREATED)
-			except IntegrityError:
-				return Response({
-					'status': "Organisation not created",
-					'message': "Organisation already exists"
-				}, status=status.HTTP_400_BAD_REQUEST)
-		return Response({
-			'status': "Bad request",
-			'message': "Failed to create an organisation"
-		}, status=status.HTTP_400_BAD_REQUEST)
+    queryset = User.objects.filter(user_type=2)
+    serializer_class = OrgSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def create(self, request):
+        """Define customizations during org creation."""
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            current_user_id = request.user.id
+            # create an organisation when you call this viewset
+            try:
+                User.create_orgprofile(
+                    current_user_id, **serializer.validated_data)
+                return Response(
+                    serializer.validated_data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({
+                    'status': "Organisation not created",
+                    'message': "Organisation already exists"
+                }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'status': "Bad request",
+            'message': "Failed to create an organisation"
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserSignUpViewSet(viewsets.ModelViewSet):
-	"""This is to be used to signup a user."""
 
-	queryset = User.objects.filter(user_type=1)
-	serializer_class = UserSerializer
+    """This is to be used to signup a user."""
 
-	def create(self, request):
-		"""Define customizations during user creation."""
-		serializer = self.serializer_class(data=request.data)
-		if serializer.is_valid():
-			try:
-				User.create_userprofile(**serializer.validated_data)
-				return Response({
-					'status': 'User Created',
-					'message': 'User Created'
-				}, status=status.HTTP_201_CREATED)
-			except IntegrityError:
-				return Response({
-					'status': "User not created",
-					'message': "User already exists"
-				}, status=status.HTTP_400_BAD_REQUEST)
+    queryset = User.objects.filter(user_type=1)
+    serializer_class = UserSerializer
 
-		return Response({
-			'status': "Bad request",
-			'message': "Failed to create user"
-		}, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request):
+        """Define customizations during user creation."""
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            try:
+                User.create_userprofile(**serializer.validated_data)
+                return Response({
+                    'status': 'User Created',
+                    'message': 'User Created'
+                }, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({
+                    'status': "User not created",
+                    'message': "User already exists"
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            'status': "Bad request",
+            'message': "Failed to create user"
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TeamMemberViewSet(viewsets.ModelViewSet):
-	"""API endpoint that allows project team members to be viewed or edited."""
 
-	queryset = TeamMember.objects.all()
-	serializer_class = TeamMemberSerializer
+    """API endpoint that allows project team members to be viewed or edited."""
+
+    queryset = TeamMember.objects.all()
+    serializer_class = TeamMemberSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
-	"""API endpoint that allows projects to be viewed or edited."""
 
-	serializer_class = ProjectSerializer
-	permission_classes = (permissions.IsAuthenticated,)
+    """API endpoint that allows projects to be viewed or edited."""
 
-	def get_queryset(self):
-		user = self.request.user
-		orgs = Member.objects.filter(
-			user_id=user.id).values_list('org_id', flat=True)
-		users = User.objects.filter(
-			Q(id=user.profile_id) | Q(id__in=orgs)).all()
-		return Project.objects.filter(owner=users)
+    serializer_class = ProjectSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
-	def post_queryset(self):
-		user = self.request.user
-		orgs = Member.objects.filter(
-			user_id=user.id).values_list('org_id', flat=True)
-		users = User.objects.filter(
-			Q(id=user.id) | Q(id__in=orgs)).all()
-		return Project.objects.filter(owner=users)
+    def get_queryset(self):
+        user = self.request.user
+        orgs = Member.objects.filter(
+            user_id=user.id).values_list('org_id', flat=True)
+        users = User.objects.filter(
+            Q(id=user.profile_id) | Q(id__in=orgs)).all()
+        return Project.objects.filter(owner=users)
 
-	def create(self, request):
-		"""Define customizations during user creation."""
-		serializer = self.serializer_class(data=request.data)
-		if serializer.is_valid():
-			Project.create_project(**serializer.validated_data)
-			return Response({
-				'status': 'Project Created',
-				'message': 'Project Created'
-			}, status=status.HTTP_201_CREATED)
+    def post_queryset(self):
+        user = self.request.user
+        orgs = Member.objects.filter(
+            user_id=user.id).values_list('org_id', flat=True)
+        users = User.objects.filter(
+            Q(id=user.id) | Q(id__in=orgs)).all()
+        return Project.objects.filter(owner=users)
 
-		return Response({
-			'status': "Bad request",
-			'message': "Failed to create project"
-		}, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request):
+        """Define customizations during user creation."""
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            Project.create_project(**serializer.validated_data)
+            return Response({
+                'status': 'Project Created',
+                'message': 'Project Created'
+            }, status=status.HTTP_201_CREATED)
+
+        return Response({
+            'status': "Bad request",
+            'message': "Failed to create project"
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StoriesViewSet(viewsets.ModelViewSet):
@@ -124,69 +128,70 @@ class StoriesViewSet(viewsets.ModelViewSet):
     serializer_class = StorySerializer
     permission_classes = (permissions.IsAuthenticated,)
 
+
 class OrgInvitesViewset(mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    viewsets.GenericViewSet):
+                        mixins.UpdateModelMixin,
+                        mixins.DestroyModelMixin,
+                        viewsets.GenericViewSet):
+
     """ Handles Invitation of Members to Organisation"""
     queryset = OrgInvites.objects.all()
     serializer_class = OrgInviteSerilizer
     permission_classes = (permissions.IsAuthenticated,)
 
-
-
     def get_queryset(self):
         # Override the GET method query to only show logged in user
-        obj = OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') )|Q(uid=self.request.user.id)).first()
+        obj = OrgInvites.objects.filter(
+            Q(code=self.kwargs.get('pk')) |
+            Q(uid=self.request.user.id)).first()
         return obj
 
-
-    def retrieve(self,request,pk=None):
-        	import ipdb; ipdb.set_trace()
-        	query =OrgInvites.objects.filter(Q(code=self.kwargs.get('pk') ),Q(uid=self.request.user.id))
-        	vals = query.values()
-        	if len(vals)< 1:
-        		return Response({
+    def retrieve(self, request, pk=None):
+        # import ipdb; ipdb.set_trace()
+        query = OrgInvites.objects.filter(
+            Q(code=self.kwargs.get('pk')), Q(uid=self.request.user.id))
+        params = query.values()
+        if len(params) < 1:
+            return Response({
                 'Error': 'Invalid Code',
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        	email = vals[0]['email']
+        email = params[0]['email']
 
-        	serializer = self.serializer_class(query, many=True)
-        	if 'register' in request.query_params:
-        		#check if email belongs to a registered user 
-        		try:
-        			import ipdb;ipdb.set_trace()
-        			user = UserAuthentication.objects.get(email=email)
-        			if User.email == email:
-        				org = vals[0]['org']
-        				org = User.objects.get(id=org)
-    					
-        				data = {'org':org.id,'user':user.id}
-        				member = Member.objects.all()
-        			# check if he is current logged in user
-        			return Response({
-                					'Message': 'Please Login',
-            							}, status.HTTP_200_OK)
-        		except UserAuthentication.DoesNotExist:
-        		# Else send user to sign 
-        			return Response({
-                'message': 'please Signup then try again',
-            }, status.HTTP_428_PRECONDITION_REQUIRED)
-        		
+        serializer = self.serializer_class(query, many=True)
+        if 'register' in request.query_params:
+            # check if email belongs to a registered user
+            try:
 
-        	
-        	
-        	return Response(serializer.data, status=status.HTTP_200_OK)
+                user = UserAuthentication.objects.get(email=email)
+                if user.email == request.user.email:
+                    org = params[0]['org_id']
+                    org = User.objects.get(id=org)
 
+                    data = {'org': org.id, 'user': user.id}
+                    Member.objects.create(org=org, user=user, user_level=2)
+                    return Response(data, status=status.HTTP_200_OK)
+                # check if he is current logged in user
+                return Response({
+                    'Message': 'Please Login',
+                    'email': email
+                }, status.HTTP_403_FORBIDDEN)
+            except UserAuthentication.DoesNotExist:
+                # Else send user to sign
+                return Response({
+                    'message': 'please Signup then try again',
+                    'email': email
+                }, status.HTTP_428_PRECONDITION_REQUIRED)
 
-        	  
-    def create(self,request):
-    	import ipdb; ipdb.set_trace()
-        #restrict ID of creator to the  
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        import ipdb
+        ipdb.set_trace()
+        # restrict ID of creator to the
         request.data['uid'] = request.user.id
         serializer = self.serializer_class(data=request.data)
-        #Check if emain belongs to an existing user
+        # Check if emain belongs to an existing user
         userid = UserAuthentication.objects.filter(email=request.data['email'])
         user = Member.objects.filter(user=userid, org=request.data['org'])
         if user:
@@ -201,102 +206,98 @@ class OrgInvitesViewset(mixins.RetrieveModelMixin,
                     'code': invite.create_hash(),
                 }, status=status.HTTP_201_CREATED)
             return Response({
-                    'message': 'Mail notification was not sent',
+                'message': 'Mail notification was not sent',
 
-                }, status=status.HTTP_201_CREATED)
+            }, status=status.HTTP_201_CREATED)
         return Response(
-            serializer.errors
+            serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        , status=status.HTTP_400_BAD_REQUEST)
-
-        
-		# '''- request updates the table 
-		# 	- requests uses post to determine if the user has accepted or rejected the invite
-		# 	-  before updating the task checks if the user is a member and if he is the current logged in 
-		# 	- if not logged send to sign in 
-		# 	- check if logged in user == invited user again 
-		# 	- if user is true register
-
-	
-			
+        # - request updates the table
+        # 	- requests uses post to determine if the user has accepted
+        # 		or rejected the invite
+        # 	-  before updating the task checks if the user is a member
+        #  and if he is the current logged in
+        # 	- if not logged send to sign in
+        # 	- check if logged in user == invited user again
+        # 	- if user is true register
 
 
 class MemberViewSet(viewsets.ModelViewSet):
-	queryset = Member.objects.filter()
-	serializer_class = MemberSerializer
-	permission_classes = (permissions.IsAuthenticated,)
+    queryset = Member.objects.filter()
+    serializer_class = MemberSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
-	def destroy(self, request, *args, **kwargs):
-		"""This function is called when the delete http method
-			is called on this viewset.
+    def destroy(self, request, *args, **kwargs):
+        """This function is called when the delete http method
+                is called on this viewset.
 
-		It then calls the "remove_org_member" function in User model to remove
-		members from an Organisation. The "remove_org_member" function ensures
-		that organisations have an admin present at all times. It also checks
-		for sufficient user privileges/ rights to perform this action.
-		"""
-		# id of the "remover" (current user)
-		admin_id = request.user.id
-		# the organisation from which a member is being removed
-		org = self.get_object().org
-		# the member who's being removed from the org
-		member = self.get_object().user
+        It then calls the "remove_org_member" function in User model to remove
+        members from an Organisation. The "remove_org_member" function ensures
+        that organisations have an admin present at all times. It also checks
+        for sufficient user privileges/ rights to perform this action.
+        """
+        # id of the "remover" (current user)
+        admin_id = request.user.id
+        # the organisation from which a member is being removed
+        org = self.get_object().org
+        # the member who's being removed from the org
+        member = self.get_object().user
 
-		try:
-			User.remove_org_member(admin_id=admin_id, org=org, member=member)
-			return Response({
-				'status': "Member successfully removed",
-				'message': "Organisation member successfully removed"
-			}, status=status.HTTP_200_OK)
-		except Exception:
-			return Response({
-				'status': "Member not removed",
-				'message': "Organisation member not removed"
-			}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            User.remove_org_member(admin_id=admin_id, org=org, member=member)
+            return Response({
+                'status': "Member successfully removed",
+                'message': "Organisation member successfully removed"
+            }, status=status.HTTP_200_OK)
+        except Exception:
+            return Response({
+                'status': "Member not removed",
+                'message': "Organisation member not removed"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TaskViewSet(viewsets.ModelViewSet):
-	queryset = Task.objects.all()
-	serializer_class = TaskSerializer
-	permission_classes = (permissions.IsAuthenticated,)
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class ProjectInviteViewSet(viewsets.ModelViewSet):
-	queryset = ProjectInvite.objects.all()
-	serializer_class = ProjectInviteSerializer
-	permission_classes = (permissions.IsAuthenticated,)
+    queryset = ProjectInvite.objects.all()
+    serializer_class = ProjectInviteSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
-	def create(self, request):
-		"""Create ProjectInvite instance, send the email then save."""
-		try:
-			serializer = self.serializer_class(data=request.data)
-			if serializer.is_valid():
-				# create project invite instance
-				project_invite = ProjectInvite(
-					email=serializer.validated_data.get('email'),
-					project=serializer.validated_data.get('project'),
-					uid=request.user
-				)
+    def create(self, request):
+        """Create ProjectInvite instance, send the email then save."""
+        try:
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                # create project invite instance
+                project_invite = ProjectInvite(
+                    email=serializer.validated_data.get('email'),
+                    project=serializer.validated_data.get('project'),
+                    uid=request.user
+                )
 
-				project_invite.send_invite_email()
-				project_invite.save()
+                project_invite.send_invite_email()
+                project_invite.save()
 
-				return Response(
-					{
-						'status': 'email sent',
-						'message': 'An invitation email has been sent'
-					}, status=status.HTTP_200_OK
-				)
-			return Response(
-				{
-					'status': 'Bad request',
-					'message': 'Invalid data'
-				}, status=status.HTTP_400_BAD_REQUEST
-			)
-		except Exception as e:
-			return Response(
-				{
-					'status': 'Bad request',
-					'message': 'Failed to create email invitation'
-				}, status=status.HTTP_400_BAD_REQUEST
-			)
+                return Response(
+                    {
+                        'status': 'email sent',
+                        'message': 'An invitation email has been sent'
+                    }, status=status.HTTP_200_OK
+                )
+            return Response(
+                {
+                    'status': 'Bad request',
+                    'message': 'Invalid data'
+                }, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception:
+            return Response(
+                {
+                    'status': 'Bad request',
+                    'message': 'Failed to create email invitation'
+                }, status=status.HTTP_400_BAD_REQUEST
+            )

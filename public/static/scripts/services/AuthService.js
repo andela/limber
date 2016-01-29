@@ -35,6 +35,15 @@ app.factory('AuthService', function ($resource) {
         }, {
             stripTrailingSlashes: false
         }),
+
+        OrgConfirmation: $resource('/api/orginvite/:pk/', {pk:'@pk'}, {
+            comfirmMember : {
+                method: 'GET'
+            }
+        }, {
+            stripTrailingSlashes: false
+        }),
+
         projects: $resource('/api/project/', {}, {
             // method to consume the api route to Projects
             // it returns an array of projects

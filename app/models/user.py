@@ -200,6 +200,4 @@ class Member(models.Model):
     user = models.ForeignKey(UserAuthentication)
     user_level = models.PositiveSmallIntegerField(blank=False)
 
-    class Meta:
-        app_label = 'app'
 
