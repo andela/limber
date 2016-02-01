@@ -53,90 +53,24 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
 	serializer_class = UserSerializer
 
 	def create(self, request):
-		"""Create user and add him/her to project members table if query parameter
-		exists. Simply create user if query parameter doesn't exist."""
-		if request.query_params:
-			try:
-				invite_code = request.query_params.get('invite', None)
-				if invite_code:
-					# confirm validity of invite code supplied
-					pi_object = get_object_or_404(ProjectInvite, pk=invite_code)
-					if pi_object:
-						# email in invite object should be email from request
-						if pi_object.email == request.data.get('email'):
-							# create the user in the system
-							self.signup_user(request)
-							# add the user as a member on the project
-							user_auth = UserAuthentication.objects.get(
-								email=pi_object.email
-							)
-							team = TeamMember(
-								user=user_auth.profile,
-								project=pi_object.project,
-								user_level=2
-							)
-							team.save()
-							# update invites table
-							pi_object.accept = ProjectInvite.ACCEPTED
-							pi_object.save()
-							return Response(
-								{
-									'status': 'Invitation successful',
-									'message': 'New user created and added to project'
-								}, status=status.HTTP_201_CREATED
-							)
-						else:
-							raise Exception('Attempt to sign up uninvited user!')
-					raise Exception()
-			except IntegrityError:
-				return Response(
-					{
-						'status': "User not created",
-						'message': "User already exists"
-					}, status=status.HTTP_400_BAD_REQUEST
-				)
-			except Exception:
-				return Response(
-					{
-						'status': "Bad request",
-						'message': "Failed to create user"
-					}, status=status.HTTP_400_BAD_REQUEST
-				)
-
-		else:
-			try:
-				self.signup_user(request)
-				return Response(
-					{
-						'status': 'User Created',
-						'message': 'User Created'
-					}, status=status.HTTP_201_CREATED
-				)
-			except IntegrityError:
-				return Response(
-					{
-						'status': "User not created",
-						'message': "User already exists"
-					}, status=status.HTTP_400_BAD_REQUEST
-				)
-			except Exception:
-				return Response(
-					{
-						'status': "Bad request",
-						'message': "Failed to create user"
-					}, status=status.HTTP_400_BAD_REQUEST
-				)
-
-	def signup_user(self, request):
-		"""Create new user with username, email and password."""
+		"""Define customizations during user creation."""
 		serializer = self.serializer_class(data=request.data)
 		if serializer.is_valid():
 			try:
 				User.create_userprofile(**serializer.validated_data)
+				return Response({
+					'status': 'User Created',
+					'message': 'User Created'
+				}, status=status.HTTP_201_CREATED)
 			except IntegrityError:
-				raise IntegrityError('User already exists')
-		else:
-			raise Exception('Invalid data')
+				return Response({
+					'status': "User not created",
+					'message': "User already exists"
+				}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({
+			'status': "Bad request",
+			'message': "Failed to create user"
+		}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TeamMemberViewSet(viewsets.ModelViewSet):
@@ -147,7 +81,7 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
 
 	def create(self, request):
 		"""Define customizations during addition of members to a project."""
-		request.query_params.get('invite')
+		invite_code = request.query_params.get('invite')
 		if invite_code:
 			# requests from user who has been invited to project
 			# request parameter supplied during redirect after user has logged in
@@ -184,6 +118,19 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
 			if serializer.is_valid():
 				team_member = TeamMember(**serializer.validated_data)
 				team_member.save()
+				return Response(
+					{
+						'status': 'Created',
+						'message': 'Team Member Created'
+					},
+					status=status.HTTP_201_CREATED
+				)
+			return Response(
+				{
+					'status': 'Invalid data',
+					'message': 'Invalid data provided'
+				}, status=status.HTTP_400_BAD_REQUEST
+			)
 
 
 class PersonalProjectViewSet(viewsets.ReadOnlyModelViewSet):
