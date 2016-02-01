@@ -3,7 +3,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from itertools import chain
 from django.db.models import Q
 from app.models.story import Story, Task
-from app.models.user import User, Member
+from app.models.user import User, Member, UserAuthentication
 from app.models.project import Project, TeamMember
 from app.models.org_invite import OrgInvites
 from app.models.invite import ProjectInvite
@@ -83,12 +83,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class TeamMemberSerializer(serializers.ModelSerializer):
-
     """Serializer class to be used for project members."""
 
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.filter(user_type=1),
-    )
     user_level = serializers.ChoiceField([1, 2])
 
     class Meta:
@@ -111,9 +107,7 @@ class StorySerializer(serializers.ModelSerializer):
         model = Story
         fields = '__all__'
 
-
 class OrgInviteSerilizer (serializers.ModelSerializer):
-
     ''' Serializer for Invitation of Members to Organisations '''
     code = serializers.CharField(required=False, read_only=True)
 
@@ -129,10 +123,8 @@ class OrgInviteSerilizer (serializers.ModelSerializer):
         ]
 
 
-
 # A serializer to add members to an existing org
 class MemberSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Member
         fields = ('url', 'org', 'user', 'user_level')
@@ -162,6 +154,6 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class ProjectInviteSerializer(serializers.ModelSerializer):
 
-	class Meta:
-		model = ProjectInvite
-		fields = ('email', 'project', 'accept')
+    class Meta:
+        model = ProjectInvite
+        fields = ('email', 'project', 'accept')
