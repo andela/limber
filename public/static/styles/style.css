@@ -12,11 +12,9 @@
 
 .cool_background > div{
     position: absolute;
-    /*text-align: center;*/
     margin: 0px;
     top: 50%;
     left: 50%;
-    /*margin-right: -50%;*/
     transform: translate(-50%, -50%);
 }
 
@@ -156,3 +154,4 @@ h5 {
 
 .dropdown-content {
     top: auto !important
+}
