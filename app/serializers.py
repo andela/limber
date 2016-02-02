@@ -115,7 +115,7 @@ class OrgInviteSerilizer (serializers.ModelSerializer):
 
 	class Meta:
 	    model = OrgInvites
-	    fields = ('email','code','org','accept','uid')
+	    fields = ('email', 'code', 'org', 'accept', 'uid')
 	    validators = [
 			UniqueTogetherValidator(
 				queryset=OrgInvites.objects.filter(accept=0),
@@ -130,6 +130,13 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = ('url', 'org', 'user', 'user_level')
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Member.objects.filter(),
+                fields=('user', 'org'),
+                message='User is already a member'
+            )
+        ]
 
     def get_fields(self, *args, **kwargs):
         fields = super(MemberSerializer, self).get_fields(*args, **kwargs)
@@ -149,4 +156,3 @@ class ProjectInviteSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = ProjectInvite
 		fields = ('email', 'project', 'accept')
-
