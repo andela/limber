@@ -54,6 +54,7 @@ def dashboard(request):
 
     return render(request, 'limber/projects.html', {'data': data})
 
+
 def create_project(request):
     cookie = request.COOKIES.has_key('token')
     data = {}

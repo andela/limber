@@ -190,6 +190,7 @@ class OrgInvitesViewset(mixins.ListModelMixin,
 
         return Response(serializer.data, status.HTTP_200_OK)
 
+
     def create(self, request):
         # restrict ID of creator to the
         request.data['uid'] = request.user.id
