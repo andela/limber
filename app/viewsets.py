@@ -131,7 +131,8 @@ class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
             user_id=current_user.id).values_list('project_id', flat=True)
         orgs = User.objects.filter(
             Q(id=current_user.profile_id) | Q(id__in=user_orgs)).all()
-        return Project.objects.filter(project_id__in=user_in_team).exclude(owner=orgs)
+        return Project.objects.filter(
+            project_id__in=user_in_team).exclude(owner=orgs)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -182,22 +183,23 @@ class StoriesViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
 
-class OrgInvitesViewset(mixins.ListModelMixin,
-                        mixins.RetrieveModelMixin,
-                        mixins.UpdateModelMixin,
-                        mixins.DestroyModelMixin,
-                        viewsets.GenericViewSet):
+class OrgInvitesViewset(viewsets.ModelViewSet):
 
     """ Handles Invitation of Members to Organisation"""
     queryset = OrgInvites.objects.all()
     serializer_class = OrgInviteSerilizer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+    def list(self, request):
+        queryset = OrgInvites.objects.all()
+        serializer = OrgInviteSerilizer(queryset, many=True)
+        return Response(serializer.data)
+
     def get_queryset(self):
         # Override the GET method query to only show logged in user
         obj = OrgInvites.objects.filter(
-            Q(code=self.kwargs.get('pk')) |
             Q(uid=self.request.user.id)).first()
+
         return obj
 
     def retrieve(self, request, pk=None):
@@ -220,13 +222,13 @@ class OrgInvitesViewset(mixins.ListModelMixin,
                         org = params[0]['org_id']
                         org = User.objects.get(id=org)
                         # Add member to Members Org
-                        Member.objects.create(org=org, user=user, user_level=2)
+                        member = Member.objects.create(org=org, user=user, user_level=2)
                         # Change flag in OrgInvitation Table to 2
-                        orginvitation.accept = 1
-                        orginvitation.save()
+                        orginvitation.update(accept= 1)
                         return Response({
                             'org': org.id,
-                            'user': user.id
+                            'user': user.id,
+                            'member':member.id
                         }, status.HTTP_201_CREATED)
                 # check if he is current logged in user
                 return Response({
@@ -322,6 +324,7 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
     queryset = ProjectInvite.objects.all()
     serializer_class = ProjectInviteSerializer
     permission_classes = (permissions.IsAuthenticated,)
+
 
     def create(self, request):
         """Create ProjectInvite instance, send the email then save."""
