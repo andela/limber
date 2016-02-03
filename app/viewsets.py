@@ -100,17 +100,10 @@ class PersonalProjectViewSet(viewsets.ReadOnlyModelViewSet):
 class OrgProjectViewSet(viewsets.ReadOnlyModelViewSet):
 
     """API endpoint to view projects for organisations the user belongs in."""
-<<<<<<< HEAD
 
     serializer_class = ProjectSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-=======
-
-    serializer_class = ProjectSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
->>>>>>> f309aabf8b81fe0a9f32ce1a2a9798bbb6d48462
     def get_queryset(self):
         current_user = self.request.user
         user_orgs = Member.objects.filter(
@@ -130,7 +123,6 @@ class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProjectSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-
     def get_queryset(self):
         current_user = self.request.user
         user_orgs = Member.objects.filter(
@@ -141,7 +133,6 @@ class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
             Q(id=current_user.profile_id) | Q(id__in=user_orgs)).all()
 
         return Project.objects.filter(project_id__in=user_in_team).exclude(owner=orgs)
-
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -231,13 +222,14 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
                         org = params[0]['org_id']
                         org = User.objects.get(id=org)
                         # Add member to Members Org
-                        member = Member.objects.create(org=org, user=user, user_level=2)
+                        member = Member.objects.create(
+                            org=org, user=user, user_level=2)
                         # Change flag in OrgInvitation Table to 2
-                        orginvitation.update(accept= 1)
+                        orginvitation.update(accept=1)
                         return Response({
                             'org': org.id,
                             'user': user.id,
-                            'member':member.id
+                            'member': member.id
                         }, status.HTTP_201_CREATED)
                 # check if he is current logged in user
                 return Response({
@@ -333,7 +325,6 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
     queryset = ProjectInvite.objects.all()
     serializer_class = ProjectInviteSerializer
     permission_classes = (permissions.IsAuthenticated,)
-
 
     def create(self, request):
         """Create ProjectInvite instance, send the email then save."""
