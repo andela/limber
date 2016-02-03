@@ -56,12 +56,11 @@ class ProjectInvite(models.Model):
 				If you have received this in error, please let us know.
 				""".format(self.project.project_name, url)
 
-		html_content = html_email % (
+		html_content = html_email.format(
 			self.uid.profile.username,
 			self.project.project_name,
 			url
 		)
-
 		email = EmailMultiAlternatives(
 			'Invitation to collaborate on project ' + self.project.project_name,
 			body,
