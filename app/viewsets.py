@@ -6,9 +6,9 @@ from django.db.models import Q
 from app.serializers import (
 	OrgSerializer, UserSerializer, ProjectSerializer,
 	TeamMemberSerializer, StorySerializer, MemberSerializer,
-	TaskSerializer, ProjectInviteSerializer,OrgInviteSerilizer
+	TaskSerializer, ProjectInviteSerializer, OrgInviteSerilizer
 )
-from app.models.user import User, Member,UserAuthentication
+from app.models.user import User, Member, UserAuthentication
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
 from app.models.invite import ProjectInvite
@@ -79,6 +79,53 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
 	serializer_class = TeamMemberSerializer
 
 
+class PersonalProjectViewSet(viewsets.ReadOnlyModelViewSet):
+	"""API endpoint to view current user's personal projects."""
+
+	serializer_class = ProjectSerializer
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get_queryset(self):
+		current_user = self.request.user
+		user = User.objects.filter(id=current_user.profile_id).all()
+		return Project.objects.filter(owner=user)
+
+
+class OrgProjectViewSet(viewsets.ReadOnlyModelViewSet):
+	"""API endpoint to view projects for organisations the user belongs in."""
+
+	serializer_class = ProjectSerializer
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get_queryset(self):
+		current_user = self.request.user
+		user_orgs = Member.objects.filter(
+			user_id=current_user.id).values_list('org_id', flat=True)
+		user_in_team = TeamMember.objects.filter(
+			user_id=current_user.id).values_list('project_id', flat=True)
+		orgs = User.objects.filter(id__in=user_orgs).all()
+		return Project.objects.filter(project_id__in=user_in_team, owner=orgs)
+
+
+class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
+	"""API endpoint to view projects by othe users, in which the
+        current user is a team member.
+    """
+
+	serializer_class = ProjectSerializer
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get_queryset(self):
+		current_user = self.request.user
+		user_orgs = Member.objects.filter(
+			user_id=current_user.id).values_list('org_id', flat=True)
+		user_in_team = TeamMember.objects.filter(
+			user_id=current_user.id).values_list('project_id', flat=True)
+		orgs = User.objects.filter(
+			Q(id=current_user.profile_id) | Q(id__in=user_orgs)).all()
+		return Project.objects.filter(project_id__in=user_in_team).exclude(owner=orgs)
+
+
 class ProjectViewSet(viewsets.ModelViewSet):
 	"""API endpoint that allows projects to be viewed or edited."""
 
@@ -104,6 +151,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 	def create(self, request):
 		"""Define customizations during user creation."""
 		serializer = self.serializer_class(data=request.data)
+
 		if serializer.is_valid():
 			Project.create_project(**serializer.validated_data)
 			return Response({
