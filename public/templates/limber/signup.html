@@ -29,29 +29,30 @@
 								<div ng-if="signuperror" class="center red-text">
 									[[ signuperror ]]
 								</div>
-					            <form ng-submit="register()">
+					            <form name="registrationForm" novalidate ng-submit="register(registrationForm.$valid)" >
 
 
 									{% csrf_token %}
 					                <div class="row">
 					                    <div class="input-field col s12">
-					                        <input required id="name" type="text" ng-model="signup.username" placeholder="Username" />
+					                        <input id="name" type="text" ng-model="signup.username" placeholder="Username" required/>
 					                    </div>
 					                </div>
 
 					                <div class="row">
 					                    <div class="input-field col s12">
-					                        <input required type="email" ng-model="signup.email" placeholder="Email Address" class="validate" />
+					                        <input type="email" ng-model="signup.email" placeholder="Email Address" class="validate" required/>
 					                    </div>
 					                </div>
 
 					                <div class="row">
 					                    <div class="input-field col s6">
-					                        <input required type="password" ng-model="signup.password" placeholder="Password" />
+					                        <input type="password" ng-model="signup.password" placeholder="Password" ng-class="(signup.password != signup.confirm_password) ? 'invalid': ''" required/>
 					                    </div>
 					                    <div class="input-field col s6">
-					                        <input required type="password" ng-model="signup.confirm_password" placeholder="Confirm Password" />
+					                        <input type="password" ng-model="signup.confirm_password" placeholder="Confirm Password" ng-class="(signup.password != signup.confirm_password) ? 'invalid': ''" required compare-to="signup.password"/>
 					                    </div>
+										<label ng-model="confirmation"></label>
 					                </div>
 
 					                <div class="row">

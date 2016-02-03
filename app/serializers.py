@@ -6,7 +6,6 @@ from app.models.story import Story, Task
 from app.models.user import User, Member
 from app.models.project import Project, TeamMember
 from app.models.org_invite import OrgInvites
-from rest_framework.validators import UniqueTogetherValidator
 from app.models.invite import ProjectInvite
 
 
@@ -149,4 +148,3 @@ class ProjectInviteSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = ProjectInvite
 		fields = ('email', 'project', 'accept')
-

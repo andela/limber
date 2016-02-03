@@ -43,7 +43,7 @@ class ProjectInvite(models.Model):
 		self.invite_code = self.create_invite_code()
 
 		host = os.environ.get('LIMBER_HOST')
-		
+
 		url = 'http://' + host + reverse('project-invites-list') + self.invite_code
 
 		body = """Hi there!\n
@@ -70,7 +70,7 @@ class ProjectInvite(models.Model):
 		"""
 
 		salt = random()
-		nonlat = "{}4384834hhhhgsdhsdydsuyaisudhd {}".format(
+		nonlat = "{0}4384834hhhhgsdhsdydsuyaisudhd {1}".format(
 			salt,
 			self.email
 		)
