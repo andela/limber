@@ -199,11 +199,10 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
         # Override the GET method query to only show logged in user
         obj = OrgInvites.objects.filter(
             Q(uid=self.request.user.id)).first()
-
         return obj
 
     def retrieve(self, request, pk=None):
-
+        # retrieve and   and registers a user
         orginvitation = OrgInvites.objects.filter(
             Q(code=self.kwargs.get('pk')))
         params = orginvitation.values()
@@ -255,8 +254,8 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
         user = Member.objects.filter(user=userid, org=request.data['org'])
         if user:
             return Response({
-                'error': 'Member already belongs to Organisation',
-            }, status.HTTP_400_BAD_REQUEST)
+                            'error': 'Member already belongs to Organisation',
+                            }, status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
             invite = OrgInvites.objects.create(**serializer.validated_data)
             if invite is not None:
@@ -267,18 +266,9 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
             return Response({
                 'message': 'Mail notification was not sent',
 
-            }, status=status.HTTP_201_CREATED)
+            }, status=status.HTTP_400_BAD_REQUEST)
         return Response(
             serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # - request updates the table
-        #   - requests uses post to determine if the user has accepted
-        #       or rejected the invite
-        #   -  before updating the task checks if the user is a member
-        #  and if he is the current logged in
-        #   - if not logged send to sign in
-        #   - check if logged in user == invited user again
-        #   - if user is true register
 
 
 class MemberViewSet(viewsets.ModelViewSet):

@@ -1,20 +1,18 @@
-import unittest
-import json
-from django.test import Client, TestCase
+
+from django.test import TestCase
 from faker import Factory
-from app.models.user import User, UserAuthentication, Member
-from app.models.project import Project
-from app.models.story import Story
+from app.models.user import User, UserAuthentication
 from app.models import OrgInvites
-from django.core import mail
 fake = Factory.create()
 
 
 class TestUrls(TestCase):
 
     '''
-        Test Invitation of Member to an organisation via email notifiaction.
-        emails are stored as EmailMessage objects in a list at django.core.mail.outbox
+        Test Invitation of Member to an organisation
+        via email notifiaction.
+        emails are stored as EmailMessage objects in
+        a list at django.core.mail.outbox
         https://docs.djangoproject.com/en/dev/topics/testing/#e-mail-services
     '''
 
@@ -48,7 +46,9 @@ class TestUrls(TestCase):
         # Register user
 
         response = self.client.post(
-            '/api/user/', data={'username': username, 'password': password, 'email': email})
+            '/api/user/', data={'username': username,
+                                'password': password,
+                                'email': email})
         # check if user has been created
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.status_text, 'Created')
@@ -61,9 +61,10 @@ class TestUrls(TestCase):
 
     def test_4_crud(self):
         # Test Login
-        response = self.client.post('/api/api-auth/login/?next=/api/user/',
-                                    data={'username': self.user.get('email'),
-                                          'password': self.user.get('password')})
+        response = self.client.post(
+            '/api/api-auth/login/?next=/api/user/',
+            data={'username': self.user.get('email'),
+                  'password': self.user.get('password')})
         self.assertEqual(response.status_code, 302)
 
         # Check if logged in user can access page
@@ -87,15 +88,19 @@ class TestUrls(TestCase):
         email = fake.email()
         current_user = UserAuthentication.objects.first()
         dummy_org = User.objects.first()
-        response = self.client.post('/api/api-auth/login/?next=/api/user/',
-                                    data={'username': self.user.get('email'),
-                                          'password': self.user.get('password')})
+        response = self.client.post(
+            '/api/api-auth/login/?next=/api/user/',
+            data={'username': self.user.get('email'),
+                  'password': self.user.get('password')})
 
         data = {"email": email, "uid": current_user.id, "org": dummy_org.id}
         response = self.client.post('/api/orginvite/', data)
         self.assertEqual(response.status_code, 201)
         invite = OrgInvites.objects.first()
         code = invite.code
+        response = self.client.get(
+            '/api/orginvite/{}/'.format(code))
+        self.assertEqual(response.status_code, 200)
         # user is new should return 428
         response = self.client.get(
             '/api/orginvite/{}/?register=org'.format(code))
@@ -105,7 +110,9 @@ class TestUrls(TestCase):
         # sign up user to system
         new_email = response.data['email']
         response = self.client.post(
-            '/api/user/', data={'username': 'test', 'password': 'password', 'email': new_email})
+            '/api/user/', data={'username': 'test',
+                                'password': 'password',
+                                'email': new_email})
         # check if user has been created
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.status_text, 'Created')
@@ -119,17 +126,17 @@ class TestUrls(TestCase):
         # loggin with new_email and try to add member
         response = self.client.post('/api/api-auth/login/?next=/api/user/',
                                     data={'username': new_email,
-                                          'password':'password'})
+                                          'password': 'password'})
         self.assertEqual(response.status_code, 302)
-        # try to add member while logged in 
+        # try to add member while logged in
         response = self.client.get(
             '/api/orginvite/{}/?register=org'.format(code))
         self.assertEqual(response.status_code, 201)
-        self.assertIn('org',response.data)
-        self.assertIn('user',response.data)
-        
-
-
-    
-
-
+        self.assertIn('org', response.data)
+        self.assertIn('user', response.data)
+        data = {"email": email, "uid": current_user.id, "org": dummy_org.id}
+        response = self.client.post('/api/orginvite/', data)
+        # check you can invite user twice to an org
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(
+            'Member already belongs to Organisation', response.data['error'])
