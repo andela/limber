@@ -1,4 +1,4 @@
-var app = angular.module('limberApp', [ 'ngRoute','ngResource', 'ngCookies']);
+var app = angular.module('limberApp', [ 'ui.materialize','ngRoute','ngResource', 'ngCookies']);
 
 app.config(function ($httpProvider, $locationProvider, $interpolateProvider) {
 

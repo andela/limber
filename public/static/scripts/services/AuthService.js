@@ -38,7 +38,8 @@ app.factory('AuthService', function ($resource) {
 
         OrgConfirmation: $resource('/api/orginvite/:pk/', {pk:'@pk'}, {
             comfirmMember : {
-                method: 'GET'
+                method: 'GET',
+                isArray: false
             }
         }, {
             stripTrailingSlashes: false

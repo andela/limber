@@ -11,6 +11,7 @@ fake = Factory.create()
 
 
 class TestUrls(TestCase):
+
     ''' 
         Test Invitation of Member to an organisation via email notifiaction.
         emails are stored as EmailMessage objects in a list at django.core.mail.outbox
@@ -19,10 +20,10 @@ class TestUrls(TestCase):
 
     def setUp(self):
         # a user to perform requests that require authentication
-        self.user = {'username': fake.user_name(), 
-                     'email': fake.email(), 
+        self.user = {'username': fake.user_name(),
+                     'email': fake.email(),
                      'password': fake.password()
-                     }                  
+                     }
         self.org = {'username': fake.user_name()}
 
         # store the user in the database
@@ -51,12 +52,12 @@ class TestUrls(TestCase):
         # check if user has been created
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.status_text, 'Created')
+
     def test_unauthorised_user(self):
         # Check if unauthorise user can access page
         response = self.client.get('/api/orginvite/')
-        
-        self.assertIsNot(response.status_code, '200')
-        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(response.status_code, 200)
 
     def test_crud(self):
         # Test Login
@@ -67,20 +68,17 @@ class TestUrls(TestCase):
 
         # Check if logged in user can access page
         response = self.client.get('/api/orginvite/')
-        
+
         self.assertEqual(response.status_code, 200)
-      
 
         # Create Invitation
         email = fake.email()
         current_user = UserAuthentication.objects.first()
         dummy_org = User.objects.first()
-        data = {"email": email , "uid": current_user.id, "org": dummy_org.id}
+        data = {"email": email, "uid": current_user.id, "org": dummy_org.id}
         response = self.client.post('/api/orginvite/', data)
         self.assertEqual(response.status_code, 201)
 
         # check if same info can be posted twice
-        import ipdb ; ipdb.set_trace()
         response = self.client.post('/api/orginvite/', data)
         self.assertEqual(response.status_code, 400)
-

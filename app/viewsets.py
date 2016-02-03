@@ -129,7 +129,8 @@ class StoriesViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
 
-class OrgInvitesViewset(mixins.RetrieveModelMixin,
+class OrgInvitesViewset(mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
                         mixins.UpdateModelMixin,
                         mixins.DestroyModelMixin,
                         viewsets.GenericViewSet):
@@ -137,7 +138,7 @@ class OrgInvitesViewset(mixins.RetrieveModelMixin,
     """ Handles Invitation of Members to Organisation"""
     queryset = OrgInvites.objects.all()
     serializer_class = OrgInviteSerilizer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         # Override the GET method query to only show logged in user
@@ -147,35 +148,39 @@ class OrgInvitesViewset(mixins.RetrieveModelMixin,
         return obj
 
     def retrieve(self, request, pk=None):
-        # import ipdb; ipdb.set_trace()
-        query = OrgInvites.objects.filter(
-            Q(code=self.kwargs.get('pk')), Q(uid=self.request.user.id))
-        params = query.values()
+
+        orginvitation = OrgInvites.objects.filter(
+            Q(code=self.kwargs.get('pk')))
+        params = orginvitation.values()
         if len(params) < 1:
             return Response({
                 'Error': 'Invalid Code',
             }, status=status.HTTP_400_BAD_REQUEST)
-
         email = params[0]['email']
-
-        serializer = self.serializer_class(query, many=True)
+        serializer = self.serializer_class(orginvitation, many=True)
         if 'register' in request.query_params:
             # check if email belongs to a registered user
             try:
-
                 user = UserAuthentication.objects.get(email=email)
-                if user.email == request.user.email:
-                    org = params[0]['org_id']
-                    org = User.objects.get(id=org)
-
-                    data = {'org': org.id, 'user': user.id}
-                    Member.objects.create(org=org, user=user, user_level=2)
-                    return Response(data, status=status.HTTP_200_OK)
+                if hasattr(request.user, 'email'):
+                    if user.email == request.user.email:
+                        org = params[0]['org_id']
+                        org = User.objects.get(id=org)
+                        # Add member to Members Org
+                        Member.objects.create(org=org, user=user, user_level=2)
+                        # Change flag in OrgInvitation Table to 2
+                        orginvitation.accept = 1
+                        orginvitation.save()
+                        return Response({
+                            'org': org.id,
+                            'user': user.id
+                        }, status.HTTP_201_CREATED)
                 # check if he is current logged in user
                 return Response({
                     'Message': 'Please Login',
                     'email': email
                 }, status.HTTP_403_FORBIDDEN)
+
             except UserAuthentication.DoesNotExist:
                 # Else send user to sign
                 return Response({
@@ -183,11 +188,9 @@ class OrgInvitesViewset(mixins.RetrieveModelMixin,
                     'email': email
                 }, status.HTTP_428_PRECONDITION_REQUIRED)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status.HTTP_200_OK)
 
     def create(self, request):
-        import ipdb
-        ipdb.set_trace()
         # restrict ID of creator to the
         request.data['uid'] = request.user.id
         serializer = self.serializer_class(data=request.data)

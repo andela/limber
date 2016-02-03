@@ -24,7 +24,6 @@ router.register(
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^org_registration', views.register_member_to_org)
 ]
 
 urlpatterns += [
