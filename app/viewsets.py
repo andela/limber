@@ -100,10 +100,17 @@ class PersonalProjectViewSet(viewsets.ReadOnlyModelViewSet):
 class OrgProjectViewSet(viewsets.ReadOnlyModelViewSet):
 
     """API endpoint to view projects for organisations the user belongs in."""
+<<<<<<< HEAD
 
     serializer_class = ProjectSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
+=======
+
+    serializer_class = ProjectSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+>>>>>>> f309aabf8b81fe0a9f32ce1a2a9798bbb6d48462
     def get_queryset(self):
         current_user = self.request.user
         user_orgs = Member.objects.filter(
@@ -123,6 +130,7 @@ class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProjectSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
+
     def get_queryset(self):
         current_user = self.request.user
         user_orgs = Member.objects.filter(
@@ -131,8 +139,9 @@ class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
             user_id=current_user.id).values_list('project_id', flat=True)
         orgs = User.objects.filter(
             Q(id=current_user.profile_id) | Q(id__in=user_orgs)).all()
-        return Project.objects.filter(
-            project_id__in=user_in_team).exclude(owner=orgs)
+
+        return Project.objects.filter(project_id__in=user_in_team).exclude(owner=orgs)
+
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
