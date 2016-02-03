@@ -15,6 +15,9 @@ router.register(r'team', viewsets.TeamMemberViewSet)
 router.register(r'story', viewsets.StoriesViewSet, 'story')
 router.register(r'task', viewsets.TaskViewSet, 'task')
 router.register(r'orginvite', viewsets.OrgInvitesViewset)
+router.register(r'personal', viewsets.PersonalProjectViewSet, 'personal')
+router.register(r'orgprojects', viewsets.OrgProjectViewSet, 'orgprojects')
+router.register(r'otherprojects', viewsets.OtherProjectViewSet, 'otherprojects')
 router.register(
 	r'project-invites',
 	viewsets.ProjectInviteViewSet,

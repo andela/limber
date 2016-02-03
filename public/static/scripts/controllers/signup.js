@@ -68,6 +68,7 @@ app.controller('authController', function($rootScope, $scope, AuthService, $cook
         catch(function(response) {
             $scope.signuperror = "Error creating account. Please try again"
         });
+
     };
 
 
