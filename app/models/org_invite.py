@@ -18,7 +18,7 @@ from limber.settings import ALLOWED_HOSTS
 class OrgInvites(models.Model):
 
     '''
-            Model Handles pending invitations. and sends an email 
+            Model Handles pending invitations. and sends an email
             to the invitee.
     '''
     ACCEPTED_STATUS = (
@@ -38,7 +38,7 @@ class OrgInvites(models.Model):
     def create_hash(self):
         # create hash
         salt = random.random()
-        nonlat = "{}4384834hhhhgsdhsdydsuyaisudhd {}".format(salt, self.email)
+        nonlat = "{0}4384834hhhhgsdhsdydsuyaisudhd {1}".format(salt, self.email)
         string = nonlat.encode()
         activation_key = hashlib.sha224(string).hexdigest()
         return activation_key
@@ -55,7 +55,7 @@ class OrgInvites(models.Model):
             super(OrgInvites, self).save(*args, **kwargs)
 
     def send_email_notification(self):
-        
+
         # Create Email notification
         # https://docs.djangoproject.com/en/dev/ref/contrib/sites/
         current_site = Site.objects.get_current()

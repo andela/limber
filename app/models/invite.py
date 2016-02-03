@@ -7,10 +7,11 @@ from random import random
 from django.db import models
 from django.core import mail
 from django.core.urlresolvers import reverse
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 
 from .project import Project
 from .user import UserAuthentication
+from app.invite_email import html_email
 
 
 class ProjectInvite(models.Model):
@@ -43,7 +44,7 @@ class ProjectInvite(models.Model):
 		self.invite_code = self.create_invite_code()
 
 		host = os.environ.get('LIMBER_HOST')
-		
+
 		url = 'http://' + host + reverse('project-invites-list') + self.invite_code
 
 		body = """Hi there!\n
@@ -54,13 +55,20 @@ class ProjectInvite(models.Model):
 				\n\n\n
 				If you have received this in error, please let us know.
 				""".format(self.project.project_name, url)
-		email = EmailMessage(
+
+		html_content = html_email.format(
+			self.uid.profile.username,
+			self.project.project_name,
+			url
+		)
+		email = EmailMultiAlternatives(
 			'Invitation to collaborate on project ' + self.project.project_name,
 			body,
 			self.uid.email,
 			[self.email],
 			connection=connection
 		)
+		email.attach_alternative(html_content, 'text/html')
 		# send the email then save the invite to the database
 		email.send()
 
@@ -70,7 +78,7 @@ class ProjectInvite(models.Model):
 		"""
 
 		salt = random()
-		nonlat = "{}4384834hhhhgsdhsdydsuyaisudhd {}".format(
+		nonlat = "{0}4384834hhhhgsdhsdydsuyaisudhd {1}".format(
 			salt,
 			self.email
 		)
