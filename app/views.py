@@ -1,8 +1,16 @@
-
 from django.shortcuts import render
+from .forms import LoginForm, RegistrationForm
+from app.models import UserAuthentication, User
+import requests
 import jwt
 from rest_framework_jwt import utils
 from django.http import HttpResponseRedirect
+
+# Create your views here.
+
+
+def comfirm_view(request):
+    return render(request, 'limber/comfirmation_page.html')
 
 
 def index(request):
@@ -45,6 +53,7 @@ def dashboard(request):
         return HttpResponseRedirect('/signup/')
 
     return render(request, 'limber/projects.html', {'data': data})
+
 
 def create_project(request):
     cookie = request.COOKIES.has_key('token')
