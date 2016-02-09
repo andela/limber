@@ -32,6 +32,19 @@ def signup(request):
     return render(request, 'limber/signup.html')
 
 
+def login(request):
+    cookie = request.COOKIES.has_key('token')
+    if cookie:
+        try:
+            token = request.COOKIES.get('token')
+            resp = utils.jwt_decode_handler(token)
+            return HttpResponseRedirect('/dashboard/')
+        except:
+            return HttpResponseRedirect('/')
+
+    return render(request, 'limber/login.html')
+
+
 def dashboard(request):
     cookie = request.COOKIES.has_key('token')
     data = {}

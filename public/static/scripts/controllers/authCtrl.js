@@ -1,8 +1,8 @@
-app.controller('authController', function($scope, AuthService, $cookies, $location, $window) {
+app.controller('authController', function($scope, mainService, $cookies, $location, $window) {
 
 
     $scope.login = function() {
-        AuthService.auth.login($scope.user).
+        mainService.auth.login($scope.user).
         $promise.
         then(function(data) {
             $cookies.put('token', data.token);
@@ -19,7 +19,7 @@ app.controller('authController', function($scope, AuthService, $cookies, $locati
         $cookies.remove('token');
         $scope.user = undefined;
     };
-    
+
     $scope.register = function(isValid) {
 
         $scope.signupmsg = ""
@@ -31,7 +31,7 @@ app.controller('authController', function($scope, AuthService, $cookies, $locati
                 email: $scope.signup.email,
                 password: $scope.signup.password
             };
-            AuthService.users.create(data).
+            mainService.users.create(data).
             $promise.
             then(function(result) {
                 console.log(result);
@@ -43,25 +43,6 @@ app.controller('authController', function($scope, AuthService, $cookies, $locati
             });
         }else {
             $scope.signuperror = "Password fields do not match"
-        }
-    };
-});
-
-app.directive("compareTo", function() {
-    return {
-        require: "ngModel",
-        scope: {
-            otherModelValue: "=compareTo"
-        },
-        link: function(scope, element, attributes, ngModel) {
-
-            ngModel.$validators.compareTo = function(modelValue) {
-                return modelValue == scope.otherModelValue;
-            };
-
-            scope.$watch("otherModelValue", function() {
-                ngModel.$validate();
-            });
         }
     };
 });

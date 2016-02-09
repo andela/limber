@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import include, url
 from app import views
 
+app_name = 'app'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^api/', include('app.urls')),
     url(r'^signup/', views.signup, name='signup'),
+    url(r'^login/', views.login, name='login'),
     url(r'^dashboard/', views.dashboard, name='dashboard'),
     url(r'^projects/', views.create_project, name='create_project'),
 ]
