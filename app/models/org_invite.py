@@ -6,14 +6,17 @@ from . import model_field_custom
 import hashlib
 import random
 from django.contrib.sites.models import Site
+from app.invite_email import html_email
+import socket
+
 
 
 class OrgInvites(models.Model):
-
     '''
             Model Handles pending invitations. and sends an email
             to the invitee.
     '''
+
     ACCEPTED_STATUS = (
         (0, 'Pending'),
         (1, 'Accepted'),
@@ -38,23 +41,25 @@ class OrgInvites(models.Model):
 
     def save(self, *args, **kwargs):
         # over ride the save() to include hash value before saving
-        # check if invitee is already a member
+        # check if invitee is already a member,
         # check if the row with this hash already exists.
+       
         if not self.pk:
-            self.send_email_notification()
             self.code = self.create_hash()
+            self.send_email_notification()
             super(OrgInvites, self).save(*args, **kwargs)
 
     def send_email_notification(self):
         # Create Email notification
         # https://docs.djangoproject.com/en/dev/ref/contrib/sites/
-        current_site = Site.objects.get_current()
+        current_site = socket.gethostname()
         link = '{0}/confirm/?code={1}'.format(current_site, self.code)
         subject = 'Limber: Organisation invitations'
-        message = 'You been Invited to ' + self.org.username + \
-            ' organisation. Your activation code is '\
-            'http://' + link
-
+        message = html_email.format(
+            self.uid.profile.username,
+            self.org,
+            link,
+            "Organisation")
         from_email = settings.EMAIL_HOST_USER
         to_list = [self.email]
         response = requests.post(
