@@ -1,6 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import viewsets, status, permissions, mixins
-
+from rest_framework import viewsets, status, permissions
 from django.db import IntegrityError
 from django.db.models import Q
 from app.serializers import (
@@ -18,7 +17,6 @@ from app.models.org_invite import OrgInvites
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
-
     """This is to be used to signup an organisation."""
 
     queryset = User.objects.filter(user_type=2)
@@ -48,7 +46,6 @@ class OrgSignUpViewSet(viewsets.ModelViewSet):
 
 
 class UserSignUpViewSet(viewsets.ModelViewSet):
-
     """This is to be used to signup a user."""
 
     queryset = User.objects.filter(user_type=1)
@@ -77,7 +74,6 @@ class UserSignUpViewSet(viewsets.ModelViewSet):
 
 
 class TeamMemberViewSet(viewsets.ModelViewSet):
-
     """API endpoint that allows project team members to be viewed or edited."""
 
     queryset = TeamMember.objects.all()
@@ -85,7 +81,6 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
 
 
 class PersonalProjectViewSet(viewsets.ReadOnlyModelViewSet):
-
     """API endpoint to view current user's personal projects."""
 
     serializer_class = ProjectSerializer
@@ -203,28 +198,27 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk=None):
         # retrieve and   and registers a user
-        orginvitation = OrgInvites.objects.filter(
-            Q(code=self.kwargs.get('pk')))
-        params = orginvitation.values()
-        if len(params) < 1:
+        orginvitation = OrgInvites.objects.get(code=pk)
+        email = orginvitation.email
+        if not email:
             return Response({
                 'Error': 'Invalid Code',
             }, status=status.HTTP_400_BAD_REQUEST)
-        email = params[0]['email']
-        serializer = self.serializer_class(orginvitation, many=True)
         if 'register' in request.query_params:
             # check if email belongs to a registered user
+
             try:
                 user = UserAuthentication.objects.get(email=email)
                 if hasattr(request.user, 'email'):
                     if user.email == request.user.email:
-                        org = params[0]['org_id']
+                        org = orginvitation.org_id
                         org = User.objects.get(id=org)
                         # Add member to Members Org
                         member = Member.objects.create(
                             org=org, user=user, user_level=2)
                         # Change flag in OrgInvitation Table to 2
-                        orginvitation.update(accept=1)
+                        orginvitation.accept = 1
+                        orginvitation.save()
                         return Response({
                             'org': org.id,
                             'user': user.id,
@@ -242,7 +236,8 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
                     'message': 'please Signup then try again',
                     'email': email
                 }, status.HTTP_428_PRECONDITION_REQUIRED)
-
+        # return detail about the invitation
+        serializer = self.serializer_class(orginvitation)
         return Response(serializer.data, status.HTTP_200_OK)
 
     def create(self, request):
@@ -261,7 +256,7 @@ class OrgInvitesViewset(viewsets.ModelViewSet):
             if invite is not None:
                 return Response({
                     'status': "email Created",
-                    'code': invite.create_hash(),
+                    'code': invite.code,
                 }, status=status.HTTP_201_CREATED)
             return Response({
                 'message': 'Mail notification was not sent',

@@ -84,7 +84,7 @@ class TestUrls(TestCase):
         response = self.client.post('/api/orginvite/', data)
         self.assertEqual(response.status_code, 400)
 
-    def test_5_email_esponse(self):
+    def test_5_email_response(self):
         email = fake.email()
         current_user = UserAuthentication.objects.first()
         dummy_org = User.objects.first()

@@ -59,7 +59,8 @@ class ProjectInvite(models.Model):
 		html_content = html_email.format(
 			self.uid.profile.username,
 			self.project.project_name,
-			url
+			url, 
+			'Project'
 		)
 		email = EmailMultiAlternatives(
 			'Invitation to collaborate on project ' + self.project.project_name,
