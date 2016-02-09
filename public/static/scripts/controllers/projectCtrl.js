@@ -1,4 +1,4 @@
-app.controller('ProjectCtrl', function($scope, $cookies, AuthService){
+app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     $('.modal-trigger').leanModal();
-    $scope.projects = AuthService.projects.getProjects();
+    $scope.projects = mainService.projects.getProjects();
 });

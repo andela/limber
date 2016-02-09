@@ -22,18 +22,23 @@
         {% block content %}
 
         {% endblock %}
-        <script type="text/javascript" src="{% static 'scripts/jquery.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/typed.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/materialize.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/angular.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/angular-resource.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/angular-cookies.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'angular-materialize/src/angular-materialize.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/angular-route.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/vendor/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/vendor/typed.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/vendor/materialize.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/vendor/angular.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/vendor/angular-resource.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/vendor/angular-cookies.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/vendor/angular-route.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'scripts/app.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/services/AuthService.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/controllers/landing.js' %}"></script>
-        <script type="text/javascript" src="{% static 'scripts/controllers/signup.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/services/mainService.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/controllers/landingCtrl.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/controllers/authCtrl.js' %}"></script>
         <script type="text/javascript" src="{% static 'scripts/controllers/projectCtrl.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/controllers/dashboardCtrl.js' %}"></script>
+         <script>
+         $(document).ready(function(){
+            $('ul.tabs').tabs();
+          });
+         </script>
     </body>
 </html>

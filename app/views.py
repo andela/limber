@@ -6,8 +6,6 @@ import jwt
 from rest_framework_jwt import utils
 from django.http import HttpResponseRedirect
 
-# Create your views here.
-
 
 def comfirm_view(request):
     return render(request, 'limber/comfirmation_page.html')
@@ -38,6 +36,19 @@ def signup(request):
             return HttpResponseRedirect('/')
 
     return render(request, 'limber/signup.html')
+
+
+def login(request):
+    cookie = request.COOKIES.has_key('token')
+    if cookie:
+        try:
+            token = request.COOKIES.get('token')
+            resp = utils.jwt_decode_handler(token)
+            return HttpResponseRedirect('/dashboard/')
+        except:
+            return HttpResponseRedirect('/')
+
+    return render(request, 'limber/login.html')
 
 
 def dashboard(request):

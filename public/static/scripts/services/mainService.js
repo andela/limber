@@ -12,7 +12,7 @@ app.factory('sessionInjector', function ($cookies) {
     };
 });
 
-app.factory('AuthService', function ($resource) {
+app.factory('mainService', function ($resource) {
     return {
         auth: $resource('/api/api-token-auth/', {}, {
             login: {

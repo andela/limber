@@ -1,4 +1,5 @@
-app.controller('authController', function($rootScope, $scope, AuthService, $cookies, $location, $window) {
+
+app.controller('authController', function($rootScope, $scope, mainService, $cookies, $location, $window) {
 
     nextParam = $location.search().code;
 
@@ -14,9 +15,8 @@ app.controller('authController', function($rootScope, $scope, AuthService, $cook
         });
     });
 
-
     $scope.login = function() {
-        AuthService.auth.login($scope.user).
+        mainService.auth.login($scope.user).
         $promise.
         then(function(data) {
             $cookies.put('token', data.token);
@@ -34,41 +34,43 @@ app.controller('authController', function($rootScope, $scope, AuthService, $cook
         $scope.user = undefined;
     };
 
+    $scope.register = function(isValid) {
+        $scope.signupmsg = ""
+        $scope.signuperror = ""
+        if (isValid) {
+            var data = {
+                username: $scope.signup.username,
+                email: $scope.signup.email,
+                password: $scope.signup.password
+            };
+            mainService.users.create(data).
+            $promise.
+            then(function(result) {
+                //when we get a code param in the url
+                if (typeof nextParam === 'undefined') {
+                    //if a code param doesn't exist in the url
+                    //then follow the normal registration process
+                    $scope.signupmsg = "Registration complete. You may now log in."
+                    $scope.signup = {}
+                } else {
+                    //otherwise login a user and redirect the user to
+                    //the org invite page
+                    var login_data = {
+                        email: $scope.signup.username,
+                        password: $scope.signup.password
+                    };
+                    $rootScope.$broadcast('AutoLogin', {
+                        data: login_data,
+                        code: nextParam
+                    });
+                }
 
-    $scope.register = function() {
-        var data = {
-            username: $scope.signup.username,
-            email: $scope.signup.email,
-            password: $scope.signup.password
+            }).
+            catch(function(response) {
+                $scope.signuperror = "Error creating account. Please try again"
+            });
+
         };
-
-        AuthService.users.create(data).
-        $promise.
-        then(function(result) {
-            //when we get a code param in the url
-            if (typeof nextParam === 'undefined') {
-                //if a code param doesn't exist in the url
-                //then follow the normal registration process
-                $scope.signupmsg = "Registration complete. You may now log in."
-                $scope.signup = {}
-            } else {
-                //otherwise login a user and redirect the user to 
-                //the org invite page
-                var login_data = {
-                    email: $scope.signup.username,
-                    password: $scope.signup.password
-                };
-                $rootScope.$broadcast('AutoLogin', {
-                    data: login_data,
-                    code: nextParam
-                });
-            }
-
-        }).
-        catch(function(response) {
-            $scope.signuperror = "Error creating account. Please try again"
-        });
-
     };
 
 
