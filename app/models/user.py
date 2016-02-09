@@ -44,6 +44,8 @@ class User(models.Model):
 
     class Meta:
         app_label = 'app'
+    def __str__(self):
+        return self.username
 
     def __str__(self):
         return self.username
@@ -198,6 +200,4 @@ class Member(models.Model):
     user = models.ForeignKey(UserAuthentication)
     user_level = models.PositiveSmallIntegerField(blank=False)
 
-    class Meta:
-        app_label = 'app'
 

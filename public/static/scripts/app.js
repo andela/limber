@@ -1,6 +1,6 @@
-var app = angular.module('limberApp', [ 'ngResource', 'ngCookies']);
+var app = angular.module('limberApp', ['ngRoute', 'ngResource', 'ngCookies']);
 
-app.config(function ($httpProvider, $locationProvider, $interpolateProvider) {
+app.config(function($httpProvider, $locationProvider, $interpolateProvider) {
 
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -20,7 +20,7 @@ app.run(function($cookies, mainService) {
     }).
     catch(function(response) {
         if (response.status == 400) {
-           $cookies.remove('token')
+            $cookies.remove('token')
         };
     });
 });

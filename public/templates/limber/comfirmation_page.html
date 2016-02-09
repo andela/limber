@@ -1,0 +1,29 @@
+{% extends 'partials/layout.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+<body ng-cloak>
+<div class="row" ng-controller="authController">
+    <div class="col s12" id="back_margin" ng-init="confirm_Org_Addition()">
+        
+        <!-- Middle content box -->
+       <!--  <div class="row">
+
+            <div class="container">
+                <h4 class="center">Confirm</h4>
+                <button type="submit" class="btn blue" ng-click="confirm_Org_Addition()">Yes</button>
+                <button type="submit" class="btn blue">No</button>
+            </div>
+        </div>
+
+         -->
+
+</div>
+<footer class="row" id="footer">
+    <div class="container s3 center">
+        <span>Made with &hearts; By Team Limber</span>
+    </div>
+</footer>
+
+{% endblock %}
