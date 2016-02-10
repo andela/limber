@@ -34,11 +34,18 @@ class AccountManager(BaseUserManager):
 class User(models.Model):
     """This model is to contain both user and organistation related data"""
 
+    USER_TYPES = (
+        (1, 'User'),
+        (2, 'Organization')
+    )
+
     id = models.AutoField(primary_key=True)
     username = model_field_custom.CharFieldCaseInsensitive(
         max_length=70, unique=True)
     full_name = models.CharField(max_length=90, blank=True)
-    user_type = models.PositiveSmallIntegerField(blank=False)
+    user_type = models.PositiveSmallIntegerField(
+        blank=False, choices=USER_TYPES, default=1
+        )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -193,11 +200,16 @@ class UserAuthentication(AbstractBaseUser):
 
 
 class Member(models.Model):
+    USER_LEVELS = (
+        (1, 'Admin'),
+        (2, 'member')
+    )
+
     class Meta:
         app_label = 'app'
 
     org = models.ForeignKey(User)
     user = models.ForeignKey(UserAuthentication)
-    user_level = models.PositiveSmallIntegerField(blank=False)
-
-
+    user_level = models.PositiveSmallIntegerField(
+        blank=False, choices=USER_LEVELS, default=2
+        )

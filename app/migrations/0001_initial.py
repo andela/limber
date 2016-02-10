@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
             name='Member',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('user_level', models.PositiveSmallIntegerField()),
+                ('user_level', models.PositiveSmallIntegerField(default=2, choices=[(1, b'Admin'), (2, b'member')])),
             ],
         ),
         migrations.CreateModel(
@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('username', app.models.model_field_custom.CharFieldCaseInsensitive(unique=True, max_length=70)),
                 ('full_name', models.CharField(max_length=90, blank=True)),
-                ('user_type', models.PositiveSmallIntegerField()),
+                ('user_type', models.PositiveSmallIntegerField(default=1, choices=[(1, b'User'), (2, b'Organization')])),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
