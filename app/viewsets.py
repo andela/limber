@@ -81,56 +81,24 @@ class TeamMemberViewSet(viewsets.ModelViewSet):
 
 	def create(self, request):
 		"""Define customizations during addition of members to a project."""
-		invite_code = request.query_params.get('invite')
-		if invite_code:
-			# requests from user who has been invited to project
-			# request parameter supplied during redirect after user has logged in
-			pi = get_object_or_404(ProjectInvite, pk=invite_code)
 
-			if isinstance(ProjectInvite, pi):
-				user_auth = UserAuthentication.objects.get(email=pi.email)
-				serializer = self.serializer_class(
-					user=user_auth, project=pi.project, user_level=0
-				)
-				if serializer.is_valid():
-					team_member = TeamMember(**serializer.validated_data)
-					team_member.save()
-					return Response(
-						{
-							'status': 'Invitation successful',
-							'message': 'Invited user added to project'
-						}, status=status.HTTP_201_CREATED
-					)
-				return Response(
-					{
-						'status': 'Invalid data',
-						'message': 'Invalid data provided'
-					}, status=status.HTTP_400_BAD_REQUEST
-				)
+		serializer = self.serializer_class(data=request.data)
+		if serializer.is_valid():
+			team_member = TeamMember(**serializer.validated_data)
+			team_member.save()
 			return Response(
 				{
-					'status': 'Object not found',
-					'message': 'Project invite not found'
-				}, status=status.HTTP_404_NOT_FOUND
+					'status': 'Created',
+					'message': 'Team Member Created'
+				},
+				status=status.HTTP_201_CREATED
 			)
-		else:
-			serializer = self.serializer_class(data=request.data)
-			if serializer.is_valid():
-				team_member = TeamMember(**serializer.validated_data)
-				team_member.save()
-				return Response(
-					{
-						'status': 'Created',
-						'message': 'Team Member Created'
-					},
-					status=status.HTTP_201_CREATED
-				)
-			return Response(
-				{
-					'status': 'Invalid data',
-					'message': 'Invalid data provided'
-				}, status=status.HTTP_400_BAD_REQUEST
-			)
+		return Response(
+			{
+				'status': 'Invalid data',
+				'message': 'Invalid data provided'
+			}, status=status.HTTP_400_BAD_REQUEST
+		)
 
 
 class PersonalProjectViewSet(viewsets.ReadOnlyModelViewSet):
@@ -361,7 +329,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 class ProjectInviteViewSet(viewsets.ModelViewSet):
 	queryset = ProjectInvite.objects.all()
 	serializer_class = ProjectInviteSerializer
-	permission_classes = (permissions.IsAuthenticated,)
+	# permission_classes = (permissions.IsAuthenticated,)
 
 	def create(self, request):
 		"""Create ProjectInvite instance, send the email then save."""
@@ -434,5 +402,38 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 				{
 					'status': 'User not found',
 					'message': 'User does not exist in the system'
+				}, status=status.HTTP_404_NOT_FOUND
+			)
+
+	def update(self, request, pk=None):
+		"""Encapsulate logic that executes when a HTTP PUT method is sent.
+
+		(To be used only when a project invite has been ACCEPTED).
+		"""
+
+		# 1. retrieve the project invite object from the database
+		# 2. then get the user object by filtering the query by the email in the invite
+		# (this means users MUST exist in the system beforehand)
+		# 3. With the user and project info, invitee is added as project member
+		# 4. Update project invite to status accepted
+		import ipdb; ipdb.set_trace()
+		pi = get_object_or_404(ProjectInvite, pk=self.kwargs.get('pk', None))
+
+		if isinstance(pi, ProjectInvite):
+			user_auth = get_object_or_404(UserAuthentication, email=pi.email)
+			if isinstance(user_auth, UserAuthentication):
+				tm = TeamMember(user=user_auth, project=pi.project, user_level=0)
+				tm.save()
+				pi.accept = ProjectInvite.ACCEPTED
+				pi.save()
+				return Response(
+					{
+						'status': 'Project invite accepted',
+						'message': 'Project invite accepted'
+					}, status=status.HTTP_200_OK
+				)
+			return Response(
+				{
+					'detail': 'Not found.'
 				}, status=status.HTTP_404_NOT_FOUND
 			)
