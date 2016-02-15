@@ -10,6 +10,7 @@ from app.serializers import (
 
 )
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import AnonymousUser
 from app.models.user import User, Member, UserAuthentication
 from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
@@ -329,10 +330,15 @@ class TaskViewSet(viewsets.ModelViewSet):
 class ProjectInviteViewSet(viewsets.ModelViewSet):
 	queryset = ProjectInvite.objects.all()
 	serializer_class = ProjectInviteSerializer
-	# permission_classes = (permissions.IsAuthenticated,)
 
 	def create(self, request):
 		"""Create ProjectInvite instance, send the email then save."""
+		if isinstance(request.user, AnonymousUser):
+			return Response(
+				{
+					'detail': 'Authentication credentials were not provided.'
+				}, status=status.HTTP_401_UNAUTHORIZED
+			)
 		try:
 			serializer = self.serializer_class(data=request.data)
 			if serializer.is_valid():
@@ -410,28 +416,73 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 
 		(To be used only when a project invite has been ACCEPTED).
 		"""
-
+		# ALGORITHM
 		# 1. retrieve the project invite object from the database
-		# 2. then get the user object by filtering the query by the email in the invite
+		# 2. Check that the email from the request matches the email in the invite
+		# 3. Get the user object by filtering the query by the email in the invite
 		# (this means users MUST exist in the system beforehand)
-		# 3. With the user and project info, invitee is added as project member
-		# 4. Update project invite to status accepted
-		import ipdb; ipdb.set_trace()
-		pi = get_object_or_404(ProjectInvite, pk=self.kwargs.get('pk', None))
+		# 4. With the user and project info, invitee is added as project member
+		# 5. Update project invite to status accepted
+		if isinstance(request.user, AnonymousUser):
+			return Response(
+				{
+					'detail': 'Authentication credentials were not provided.'
+				}, status=status.HTTP_401_UNAUTHORIZED
+			)
 
-		if isinstance(pi, ProjectInvite):
-			user_auth = get_object_or_404(UserAuthentication, email=pi.email)
-			if isinstance(user_auth, UserAuthentication):
-				tm = TeamMember(user=user_auth, project=pi.project, user_level=0)
-				tm.save()
-				pi.accept = ProjectInvite.ACCEPTED
-				pi.save()
+		serializer = self.serializer_class(data=request.data)
+
+		if serializer.is_valid():
+			try:
+				pi = ProjectInvite.objects.get(pk=self.kwargs.get('pk', None))
+
+				if serializer.data.get('email') != pi.email:
+					return Response(
+						{
+							'status': 'Invite not processed',
+							'message': 'Login email does not match invited email!'
+						}, status=status.HTTP_400_BAD_REQUEST
+					)
+				try:
+					user_auth = UserAuthentication.objects.get(email=pi.email)
+
+					tm = TeamMember(user=user_auth, project=pi.project, user_level=0)
+					tm.save()
+					pi.accept = ProjectInvite.ACCEPTED
+					pi.save()
+					return Response(
+						{
+							'status': 'Project invite accepted',
+							'message': 'Project invite accepted'
+						}, status=status.HTTP_200_OK
+					)
+				except UserAuthentication.DoesNotExist:
+					return Response(
+						{
+							'detail': 'User not found.'
+						}, status=status.HTTP_404_NOT_FOUND
+					)
+			except ProjectInvite.DoesNotExist:
 				return Response(
 					{
-						'status': 'Project invite accepted',
-						'message': 'Project invite accepted'
-					}, status=status.HTTP_200_OK
+						'detail': 'Project invite not found.'
+					}, status=status.HTTP_404_NOT_FOUND
 				)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+	def destroy(self, request, pk=None):
+		if isinstance(request.user, AnonymousUser):
+			return Response(
+				{
+					'detail': 'Authentication credentials were not provided.'
+				}, status=status.HTTP_401_UNAUTHORIZED
+			)
+
+		try:
+			pi = ProjectInvite.objects.get(pk=pk)
+			pi.delete()
+			return Response({}, status=status.HTTP_204_NO_CONTENT)
+		except ProjectInvite.DoesNotExist:
 			return Response(
 				{
 					'detail': 'Not found.'
