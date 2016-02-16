@@ -31,30 +31,27 @@ class TestAddteamMember(APITestCase):
 			username=self.username, user_type=self.user_type,
 			email=self.email, password=self.password)
 
-		self.user = User.objects.filter(username=self.username).first()
-
 		self.project = Project.create_project(
-			owner=self.user, project_name=self.project_name,
+			owner=self.create_user.profile, project_name=self.project_name,
 			project_desc=self.project_desc)
 
 		self.team_member_data = {
 			'project': self.project.project_id,
-			'user_level': 1, 'user': self.user.id}
+			'user_level': 1, 'user': self.create_user.id}
 
 		self.create_second_user = User.create_userprofile(
 			username=self.username1, user_type=1,
 			email=fake.email(), password=self.password)
 
-		self.second_user = User.objects.filter(username=self.username1).first()
-
 		self.diff_team_member_data = {
 			'project': self.project.project_id,
-			'user_level': 1, 'user': self.second_user.id}
+			'user_level': 1, 'user': self.create_second_user.id}
 
 	def tearDown(self):
 		"""Free resources and do some housekeeping after tests are run."""
 		del self.project
-		del self.user
+		del self.create_user
+		del self.create_second_user
 
 	def test_add_team_member_success(self):
 		"""Ensure a user is added in the team members list."""
@@ -62,7 +59,7 @@ class TestAddteamMember(APITestCase):
 		response = self.client.post(url, self.team_member_data, format='json')
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 		self.assertEqual(TeamMember.objects.count(), 1)
-		self.assertEqual(TeamMember.objects.get().user, self.user)
+		self.assertEqual(TeamMember.objects.get().user, self.create_user)
 
 	def test_adding_same_user_to_one_project_twice_fails(self):
 		"""Check that a user isn't added to the same project twice."""

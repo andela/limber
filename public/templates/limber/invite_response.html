@@ -1,0 +1,9 @@
+{% extends 'partials/dashboard.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+<div ng-controller="ProjectInviteCtrl" ng-init="completeProjectInvite('{{ invite_code }}')">
+
+</div>
+{% endblock %}

@@ -79,3 +79,11 @@ def create_project(request):
         return HttpResponseRedirect('/signup/')
 
     return render(request, 'limber/create_project.html', {'data': data})
+
+
+def respond_project_invite(request, invite_code):
+    return render(
+        request,
+        'limber/invite_response.html',
+        {'invite_code': invite_code}
+    )

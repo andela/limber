@@ -1,7 +1,9 @@
 
-app.controller('authController', function($rootScope, $scope, mainService, $cookies, $location, $window) {
+app.controller('authController', function($rootScope, $scope, mainService, $cookies, $location, $window, projectInviteService) {
 
     nextParam = $location.search().code;
+    finishProjectInvite = $location.search().completeinvite;
+    invite_code = $location.search().invitecode;
 
 
     $scope.$on('AutoLogin', function(event, args) {
@@ -21,6 +23,24 @@ app.controller('authController', function($rootScope, $scope, mainService, $cook
         then(function(data) {
             $cookies.put('token', data.token);
             $window.location.href = '/dashboard';
+
+            // if there's a query parameter named 'completeinvite' at this point,
+            // add this person as a project member
+            if (finishProjectInvite === 'yes') {
+                projectInviteService.ProjectInvite.acceptInvite({invite_code: invite_code}).
+                $promise.then(
+                    function (response) {
+                        if (response.status === 'Project invite accepted') {
+                            var $toastContent = $('<strong style="color: #4db6ac;">Your invite has been completed successfully</strong>');
+                            Materialize.toast($toastContent, 5000);
+                        }
+                    },
+                    function (error) {
+                        var $toastContent = $('<strong style="color: #4db6ac;">Your invite has not been completed successfully</strong>');
+                        Materialize.toast($toastContent, 5000);
+                    }
+                );
+            }
 
         }).
         catch(function(data) {
@@ -52,6 +72,13 @@ app.controller('authController', function($rootScope, $scope, mainService, $cook
                     //then follow the normal registration process
                     $scope.signupmsg = "Registration complete. You may now log in."
                     $scope.signup = {}
+
+                    // for project invites, completeinvite and invitecode query
+                    // parameters are required
+                    if (finishProjectInvite && invite_code) {
+                        $window.location.href = '/login?completeinvite=' + finishProjectInvite + '&invitecode=' + invite_code;
+                    }
+
                 } else {
                     //otherwise login a user and redirect the user to
                     //the org invite page
