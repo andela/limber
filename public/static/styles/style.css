@@ -135,7 +135,7 @@ h5 {
 }
 
 
-.input-field input{
+#signup .input-field input, #login .input-field input{
     border: 1px solid #ccc;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -174,4 +174,14 @@ h5 {
     display: block;
     font-size: 1.3em;
     text-align: center;
+}
+.add-project .card:hover {
+    color: #757575;
+    background: #bdbdbd;
+}
+.add-project a {
+    color: #424242;
+}
+.modal-button {
+    padding: 10px;
 }
