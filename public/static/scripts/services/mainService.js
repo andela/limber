@@ -73,6 +73,13 @@ app.factory('mainService', function ($resource) {
             }
         }, {
             stripTrailingSlashes: false
+        }),
+        Projects: $resource('/api/project/', {}, {
+            createPersonalProject: {
+                method: 'POST'
+            }
+        }, {
+            stripTrailingSlashes: false
         })
     };
 });
