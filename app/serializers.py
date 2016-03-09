@@ -35,10 +35,11 @@ class OrgSerializer(serializers.ModelSerializer):
     """This serializer class is to be used to register an organisation."""
 
     user_type = serializers.IntegerField(default=2, read_only=True)
+    org_id = serializers.CharField(source='id', read_only=True)
 
     class Meta:
         model = User
-        fields = ('username', 'user_type', 'full_name')
+        fields = ('username', 'user_type', 'full_name', 'org_id')
         read_only_fields = ('user_type')
 
     def create(self, validated_data):
@@ -68,7 +69,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = (
-            'url', 'owner', 'project_name', 'project_desc', 'team_members')
+            'url', 'owner', 'project_name', 'project_desc', 'team_members',
+        )
+
         validators = [
             UniqueTogetherValidator(
                 queryset=Project.objects.all(),
