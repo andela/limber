@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Limber</title>
+        <link type="text/css" rel="stylesheet" href="{% static 'styles/404.css' %}"/>
+    </head>
+    <body>
+        <div class="container">
+            <form class="four-oh-four-form">
+                <input type="text" class="404-input">
+            </form>
+
+            <div class="terminal">
+                <p class="prompt">Limber says the page you requested cannot be found right now. Try typing 'all iz well'.</p>
+                <p class="prompt output new-output"></p>
+            </div>
+        </div>
+        <script type="text/javascript" src="{% static 'scripts/vendor/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/404.js' %}"></script>
+    </body>
+</html>

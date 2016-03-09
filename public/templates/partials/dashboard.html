@@ -6,16 +6,21 @@
 <div class="row" ng-controller="DashCtrl">
 
 	<!-- Dropdown Structure -->
+	<ul id="med-nav" class="side-nav">
+		<li><a href="#!">Profile</a></li>
+		<li><a href="#!">Settings</a></li>
+		<li><a href="#!" ng-click="logout()">Sign Out</a></li>
+	</ul>
 	<ul id="dropdown1" class="dropdown-content">
 		<li><a href="#!">Profile</a></li>
 		<li><a href="#!">Settings</a></li>
 		<li><a href="#!" ng-click="logout()">Sign Out</a></li>
 	</ul>
-	<nav class="blue">
+	<nav class="grey darken-4">
 		<div class="nav-wrapper">
 			<div class="col s12">
+				<a href="#" data-activates="med-nav" class="button-collapse"><i class="material-icons">menu</i></a>
 				<a href="#" class="breadcrumb">Limber</a>
-				<a href="#!" class="breadcrumb">First</a>
 				<ul class="right hide-on-med-and-down">
 					<li><a href="#"><i class="material-icons">search</i></a></li>
 					<!-- Dropdown Trigger -->

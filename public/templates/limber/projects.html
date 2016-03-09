@@ -3,65 +3,148 @@
 {% load staticfiles %}
 
 {% block dashboard %}
-<body class="grey lighten-3" ng-cloak>
+<body class="grey lighten-5" ng-cloak>
     <div class="row">
         <div id="dash_wrapper" class="container">
             <div class="row" ng-controller="ProjectCtrl">
                 <div class="col s12">
-                    <h5>Personal Projects
-                      <span class="right"><a class="modal-trigger" data-target="newproject"><i class="material-icons">add</i></a></span>
-                  </h5>
-                  <div class="col s12 m4 l3" ng-repeat="project in projects">
-                    <div class="card">
-                        <div class="card-content">
-                            <a class="card-title">
-                                [[project.project_name]]
-                            </a>
-                            <div>
-                                [[project.project_desc]]
+                    <h5>Personal Projects</h5>
+                    <div class="col s12 m4 l3" ng-repeat="project in personal_projects">
+                        <div class="card">
+                            <div class="card-content">
+                                <a class="card-title">
+                                    [[project.project_name]]
+                                </a>
+                                <div>
+                                    [[project.project_desc]]
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col s12 m4 l3 add-project">
+                        <a href="#project-modal" class="modal-trigger">
+                            <div  class="card valign-wrapper">
+
+                                <div class="card-content valign">
+
+                                    <span >
+                                        <i class="material-icons tiny">add</i>Add Project
+                                    </span>
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+                    <div ng-show="personal_projects.length !== 0" class="col s12">
+                        <a href="#">view all</a>
+                    </div>
+                </div>
+                <div class="col s12">
+                    <h5>Organization Projects</h5>
+                    <div class="col s12 m4 l3" ng-repeat="project in org_projects">
+                        <div class="card">
+                            <div class="card-content">
+                                <a class="card-title">
+                                    [[project.project_name]]
+                                </a>
+                                <div>
+                                    [[project.project_desc]]
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m4 l3 add-project">
+                        <a href="#project-modal" class="modal-trigger">
+                            <div  class="card valign-wrapper">
+                                <div class="card-content valign">
+                                    <span>
+                                        <i class="material-icons tiny">add</i> Add Project
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div ng-show="org_projects.length !== 0" class="col s12">
+                        <a href="#">view all</a>
+                    </div>
+                </div>
+                <div class="col s12">
+                    <h5>Other Projects</h5>
+                    <div class="col s12 m4 l3" ng-repeat="project in other_projects">
+                        <div class="card">
+                            <div class="card-content">
+                                <a class="card-title">
+                                    [[project.project_name]]
+                                </a>
+                                <div>
+                                    [[project.project_desc]]
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m4 l3" ng-show="org_projects.length === 0">
+                        <div class="card">
+                            <div class="card-content">
+                                <p>
+                                    There are no other projects.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="org_projects.length !== 0" class="col s12">
+                        <a href="#">view all</a>
                     </div>
                 </div>
             </div>
             <div class="col s12">
-            <h5>ORG 1
-                  <span class="right"><a class="modal-trigger" data-target="newproject"><i class="material-icons">add</i></a></span>
-              </h5>
-              <div class="col s12 m4 l3" ng-repeat="project in projects">
-                <div class="card">
-                    <div class="card-content">
-                        <a class="card-title">
-                            [[project.project_name]]
-                        </a>
-                        <div>
-                            [[project.project_desc]]
+                <div class="row">
+                    <div class="card white">
+                        <div class="card-content">
+                            <h6>Activities</h6>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-   <div class="col s12">
-    <div class="row">
-        <div class="card white">
-            <div class="card-content">
-                <h6>Activities</h6>
+
+    <div id="project-modal" class="modal">
+        <form class="col s12">
+            <div class="modal-content">
+                <h4 class="center">Add Project</h4>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="name" type="text" class="validate" required>
+                        <label for="name">Project Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select id="owner" class="browser-default"required>
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="1">Option 1</option>
+                        </select>
+                        <label for="owner">Owner</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="description" class="materialize-textarea validate" required> </textarea>
+                        <label for="description">Project Description</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field right">
+                        <span class="modal-button">
+                            <button id="save-project" type="submit" class="btn blue waves-effect waves-cyan " type="submit" >Save</button>
+                        </span>
+                        <span class="modal-button">
+                            <a class="btn grey modal-action modal-close waves-effect waves-grey ">Cancel</a>
+                        </span>
+                    </div>
+                </div>
+
             </div>
-        </div>
+        </form>
     </div>
-</div>
-</div>
-</div>
-
-<div id="newproject" class="modal">
-  <div class="modal-content">
-    <h4>Add Project</h4>
-    <p>A bunch of text</p>
-</div>
-<div class="modal-footer">
-    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
-</div>
-</div>
-
 {% endblock %}
