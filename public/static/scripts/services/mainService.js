@@ -75,8 +75,16 @@ app.factory('mainService', function ($resource) {
             stripTrailingSlashes: false
         }),
         Projects: $resource('/api/project/', {}, {
-            createPersonalProject: {
+            createProject: {
                 method: 'POST'
+            }
+        }, {
+            stripTrailingSlashes: false
+        }),
+        OrgAssociations: $resource('/api/org-associations/', {}, {
+            getAll: {
+                method: 'GET',
+                isArray: true
             }
         }, {
             stripTrailingSlashes: false
