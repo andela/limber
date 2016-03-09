@@ -176,9 +176,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
 		return Project.objects.filter(owner=users)
 
 	def create(self, request):
-		"""Define customizations during project creation."""
-		serializer = self.serializer_class(data=request.data)
-
+		"""Define customizations during user creation."""
+		data = request.data
+		data['owner'] = request.user.profile.id
+		serializer = self.serializer_class(data=data)
 		if serializer.is_valid():
 			Project.create_project(**serializer.validated_data)
 			return Response({
@@ -186,10 +187,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 				'message': 'Project Created'
 			}, status=status.HTTP_201_CREATED)
 
-		return Response({
-			'status': "Bad request",
-			'message': "Failed to create project"
-		}, status=status.HTTP_400_BAD_REQUEST)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StoriesViewSet(viewsets.ModelViewSet):
