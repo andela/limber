@@ -54,7 +54,7 @@
 												</div>
 										</div>
 										<div class="col s12 m4 l3 add-project">
-												<a href="#project-modal" class="modal-trigger">
+												<a href="#organisationalProjectModal" class="modal-trigger" ng-click="getAssociatedOrgs()">
 														<div  class="card valign-wrapper">
 																<div class="card-content valign">
 																		<span>
@@ -122,12 +122,45 @@
 				<div class="row">
 					<div class="input-field col s12">
 						<textarea ng-model="personal.project_desc" id="personal_project_desc" class="materialize-textarea"></textarea>
-						<label for="personal_project_desc">Project Name</label>
+						<label for="personal_project_desc">Project Description</label>
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
 				<a class="modal-action modal-close waves-effect waves-green btn-flat " ng-click="createPersonalProject()">Save</a>
+				<a class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+			</div>
+		</div>
+
+		<div id="organisationalProjectModal" class="modal modal-fixed-footer">
+			<div class="modal-content">
+				<div class="row">
+					<div class="center"><h4>Create Organisational Project</h4></div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<input ng-model="organisational.project_name" id="organisational_project_name" type="text" class="validate">
+						<label for="organisational_project_name">Project Name</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+							<select id="owner" class="browser-default" ng-model="organisational.owner" required>
+									<option value="" disabled selected>Organisation Owner (Project)</option>
+									<option ng-repeat="org in org_associations" value="[[org.org_id]]">[[org.full_name]]</option>
+							</select>
+							<label for="owner" class="active">Owner</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<textarea ng-model="organisational.project_desc" id="organisational_project_desc" class="materialize-textarea"></textarea>
+						<label for="organisational_project_desc">Project Description</label>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a class="modal-action modal-close waves-effect waves-green btn-flat " ng-click="createOrganisationalProject()">Save</a>
 				<a class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 			</div>
 		</div>
