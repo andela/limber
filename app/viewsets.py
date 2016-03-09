@@ -128,7 +128,8 @@ class OrgProjectViewSet(viewsets.ReadOnlyModelViewSet):
 		user_in_team = TeamMember.objects.filter(
 			user_id=current_user.id).values_list('project_id', flat=True)
 		orgs = User.objects.filter(id__in=user_orgs).all()
-		return Project.objects.filter(project_id__in=user_in_team, owner=orgs)
+
+		return Project.objects.filter(owner=orgs)
 
 
 class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
@@ -149,7 +150,9 @@ class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
 		orgs = User.objects.filter(
 			Q(id=current_user.profile_id) | Q(id__in=user_orgs)).all()
 
-		return Project.objects.filter(project_id__in=user_in_team).exclude(owner=orgs)
+		return Project.objects.filter(
+			project_id__in=user_in_team
+		).exclude(owner=orgs)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -178,7 +181,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
 	def create(self, request):
 		"""Define customizations during user creation."""
 		data = request.data
-		data['owner'] = request.user.profile.id
+		if request.data.get('owner'):
+			# If there's an owner in the request data, let it be in the form of
+			# an organisation id
+			data['owner'] = request.data.get('owner')
+		else:
+			# If there's no owner in the request data, then the current user
+			# should own the project
+			data['owner'] = request.user.profile.id
+
 		serializer = self.serializer_class(data=data)
 		if serializer.is_valid():
 			Project.create_project(**serializer.validated_data)
@@ -192,7 +203,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 class StoriesViewSet(viewsets.ModelViewSet):
 	""" Viewset for project stories """
-
 	queryset = Story.objects.all()
 	serializer_class = StorySerializer
 	permission_classes = (permissions.IsAuthenticated,)
@@ -486,3 +496,21 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 					'detail': 'Not found.'
 				}, status=status.HTTP_404_NOT_FOUND
 			)
+
+
+class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
+	"""API endpoint to list all organisations associated with the current user."""
+
+	serializer_class = OrgSerializer
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get_queryset(self):
+		"""Modify the queryset to fetch all organisations in which current user
+		belongs to (and is an admin in those orgs)."""
+		current_user = self.request.user
+		orgs = Member.objects.filter(
+			user=current_user,
+			user_level=1
+		).values_list('org', flat=True)
+		org_objects = User.objects.filter(user_type=2, id__in=orgs, )
+		return org_objects
