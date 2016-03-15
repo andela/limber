@@ -185,3 +185,15 @@ h5 {
 .modal-button {
     padding: 10px;
 }
+
+.word-wrap {
+    word-wrap:break-word;
+}
+
+.card {
+    min-height: 11em;
+}
+
+.fixed-action-btn.horizontal ul li {
+    margin: 0px 0px 0px 8px;
+}
