@@ -359,6 +359,12 @@ body {
     background: #ffc928;
 }
 
+/*
+Limber loves pacman
+pacman-container class has styling rules to
+apply the animation that powers the little
+blue guy (not every pacman is yellow)
+*/
 .pacman-container {
     width: 256px;
     height: 280px;
@@ -933,6 +939,9 @@ body {
     text-align: center;
 }
 
+/*
+defines the `page not found` text fade in animation
+*/
 @-webkit-keyframes messageFadeIn {
     0% {
         opacity: 0;
@@ -952,6 +961,9 @@ body {
     }
 }
 
+/*
+defines the GhostMoving animation effect
+*/
 @-webkit-keyframes GhostMoving {
     0% {
         top: 158px;
@@ -964,6 +976,10 @@ body {
     }
 }
 
+/*
+defines animation for blue stars around
+Limbers' blue pacman
+*/
 @-webkit-keyframes pulse-move-1 {
     0% {
         -moz-transform: scale(1);
