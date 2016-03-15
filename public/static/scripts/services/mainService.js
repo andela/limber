@@ -80,6 +80,9 @@ app.factory('mainService', function ($resource) {
             },
             editProject: {
                 method: 'PUT'
+            },
+            deleteProject: {
+                method: 'DELETE'
             }
         }, {
             stripTrailingSlashes: false

@@ -29,7 +29,7 @@
 														      <i class="fa fa-list" style="font-size: 17px;"></i>
 														    </a>
 														    <ul>
-														      <li><a class="btn-floating btn-small btn-flat red"><i class="material-icons">delete</i></a></li>
+														      <li><a class="btn-floating btn-small btn-flat red" ng-click="openDeleteModal(project.project_id, 'personal')"><i class="material-icons">delete</i></a></li>
 														      <li><a class="btn-floating btn-small btn-flat blue" ng-click="openEditProjectModal(project.project_id, project.owner, 'personal')"><i class="material-icons">edit</i></a></li>
 														    </ul>
 														  </div>
@@ -76,7 +76,7 @@
 														      <i class="fa fa-list" style="font-size: 17px;"></i>
 														    </a>
 														    <ul>
-														      <li><a class="btn-floating btn-small btn-flat red"><i class="material-icons">delete</i></a></li>
+														      <li><a class="btn-floating btn-small btn-flat red" ng-click="openDeleteModal(project.project_id, 'organisational')"><i class="material-icons">delete</i></a></li>
 														      <li><a class="btn-floating btn-small btn-flat blue" ng-click="openEditProjectModal(project.project_id, project.owner, 'organisational')"><i class="material-icons">edit</i></a></li>
 														    </ul>
 														  </div>
@@ -177,8 +177,9 @@
 					<div class="input-field col s12">
 							<select id="owner" class="browser-default" ng-model="organisational.owner" required>
 									<option value="" disabled selected>Organisation Owner (Project)</option>
+									<option value="[[ organisation.org_id ]]"  ng-repeat="organisation in org_associations">[[ organisation.full_name]]</option>
 							</select>
-							<label for="owner" class="active">Owner</label>
+							<label for="owner" class="active">Project Owner</label>
 					</div>
 				</div>
 				<div class="row">
@@ -218,6 +219,31 @@
 			</div>
 		</div>
 
+		<div id="confirmDeleteProjectModal" class="modal modal-fixed-footer">
+			<div class="modal-content">
+				<div class="row">
+					<div class="center"><h4>Confirm Project Delete</h4></div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<div class="center">
+							<p style="color: #ff0000;">You will not be able to recover from this operation!</p>
+						<p>To proceed, type in the word '<span style="font-weight: bold;">DELETE</span>' (in caps, quotes excluded)</p>
+						</div>
 
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<input ng-model="confirm.delete" id="confirm_project_delete" type="text" class="validate">
+						<!-- <label for="confirm_project_delete">New Project Name</label> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a class="modal-action modal-close waves-effect waves-green btn-flat " ng-click="deleteProject()">DELETE PROJECT</a>
+				<a class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+			</div>
+		</div>
 	</body>
 {% endblock %}
