@@ -12,6 +12,7 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     $scope.other_projects = mainService.other.getProjects();
     $scope.personal = {};
     $scope.organisational = {};
+    $scope.edit = {};
 
     $scope.createPersonalProject = function () {
     	mainService.Projects.createProject($scope.personal).$promise.then(
@@ -47,4 +48,34 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     		}
     	);
     };
+
+    $scope.openEditOrgModal = function (project_id, project_owner_id) {
+        $('#editOrgProjectModal').openModal();
+        $scope.edit_org_project_id = project_id;
+        $scope.edit_org_project_owner_id = project_owner_id;
+    }
+
+    $scope.editOrganisationalProject = function(project_id) {
+        var data = {
+            project_id: $scope.edit_org_project_id,
+            owner: $scope.edit_org_project_owner_id,
+            project_name: $scope.edit.org_project_name,
+            project_desc: $scope.edit.org_project_desc
+        };
+        mainService.Projects.editProject(data).$promise.then(
+            function (response) {
+                var $toastContent = $('<span style="font-weight: bold;">Project details updated.</span>');
+                Materialize.toast($toastContent, 5000);
+                // reload page
+                loadOrgProjects();
+                // Reset modal values
+                $scope.edit.org_project_name = '';
+                $scope.edit.org_project_desc = '';
+            },
+            function (error) {
+                var $toastContent = $('<span style="font-weight: bold;">Error! Project not updated.</span>');
+                Materialize.toast($toastContent, 5000);
+            }
+        );
+    }
 });

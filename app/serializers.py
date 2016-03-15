@@ -53,6 +53,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     team_members = serializers.SlugRelatedField(
         many=True, read_only=True, slug_field='user_id')
+    project_id = serializers.IntegerField(read_only=True)
 
     def get_fields(self, *args, **kwargs):
         """Method to filter the choices presented for project owner."""
@@ -70,6 +71,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = (
             'url', 'owner', 'project_name', 'project_desc', 'team_members',
+            'project_id',
         )
 
         validators = [

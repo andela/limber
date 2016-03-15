@@ -74,9 +74,12 @@ app.factory('mainService', function ($resource) {
         }, {
             stripTrailingSlashes: false
         }),
-        Projects: $resource('/api/project/', {}, {
+        Projects: $resource('/api/project/:project_id', {project_id: '@project_id'}, {
             createProject: {
                 method: 'POST'
+            },
+            editProject: {
+                method: 'PUT'
             }
         }, {
             stripTrailingSlashes: false
