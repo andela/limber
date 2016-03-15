@@ -49,28 +49,33 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     	);
     };
 
-    $scope.openEditOrgModal = function (project_id, project_owner_id) {
-        $('#editOrgProjectModal').openModal();
-        $scope.edit_org_project_id = project_id;
-        $scope.edit_org_project_owner_id = project_owner_id;
+    $scope.openEditProjectModal = function (project_id, project_owner_id, owner_type) {
+        $('#editProjectModal').openModal();
+        $scope.edit_project_id = project_id;
+        $scope.edit_project_owner_id = project_owner_id;
+        $scope.owner_type = owner_type;
     }
 
-    $scope.editOrganisationalProject = function(project_id) {
+    $scope.editProject = function(project_id) {
         var data = {
-            project_id: $scope.edit_org_project_id,
-            owner: $scope.edit_org_project_owner_id,
-            project_name: $scope.edit.org_project_name,
-            project_desc: $scope.edit.org_project_desc
+            project_id: $scope.edit_project_id,
+            owner: $scope.edit_project_owner_id,
+            project_name: $scope.edit.project_name,
+            project_desc: $scope.edit.project_desc
         };
         mainService.Projects.editProject(data).$promise.then(
             function (response) {
                 var $toastContent = $('<span style="font-weight: bold;">Project details updated.</span>');
                 Materialize.toast($toastContent, 5000);
                 // reload page
-                loadOrgProjects();
+                if ($scope.owner_type === 'personal') {
+                    loadPersonalProjects();
+                } else if ($scope.owner_type === 'organisational') {
+                    loadOrgProjects();
+                }
                 // Reset modal values
-                $scope.edit.org_project_name = '';
-                $scope.edit.org_project_desc = '';
+                $scope.edit.project_name = '';
+                $scope.edit.project_desc = '';
             },
             function (error) {
                 var $toastContent = $('<span style="font-weight: bold;">Error! Project not updated.</span>');
