@@ -87,7 +87,7 @@ app.factory('mainService', function ($resource) {
         }, {
             stripTrailingSlashes: false
         }),
-        OrgAssociations: $resource('/api/org-associations/', {}, {
+        OrgAdminAssociations: $resource('/api/org-admin-associations/', {}, {
             getAll: {
                 method: 'GET',
                 isArray: true

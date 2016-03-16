@@ -498,8 +498,8 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 			)
 
 
-class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
-	"""API endpoint to list all organisations associated with the current user."""
+class OrgAdminAssociationViewSet(viewsets.ReadOnlyModelViewSet):
+	"""API endpoint to list all organisations in which current user is an admin."""
 
 	serializer_class = OrgSerializer
 	permission_classes = (permissions.IsAuthenticated,)
@@ -512,5 +512,20 @@ class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
 			user=current_user,
 			user_level=1
 		).values_list('org', flat=True)
+		org_objects = User.objects.filter(user_type=2, id__in=orgs, )
+		return org_objects
+
+
+class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
+	"""API endpoint to list all organisations in which current user is a member"""
+
+	serializer_class = OrgSerializer
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get_queryset(self):
+		"""Modify the queryset to fetch all organisations in which current user
+		is a member."""
+		current_user = self.request.user
+		orgs = Member.objects.filter(user=current_user).values_list('org', flat=True)
 		org_objects = User.objects.filter(user_type=2, id__in=orgs, )
 		return org_objects

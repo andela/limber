@@ -23,6 +23,11 @@ router.register(
 	'project-invites'
 )
 router.register(
+	r'org-admin-associations',
+	viewsets.OrgAdminAssociationViewSet,
+	'org-admin-associations'
+)
+router.register(
 	r'org-associations',
 	viewsets.OrgAssociationViewSet,
 	'org-associations'
