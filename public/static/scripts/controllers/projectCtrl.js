@@ -17,21 +17,34 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     $scope.confirm = {};
 
     $scope.createPersonalProject = function () {
-    	mainService.Projects.createProject($scope.personal).$promise.then(
-    		function (response) {
-    			loadPersonalProjects()
-    			$scope.personal.project_name = '';
-    			$scope.personal.project_desc = '';
-    		},
-    		function (error) {
-    			console.log(error);
-    		}
-    	);
+
+        if ($scope.personal.project_name && $scope.personal.project_desc) {
+            $('#personalProjectModal').closeModal();
+            mainService.Projects.createProject($scope.personal).$promise.then(
+                function (response) {
+                    // refresh projects
+                    loadPersonalProjects()
+                    var $toastContent = $('<span style="font-weight: bold;">Personal project created.</span>');
+                    Materialize.toast($toastContent, 5000);
+                    // clear modal fields
+                    $scope.personal.project_name = '';
+                    $scope.personal.project_desc = '';
+                },
+                function (error) {
+                    var $toastContent = $('<span style="font-weight: bold;">An error occured while creating project.</span>');
+                    Materialize.toast($toastContent, 5000);
+                }
+            );
+        } else {
+            var $toastContent = $('<span style="font-weight: bold;">Please fill in both fields.</span>');
+            Materialize.toast($toastContent, 5000);
+        }
+
     };
 
     $scope.createOrganisationalProject = function () {
-
-        if ($scope.organisational.owner) {
+        if ($scope.organisational.owner && $scope.organisational.project_name && $scope.organisational.project_desc) {
+            $('#organisationalProjectModal').closeModal();
             mainService.Projects.createProject($scope.organisational).$promise.then(
                 function (response) {
                     var $toastContent = $('<span style="font-weight: bold;">Organisation project created.</span>');
@@ -47,9 +60,7 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
                 }
             );
         } else {
-            var $toastContent = $('<span style="font-weight: bold;">' +
-                '<p>You are creating an organisational project.</p>' +
-                '<p>Please specify the Organisation that owns this project</p></span>');
+            var $toastContent = $('<span style="font-weight: bold;"><p>Please fill all the fields.</p></span>');
             Materialize.toast($toastContent, 10000);
         }
 
@@ -74,31 +85,38 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     };
 
     $scope.editProject = function(project_id) {
-        var data = {
-            project_id: $scope.edit_project_id,
-            owner: $scope.edit_project_owner_id,
-            project_name: $scope.edit.project_name,
-            project_desc: $scope.edit.project_desc
-        };
-        mainService.Projects.editProject(data).$promise.then(
-            function (response) {
-                var $toastContent = $('<span style="font-weight: bold;">Project details updated.</span>');
-                Materialize.toast($toastContent, 5000);
-                // reload page
-                if ($scope.edit_owner_type === 'personal') {
-                    loadPersonalProjects();
-                } else if ($scope.edit_owner_type === 'organisational') {
-                    loadOrgProjects();
+        if ($scope.edit.project_desc && $scope.edit.project_name) {
+            $('#editProjectModal').closeModal();
+            var data = {
+                project_id: $scope.edit_project_id,
+                owner: $scope.edit_project_owner_id,
+                project_name: $scope.edit.project_name,
+                project_desc: $scope.edit.project_desc
+            };
+            mainService.Projects.editProject(data).$promise.then(
+                function (response) {
+                    var $toastContent = $('<span style="font-weight: bold;">Project details updated.</span>');
+                    Materialize.toast($toastContent, 5000);
+                    // reload page
+                    if ($scope.edit_owner_type === 'personal') {
+                        loadPersonalProjects();
+                    } else if ($scope.edit_owner_type === 'organisational') {
+                        loadOrgProjects();
+                    }
+                    // Reset modal values
+                    $scope.edit.project_name = '';
+                    $scope.edit.project_desc = '';
+                },
+                function (error) {
+                    var $toastContent = $('<span style="font-weight: bold;">Error! Project not updated.</span>');
+                    Materialize.toast($toastContent, 5000);
                 }
-                // Reset modal values
-                $scope.edit.project_name = '';
-                $scope.edit.project_desc = '';
-            },
-            function (error) {
-                var $toastContent = $('<span style="font-weight: bold;">Error! Project not updated.</span>');
-                Materialize.toast($toastContent, 5000);
-            }
-        );
+            );
+        } else {
+            var $toastContent = $('<span style="font-weight: bold;"><p>Please fill all the fields.</p></span>');
+            Materialize.toast($toastContent, 10000);
+        }
+
     };
 
     $scope.openDeleteModal = function (project_id, owner_type) {
