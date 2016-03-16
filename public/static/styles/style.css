@@ -23,7 +23,6 @@
     padding: 0px;
 }
 
-
 /*these are styles to the testimonials section*/
 #testmonials {
     background: url(../images/bgpattern.png) repeat center center fixed;
@@ -50,8 +49,6 @@
     padding-left: -40px;
 }
 
-
-
 /*these are styles to the Navigation section*/
 #nav-mobile > li > a{
     border: 1px solid #2196f3;
@@ -62,12 +59,10 @@
     background: #2196f3;
 }
 
-
 /*Footer Styles*/
 #footer {
     min-height: 50px;
 }
-
 
 /*Styles for the typing animation*/
 #animation-class p {
@@ -94,22 +89,24 @@
     -moz-animation: blink 0.7s infinite;
     animation: blink 0.7s infinite;
 }
+
 @keyframes blink{
     0% { opacity:1; }
     50% { opacity:0; }
     100% { opacity:1; }
 }
+
 @-webkit-keyframes blink{
     0% { opacity:1; }
     50% { opacity:0; }
     100% { opacity:1; }
 }
+
 @-moz-keyframes blink{
     0% { opacity:1; }
     50% { opacity:0; }
     100% { opacity:1; }
 }
-
 
 .form_for_auth {
     border: 1px solid #ccc;
@@ -134,7 +131,6 @@ h5 {
     margin-top: 10%;
 }
 
-
 #signup .input-field input, #login .input-field input{
     border: 1px solid #ccc;
     -webkit-border-radius: 3px;
@@ -143,7 +139,6 @@ h5 {
     padding: 0px 5px;
     box-sizing: border-box;
 }
-
 
 .collection p{
     font-size: 12px;
@@ -156,32 +151,39 @@ h5 {
 .dropdown-content {
     top: auto !important
 }
+
 .add-project .card {
     background: #e0e0e0;
     min-height: 110px;
     box-shadow: 0 2px 5px 0 #9e9e9e,0 2px 10px 0 #9e9e9e;
 }
+
 .add-project .valign {
     margin: 0 auto;
 }
+
 .add-project span {
     font-size: 20px;
     line-height: 1.5em;
     display: -webkit-box;
 }
+
 .add-project span i{
     line-height: inherit;
     display: block;
     font-size: 1.3em;
     text-align: center;
 }
+
 .add-project .card:hover {
     color: #757575;
     background: #bdbdbd;
 }
+
 .add-project a {
     color: #424242;
 }
+
 .modal-button {
     padding: 10px;
 }
