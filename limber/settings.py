@@ -29,7 +29,7 @@ MAILGUN_SERVER_NAME = os.environ.get('MAILGUN_SUBDOMAIN')
 SECRET_KEY = os.environ.get('SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 SITE_ID =1
