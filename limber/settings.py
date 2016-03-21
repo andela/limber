@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET')
 DEBUG = False
 
 ALLOWED_HOSTS = []
-SITE_ID =1
+SITE_ID = 1
 
 # Application definition
 

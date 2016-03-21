@@ -47,10 +47,48 @@ app.factory('mainService', function ($resource) {
             stripTrailingSlashes: false
         }),
 
-        projects: $resource('/api/project/', {}, {
-            // method to consume the api route to Projects
-            // it returns an array of projects
+        personal: $resource('/api/personal/', {}, {
+            // method to consume the api route to personal projects
             getProjects: {
+                method: 'GET',
+                isArray: true
+            }
+        }, {
+            stripTrailingSlashes: false
+        }),
+        org: $resource('/api/orgprojects/', {}, {
+            // method to consume the api route to organization projects
+            getProjects: {
+                method: 'GET',
+                isArray: true
+            }
+        }, {
+            stripTrailingSlashes: false
+        }),
+        other: $resource('/api/otherprojects/', {}, {
+            // method to consume the api route to other projects
+            getProjects: {
+                method: 'GET',
+                isArray: true
+            }
+        }, {
+            stripTrailingSlashes: false
+        }),
+        Projects: $resource('/api/project/:project_id', {project_id: '@project_id'}, {
+            createProject: {
+                method: 'POST'
+            },
+            editProject: {
+                method: 'PUT'
+            },
+            deleteProject: {
+                method: 'DELETE'
+            }
+        }, {
+            stripTrailingSlashes: false
+        }),
+        OrgAssociations: $resource('/api/org-associations/', {}, {
+            getAll: {
                 method: 'GET',
                 isArray: true
             }
