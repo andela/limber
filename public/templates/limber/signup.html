@@ -40,7 +40,7 @@
 
 					                <div class="row">
 					                    <div class="input-field col s6">
-					                        <input type="password" ng-model="signup.password" placeholder="Password" ng-class="(signup.password != signup.confirm_password) ? 'invalid': ''" required/>
+					                        <input type="password" ng-model="signup.password" placeholder="Password" ng-class="(signup.password != signup.confirm_password) ? 'invalid': ''" password-strength="signup.password" required/>
 					                    </div>
 					                    <div class="input-field col s6">
 					                        <input type="password" ng-model="signup.confirm_password" placeholder="Confirm Password" ng-class="(signup.password != signup.confirm_password) ? 'invalid': ''" required compare-to="signup.password"/>
@@ -50,7 +50,7 @@
 
 					                <div class="row">
 					                    <div class="input-field center">
-					                        <button class="btn blue" type="submit" name="action">sign up</button>
+					                        <button class="btn blue" type="submit" name="action"  ng-disabled="valid_password != ''">sign up</button>
 					                    </div>
 					                </div>
 					            </form>

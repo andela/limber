@@ -53,6 +53,8 @@
 #nav-mobile > li > a{
     border: 1px solid #2196f3;
     background: #2196f3;
+    z-index: 3;
+    margin-left: 10px;
 }
 
 #nav-mobile > li > a:hover{

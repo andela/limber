@@ -16,7 +16,6 @@ app.run(function($cookies, mainService) {
     cookie = $cookies.get('token')
     mainService.verify.token({'token': cookie})
     .$promise.then(function  (data) {
-        // console.log(data)
     }).
     catch(function(response) {
         if (response.status == 400) {
@@ -43,6 +42,24 @@ app.directive("compareTo", function() {
         }
     };
 });
+
+app.directive("passwordStrength", function(){
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            scope.$watch(attrs.passwordStrength, function(value) {
+                if(angular.isDefined(value)){
+                    if (value.length >= 8) {
+                        scope.valid_password = '';
+                    } else {
+                        scope.valid_password = 'password too short';
+                    }
+                }
+            });
+        }
+    };
+});
+
 $(document).ready(function(){
     $('ul.tabs').tabs();
     $(".button-collapse").sideNav();
