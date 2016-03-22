@@ -94,6 +94,14 @@ app.factory('mainService', function ($resource) {
             }
         }, {
             stripTrailingSlashes: false
+        }),
+        OrgAssociations: $resource('/api/org-associations/', {}, {
+            getAll: {
+                method: 'GET',
+                isArray: true
+            }
+        }, {
+            stripTrailingSlashes: false
         })
     };
 });
