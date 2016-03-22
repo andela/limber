@@ -1,14 +1,44 @@
 app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     $('.modal-trigger').leanModal();
 
+
+    $scope.orgProjectClassifier = {};
+
     var loadPersonalProjects = function () {
     	$scope.personal_projects = mainService.personal.getProjects();
     };
     loadPersonalProjects();
-    var loadOrgProjects = function () {
-    	$scope.org_projects = mainService.org.getProjects();
+
+    $scope.loadOrgProjects = function (org_id) {
+        // Provide the owner_id query parameter. This returns projects that belong
+        // to organisations of this org_id
+
+        var data = {
+            owner_id: org_id
+        }
+        mainService.org.getProjects(data).$promise.then(
+            function (response) {
+                // $scope.org_projects = response;
+                // console.log("One" + org_id, $scope.org_projects);
+                $scope.orgProjectClassifier[org_id] = response;
+                console.log($scope.orgProjectClassifier);
+            },
+            function (error) {
+                console.log(error);
+            }
+        );
     };
-    loadOrgProjects();
+    // loadOrgProjects();
+
+    var loadUserOrganisations = function() {
+        // load all the organisations in which current user belongs
+        $scope.user_organisations = mainService.OrgAssociations.getAll();
+        console.log($scope.user_organisations);
+
+        // console.log($scope.user_organisations.length);
+    }
+    loadUserOrganisations();
+
     $scope.other_projects = mainService.other.getProjects();
     $scope.personal = {};
     $scope.organisational = {};
@@ -66,8 +96,8 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
 
     };
 
-    $scope.getAssociatedOrgs = function () {
-    	mainService.OrgAssociations.getAll().$promise.then(
+    $scope.getAdminAssociatedOrgs = function () {
+    	mainService.OrgAdminAssociations.getAll().$promise.then(
     		function (response) {
     			$scope.org_associations = response;
     		},
