@@ -21,7 +21,6 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
                 // $scope.org_projects = response;
                 // console.log("One" + org_id, $scope.org_projects);
                 $scope.orgProjectClassifier[org_id] = response;
-                console.log($scope.orgProjectClassifier);
             },
             function (error) {
                 console.log(error);
@@ -33,7 +32,6 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     var loadUserOrganisations = function() {
         // load all the organisations in which current user belongs
         $scope.user_organisations = mainService.OrgAssociations.getAll();
-        console.log($scope.user_organisations);
 
         // console.log($scope.user_organisations.length);
     }
@@ -80,7 +78,7 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
                     var $toastContent = $('<span style="font-weight: bold;">Organisation project created.</span>');
                     Materialize.toast($toastContent, 5000);
                     // Refresh view
-                    loadOrgProjects();
+                    loadUserOrganisations();
                     //  Clear data in modal
                     $scope.organisational = {};
                 },
@@ -131,7 +129,7 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
                     if ($scope.edit_owner_type === 'personal') {
                         loadPersonalProjects();
                     } else if ($scope.edit_owner_type === 'organisational') {
-                        loadOrgProjects();
+                        loadUserOrganisations();
                     }
                     // Reset modal values
                     $scope.edit.project_name = '';
@@ -167,7 +165,7 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
                     if ($scope.delete_owner_type === 'personal') {
                         loadPersonalProjects();
                     } else if ($scope.delete_owner_type === 'organisational') {
-                        loadOrgProjects();
+                        loadUserOrganisations();
                     }
                     // clear modal field on success
                     $scope.confirm.delete = '';

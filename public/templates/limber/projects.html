@@ -91,21 +91,21 @@
 							</div>
 						</div>
 					</div>
-					<!-- Add organisational Project div -->
-					<div class="col s12 m4 l3 add-project">
-						<a href="#organisationalProjectModal" class="modal-trigger" ng-click="getAdminAssociatedOrgs()">
-							<div  class="card valign-wrapper">
-								<div class="card-content valign">
-									<span>
-										<i class="material-icons tiny">add</i> Add Project
-									</span>
-								</div>
-							</div>
-						</a>
-					</div>
 					<div ng-show="org_projects.length !== 0" class="col s12">
 						<a href="#">view all</a>
 					</div>
+				</div>
+				<!-- Add organisational Project div -->
+				<div class="col s12 m4 l3 add-project">
+					<a href="#organisationalProjectModal" class="modal-trigger" ng-click="getAdminAssociatedOrgs()">
+						<div  class="card valign-wrapper">
+							<div class="card-content valign">
+								<span>
+									<i class="material-icons tiny">add</i> Add Project
+								</span>
+							</div>
+						</div>
+					</a>
 				</div>
 
 				<!-- Other projects view -->
