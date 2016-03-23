@@ -199,3 +199,7 @@ h5 {
 .fixed-action-btn.horizontal ul li {
     margin: 0px 0px 0px 8px;
 }
+
+.feature {
+    text-align: justify;
+}
