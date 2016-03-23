@@ -4,57 +4,52 @@
 
 {% block content %}
 <body ng-cloak>
-<div class="row" >
-
+	<div class="row" >
     <div class="container">
-    <div class="row">
+      <div class="row">
         <div class="container mainform">
-            <h4 class="center"><a href="/" target="_self" >Limber</a></h4>
-            <div class="row">
-                <div class="container">
-                    <div class="form_for_auth" ng-controller="authController">
-                        <div class="row">
-                            <div id="login" class="col s12" >
-                            <!-- <span class="active blue-text center" ><h5> LOGIN </h5></span> -->
-                            <h5 class="center"><span class="active blue-text"> LOGIN </span></h5>
-                            <div ng-if="loginmsg" class="center red-text">
-                                    [[ loginmsg ]]
-                                </div>
-                                <form name="loginForm"  ng-submit="login()">
-                                    {% csrf_token %}
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <input required type="email" ng-model="user.email" placeholder="Email Address" class="validate" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <input required type="password" ng-model="user.password" placeholder="Password" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="input-field center">
-                                            <button class="btn blue" type="submit" name="action" ng-disabled="!(loginForm.$valid)">Log In</button>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-
+          <h4 class="center"><a href="/" target="_self" >Limber</a></h4>
+          <div class="row">
+            <div class="container">
+              <div class="form_for_auth" ng-controller="authController">
+                <div class="row">
+                  <div id="login" class="col s12" >
+                    <h5 class="center"><span class="active blue-text"> LOGIN </span></h5>
+                    <div ng-if="loginmsg" class="center red-text">
+                      [[ loginmsg ]]
+                    </div>
+                    <form name="loginForm"  ng-submit="login()">
+                      {% csrf_token %}
+                      <div class="row">
+                        <div class="input-field col s12">
+                          <input required type="email" ng-model="user.email" placeholder="Email Address" class="validate" />
                         </div>
+                      </div>
+										  <div class="row">
+											  <div class="input-field col s12">
+												  <input required type="password" ng-model="user.password" placeholder="Password" />
+											  </div>
+										  </div>
+
+                      <div class="row">
+                        <div class="input-field center">
+                          <button class="btn blue" type="submit" name="action" ng-disabled="!(loginForm.$valid)">Log In</button>
+                        </div>
+                      </div>
+									  </form>
+								  </div>
                 </div>
+              </div>
             </div>
             <div class="alternative">
-                <div class="center">
-                    <a href="/signup" target="_self">Don't have an account?</a>
-                </div>
+              <div class="center">
+                <a href="/signup" target="_self">Don't have an account?</a>
+              </div>
             </div>
+          </div>
         </div>
-        </div>
-        </div>
+      </div>
     </div>
-
-</div>
+  </div>
+</body>
 {% endblock %}

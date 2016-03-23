@@ -141,4 +141,8 @@ app.controller('authController', function($rootScope, $scope, mainService, $cook
                 }
             });
     };
+
+    $scope.openPassResetEmailModal = function () {
+        $('#password_reset_email_modal').openModal();
+    };
 });
