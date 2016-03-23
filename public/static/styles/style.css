@@ -53,6 +53,7 @@
 #nav-mobile > li > a{
     border: 1px solid #2196f3;
     background: #2196f3;
+    z-index: 3;
     margin-left: 10px;
 }
 
@@ -206,6 +207,11 @@ h5 {
     margin: 0px 0px 0px 8px;
 }
 
+.alternative {
+    margin-top: 1em;
+}
+
 .feature {
     text-align: justify;
 }
+

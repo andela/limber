@@ -5,6 +5,8 @@ app.controller('authController', function($rootScope, $scope, mainService, $cook
     finishProjectInvite = $location.search().completeinvite;
     invite_code = $location.search().invitecode;
 
+     $scope.user = {}
+
 
     $scope.$on('AutoLogin', function(event, args) {
         console.log(args);
@@ -70,7 +72,9 @@ app.controller('authController', function($rootScope, $scope, mainService, $cook
                 if (typeof nextParam === 'undefined') {
                     //if a code param doesn't exist in the url
                     //then follow the normal registration process
-                    $scope.signupmsg = "Registration complete. You may now log in."
+                    $scope.user.email = $scope.signup.email
+                    $scope.user.password = $scope.signup.password
+                    $scope.login()
                     $scope.signup = {}
 
                     // for project invites, completeinvite and invitecode query
