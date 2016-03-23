@@ -7,6 +7,7 @@ from app.models.user import User, Member, UserAuthentication
 from app.models.project import Project, TeamMember
 from app.models.org_invite import OrgInvites
 from app.models.invite import ProjectInvite
+from app.models.pass_reset import PasswordReset
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -112,6 +113,7 @@ class StorySerializer(serializers.ModelSerializer):
         model = Story
         fields = '__all__'
 
+
 class OrgInviteSerilizer (serializers.ModelSerializer):
     ''' Serializer for Invitation of Members to Organisations '''
     code = serializers.CharField(required=False, read_only=True)
@@ -162,3 +164,13 @@ class ProjectInviteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectInvite
         fields = ('email', 'project', 'accept')
+
+
+class PasswordResetSerializer(serializers.ModelSerializer):
+    """Serializer to represent data from PasswordReset model in JSON format."""
+
+    class Meta:
+        model = PasswordReset
+        fields = ('user', 'request_date',)
+        # write_only_fields = ('email', 'password',)
+        read_only_fields = ('reset_code')

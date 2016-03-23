@@ -6,7 +6,8 @@ from app.serializers import (
 
 	OrgSerializer, UserSerializer, ProjectSerializer,
 	TeamMemberSerializer, StorySerializer, MemberSerializer,
-	TaskSerializer, ProjectInviteSerializer, OrgInviteSerilizer
+	TaskSerializer, ProjectInviteSerializer, OrgInviteSerilizer,
+	PasswordResetSerializer
 
 )
 from django.shortcuts import get_object_or_404
@@ -16,6 +17,7 @@ from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
 from app.models.invite import ProjectInvite
 from app.models.org_invite import OrgInvites
+from app.models.pass_reset import PasswordReset
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -542,3 +544,10 @@ class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
 		orgs = Member.objects.filter(user=current_user).values_list('org', flat=True)
 		org_objects = User.objects.filter(user_type=2, id__in=orgs, )
 		return org_objects
+
+
+class PasswordResetViewSet(viewsets.ModelViewSet):
+	"""API endpoint for managing 'password reset' requests."""
+
+	serializer_class = PasswordResetSerializer
+	queryset = PasswordReset.objects.all()
