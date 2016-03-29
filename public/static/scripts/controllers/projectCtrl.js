@@ -12,14 +12,11 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     $scope.loadOrgProjects = function (org_id) {
         // Provide the owner_id query parameter. This returns projects that belong
         // to organisations of this org_id
-
         var data = {
             owner_id: org_id
         }
         mainService.org.getProjects(data).$promise.then(
             function (response) {
-                // $scope.org_projects = response;
-                // console.log("One" + org_id, $scope.org_projects);
                 $scope.orgProjectClassifier[org_id] = response;
             },
             function (error) {
@@ -27,13 +24,10 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
             }
         );
     };
-    // loadOrgProjects();
 
     var loadUserOrganisations = function() {
         // load all the organisations in which current user belongs
         $scope.user_organisations = mainService.OrgAssociations.getAll();
-
-        // console.log($scope.user_organisations.length);
     }
     loadUserOrganisations();
 
@@ -45,27 +39,23 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
     $scope.confirm = {};
 
     $scope.createPersonalProject = function () {
-
         if ($scope.personal.project_name && $scope.personal.project_desc) {
             $('#personalProjectModal').closeModal();
             mainService.Projects.createProject($scope.personal).$promise.then(
                 function (response) {
                     // refresh projects
-                    loadPersonalProjects()
-                    var $toastContent = $('<span style="font-weight: bold;">Personal project created.</span>');
-                    Materialize.toast($toastContent, 5000);
+                    loadPersonalProjects();
+                    Materialize.toast('Personal project created.', 5000);
                     // clear modal fields
                     $scope.personal.project_name = '';
                     $scope.personal.project_desc = '';
                 },
                 function (error) {
-                    var $toastContent = $('<span style="font-weight: bold;">An error occured while creating project.</span>');
-                    Materialize.toast($toastContent, 5000);
+                    Materialize.toast('An error occured while creating project.', 5000);
                 }
             );
         } else {
-            var $toastContent = $('<span style="font-weight: bold;">Please fill in both fields.</span>');
-            Materialize.toast($toastContent, 5000);
+            Materialize.toast('Please fill in both fields.', 5000);
         }
 
     };
@@ -75,21 +65,18 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
             $('#organisationalProjectModal').closeModal();
             mainService.Projects.createProject($scope.organisational).$promise.then(
                 function (response) {
-                    var $toastContent = $('<span style="font-weight: bold;">Organisation project created.</span>');
-                    Materialize.toast($toastContent, 5000);
+                    Materialize.toast('Organisation project created.', 5000);
                     // Refresh view
                     loadUserOrganisations();
                     //  Clear data in modal
                     $scope.organisational = {};
                 },
                 function (error) {
-                    var $toastContent = $('<span style="font-weight: bold;">Error! Organisation project not created.</span>');
-                    Materialize.toast($toastContent, 5000);
+                    Materialize.toast('Error! Organisation project not created.', 5000);
                 }
             );
         } else {
-            var $toastContent = $('<span style="font-weight: bold;"><p>Please fill all the fields.</p></span>');
-            Materialize.toast($toastContent, 10000);
+            Materialize.toast('Please fill all the fields.', 10000);
         }
 
     };
@@ -123,8 +110,7 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
             };
             mainService.Projects.editProject(data).$promise.then(
                 function (response) {
-                    var $toastContent = $('<span style="font-weight: bold;">Project details updated.</span>');
-                    Materialize.toast($toastContent, 5000);
+                    Materialize.toast('Project details updated.', 5000);
                     // reload page
                     if ($scope.edit_owner_type === 'personal') {
                         loadPersonalProjects();
@@ -136,13 +122,11 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
                     $scope.edit.project_desc = '';
                 },
                 function (error) {
-                    var $toastContent = $('<span style="font-weight: bold;">Error! Project not updated.</span>');
-                    Materialize.toast($toastContent, 5000);
+                    Materialize.toast('Error! Project not updated.', 5000);
                 }
             );
         } else {
-            var $toastContent = $('<span style="font-weight: bold;"><p>Please fill all the fields.</p></span>');
-            Materialize.toast($toastContent, 10000);
+            Materialize.toast('Please fill all the fields.', 10000);
         }
 
     };
@@ -160,8 +144,7 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
             };
             mainService.Projects.deleteProject(data).$promise.then(
                 function (response) {
-                    var $toastContent = $('<span style="font-weight: bold;">Project deleted.</span>');
-                    Materialize.toast($toastContent, 5000);
+                    Materialize.toast('Project deleted.', 5000);
                     if ($scope.delete_owner_type === 'personal') {
                         loadPersonalProjects();
                     } else if ($scope.delete_owner_type === 'organisational') {
@@ -171,14 +154,12 @@ app.controller('ProjectCtrl', function($scope, $cookies, mainService){
                     $scope.confirm.delete = '';
                 },
                 function (error) {
-                    var $toastContent = $('<span style="font-weight: bold;">Error! Project not deleted.</span>');
-                    Materialize.toast($toastContent, 5000);
+                    Materialize.toast('Error! Project not deleted.', 5000);
                 }
             );
 
         } else {
-            var $toastContent = $('<span style="font-weight: bold;">Please confirm this operation by typing DELETE.</span>');
-            Materialize.toast($toastContent, 5000);
+            Materialize.toast('Please confirm this operation by typing DELETE.', 5000);
         }
 
     };
