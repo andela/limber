@@ -145,4 +145,19 @@ app.controller('authController', function($rootScope, $scope, mainService, $cook
     $scope.openPassResetEmailModal = function () {
         $('#password_reset_email_modal').openModal();
     };
+
+    $scope.newPasswordRequest = function () {
+        $('#password_reset_email_modal').closeModal();
+        var data = {
+            email: $scope.reset_email
+        };
+        mainService.PasswordReset.reset(data).$promise.then(
+            function (reponse) {
+                Materialize.toast('Thanks! Please check (' + $scope.reset_email + ') for a link to reset your password.', 7000);
+            },
+            function (error) {
+                Materialize.toast(error.data.status, 7000);
+            }
+        );
+    };
 });

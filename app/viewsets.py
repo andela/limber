@@ -551,3 +551,32 @@ class PasswordResetViewSet(viewsets.ModelViewSet):
 
 	serializer_class = PasswordResetSerializer
 	queryset = PasswordReset.objects.all()
+
+	def create(self, request):
+		"""Customize POST request to '/api/password/reset'.
+
+		Expects a user id (when posted from the browsable viewset) or an email
+		(when posted from the client).
+		"""
+		data = {}
+		email = request.data.get('email')
+		# when 'email' has been provided and 'user' has not...
+		if email and not request.data.get('user'):
+			try:
+				user_auth = UserAuthentication.objects.get(email=email)
+				data['user'] = user_auth.id
+			except UserAuthentication.DoesNotExist:
+				return Response(
+					{
+						'status': 'User with specified email does not exist'
+					}, status=status.HTTP_400_BAD_REQUEST
+				)
+		else:
+			data['user'] = request.data.get('user')
+
+		serializer = self.serializer_class(data=data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+>>>>>>> [Feature #115230531] Customize POST for '/api/password/reset/'

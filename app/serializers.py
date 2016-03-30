@@ -173,4 +173,4 @@ class PasswordResetSerializer(serializers.ModelSerializer):
         model = PasswordReset
         fields = ('user', 'request_date',)
         # write_only_fields = ('email', 'password',)
-        read_only_fields = ('reset_code')
+        read_only_fields = ('reset_code', 'request_date')
