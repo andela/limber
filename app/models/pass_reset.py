@@ -28,7 +28,7 @@ class PasswordReset(models.Model):
 
 		host = os.environ.get('LIMBER_HOST')
 
-		url = 'http://' + host + '/api/password/reset/' + self.reset_code
+		url = 'http://' + host + '/password/reset/complete/' + self.reset_code
 
 		body = """Hi there,\n
 				Someone recently requested a password change for your\n

@@ -26,4 +26,8 @@ urlpatterns = [
     url(r'^comfirm/', views.comfirm_view, name='comfirm'),
     url(r'^projects/$', views.create_project, name='create_project'),
     url(r'^projects/(?P<invite_code>[0-9a-zA-Z]+)/$', views.respond_project_invite, name='project_invite'),
+    url(
+    r'^password/reset/complete/(?P<reset_code>[0-9a-zA-Z]+)/$',
+    views.respond_password_reset,
+    name='password_reset'),
 ]
