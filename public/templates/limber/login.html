@@ -5,6 +5,7 @@
 {% block content %}
 <body ng-cloak>
 	<div class="row" >
+<<<<<<< HEAD
     <div class="container">
       <div class="row">
         <div class="container mainform">
@@ -29,6 +30,9 @@
 											  <div class="input-field col s12">
 												  <input required type="password" ng-model="user.password" placeholder="Password" />
 											  </div>
+                        <div class="input-field col s12">
+                          <a class="right modal-trigger" ng-click="openPassResetEmailModal()">Forgot Password?</a>
+                        </div>
 										  </div>
 
                       <div class="row">
@@ -39,6 +43,26 @@
 									  </form>
 								  </div>
                 </div>
+                <!-- Modal Structure -->
+                <div id="password_reset_email_modal" class="modal">
+                  <div class="modal-content">
+                    <div class="row">
+                      <h4 class="center">Reset your password</h4>
+                      <p class="center">Enter your email address and we will send you a link to reset your password.</p>
+                    </div>
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <input placeholder="Enter your email address" id="user_email" type="email" ng-model="reset_email" class="validate">
+                        <label for="user_email">Email Address</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="#!" class=" modal-action waves-effect waves-green btn-flat" ng-click="newPasswordRequest()">Send Password Reset Email</a>
+                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                  </div>
+                </div>
+                <!-- End modal structure -->
               </div>
             </div>
             <div class="alternative">
