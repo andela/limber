@@ -579,4 +579,35 @@ class PasswordResetViewSet(viewsets.ModelViewSet):
 			serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
->>>>>>> [Feature #115230531] Customize POST for '/api/password/reset/'
+
+	def update(self, request, pk=None):
+		"""Customize PUT request to '/api/password/reset/:reset_id/'.
+
+		This method retrieves the user from the PasswordReset object's user
+		attribute and calls the 'set_password' method on it.
+		"""
+		new_password = request.data.get('new_password')
+		if new_password:
+			try:
+				pass_reset = PasswordReset.objects.get(pk=pk)
+				user_auth = pass_reset.user
+				user_auth.set_password(new_password)
+				user_auth.save()
+				return Response(
+					{
+						'status': 'Success',
+						'detail': 'Password reset successful'
+					}, status=status.HTTP_200_OK
+				)
+			except PasswordReset.DoesNotExist:
+				return Response(
+					{
+						'status': 'Password reset request not found'
+					}, status=status.HTTP_404_NOT_FOUND
+				)
+		else:
+			return Response(
+				{
+					'status': 'New password required'
+				}, status=status.HTTP_400_BAD_REQUEST
+			)
