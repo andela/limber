@@ -217,3 +217,11 @@ h5 {
     text-align: justify;
 }
 
+/* Adjust modal height to have unobstructed view of all elements within */
+#password_reset_email_modal {
+    max-height: 90%;
+}
+
+#reset_password_btn {
+    text-transform: capitalize;
+}
