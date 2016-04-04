@@ -238,3 +238,7 @@ h5 {
 #reset_password_div div form{
     padding: 3em;
 }
+
+#login_hyperlink {
+    margin-top: 1em;
+}

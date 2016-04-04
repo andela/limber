@@ -589,10 +589,21 @@ class PasswordResetViewSet(viewsets.ModelViewSet):
 		new_password = request.data.get('new_password')
 		if new_password:
 			try:
-				pass_reset = PasswordReset.objects.get(pk=pk)
+				pass_reset = PasswordReset.objects.get(reset_code=pk)
+				# if a password reset has already been used before, return response
+				# saying link has expired
+				if pass_reset.request_completed:
+					return Response(
+						{
+							'status': 'That password reset request has expired.',
+						}, status=status.HTTP_400_BAD_REQUEST
+					)
 				user_auth = pass_reset.user
 				user_auth.set_password(new_password)
 				user_auth.save()
+				# set the process as complete
+				pass_reset.request_completed = True
+				pass_reset.save()
 				return Response(
 					{
 						'status': 'Success',

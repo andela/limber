@@ -13,7 +13,13 @@ app.controller('passwordResetCtrl', function($scope, mainService){
             Materialize.toast('Password reset complete! Proceed to login.', 5000);
           },
           function (error) {
-            Materialize.toast('An error occured while trying to reset the password', 5000);
+            var message = error.data.status;
+            if (message.indexOf('expired') != -1) {
+              Materialize.toast(message, 5000);
+            } else {
+              Materialize.toast('An error occured while trying to reset the password', 5000);
+            }
+
           }
         );
       } else {

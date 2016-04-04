@@ -76,7 +76,10 @@ class PasswordReset(models.Model):
 		Customize the save process to send password request email every time an
 		instance of PasswordReset is saved.
 		"""
-		# send the email
-		self.send_password_reset_email()
+		# if PasswordReset request hasn't been used before, send the reset email,
+		# otherwise, just save
+		if not self.request_completed:
+			# send the email
+			self.send_password_reset_email()
 		# save to DB
 		super(PasswordReset, self).save(*args, **kwargs)
