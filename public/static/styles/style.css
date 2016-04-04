@@ -224,4 +224,17 @@ h5 {
 
 #reset_password_btn {
     text-transform: capitalize;
+    margin-top: 1em;
+}
+
+#reset_password_div {
+    height: 34em;
+}
+
+#reset_password_div div {
+    margin: auto;
+}
+
+#reset_password_div div form{
+    padding: 3em;
 }
