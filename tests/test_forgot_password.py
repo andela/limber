@@ -115,7 +115,7 @@ class TestPasswordReset(TestCase):
 		}
 		response = self.client.post(login_url, login_data)
 		self.assertEqual(response.status_code, 200)
-		self.assertTrue(response.data.has_key('token'))
+		self.assertTrue('token' in response.data)
 		# logout user
 		logout_url = reverse('rest_framework:logout')
 		self.client.get(logout_url)
@@ -133,7 +133,7 @@ class TestPasswordReset(TestCase):
 		response = self.client.post(login_url, login_data)
 		self.assertEqual(response.status_code, 400)
 		self.assertEqual(response.status_text, 'Bad Request')
-		self.assertFalse(response.data.has_key('token'))
+		self.assertFalse('token' in response.data)
 		self.assertTrue(
 			'Unable to login with provided credentials' in
 			response.data.get('non_field_errors')[0]
@@ -146,7 +146,7 @@ class TestPasswordReset(TestCase):
 		response = self.client.post(login_url, new_login_data)
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.status_text, 'OK')
-		self.assertTrue(response.data.has_key('token'))
+		self.assertTrue('token' in response.data)
 
 	def test_update_password_reset_invalid_reset_code(self):
 		"""Test a PUT request to '/api/password/reset/:reset_ud'.
@@ -214,7 +214,7 @@ class TestPasswordReset(TestCase):
 		}
 		response = self.client.post(login_url, login_data)
 		self.assertEqual(response.status_code, 200)
-		self.assertTrue(response.data.has_key('token'))
+		self.assertTrue('token' in response.data)
 		# logout user
 		logout_url = reverse('rest_framework:logout')
 		self.client.get(logout_url)
