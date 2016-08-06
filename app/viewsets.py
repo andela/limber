@@ -122,6 +122,8 @@ class OrgProjectViewSet(viewsets.ReadOnlyModelViewSet):
 	permission_classes = (permissions.IsAuthenticated,)
 
 	def get_queryset(self):
+		"""Return queryset containing projects belonging to organisations in
+		which current user is a member."""
 		current_user = self.request.user
 		user_orgs = Member.objects.filter(
 			user_id=current_user.id).values_list('org_id', flat=True)
@@ -129,6 +131,17 @@ class OrgProjectViewSet(viewsets.ReadOnlyModelViewSet):
 			user_id=current_user.id).values_list('project_id', flat=True)
 		orgs = User.objects.filter(id__in=user_orgs).all()
 
+		# if there's an owner_id query parameter, search the User model for the
+		# org object. Use that to filter out projects and return only those that
+		# belong to org object
+		# if user of owner_id does not exist, queryset remains unfiltered
+		if self.request.query_params.get('owner_id'):
+			owner_id = self.request.query_params.get('owner_id')
+			try:
+				owner_org = User.objects.get(pk=owner_id)
+				return Project.objects.filter(owner=owner_org)
+			except User.DoesNotExist:
+				pass
 		return Project.objects.filter(owner=orgs)
 
 
@@ -136,7 +149,7 @@ class OtherProjectViewSet(viewsets.ReadOnlyModelViewSet):
 
 	"""API endpoint to view projects by othe users, in which the
 	current user is a team member.
-"""
+	"""
 
 	serializer_class = ProjectSerializer
 	permission_classes = (permissions.IsAuthenticated,)
@@ -498,8 +511,8 @@ class ProjectInviteViewSet(viewsets.ModelViewSet):
 			)
 
 
-class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
-	"""API endpoint to list all organisations associated with the current user."""
+class OrgAdminAssociationViewSet(viewsets.ReadOnlyModelViewSet):
+	"""API endpoint to list all organisations in which current user is an admin."""
 
 	serializer_class = OrgSerializer
 	permission_classes = (permissions.IsAuthenticated,)
@@ -512,5 +525,20 @@ class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
 			user=current_user,
 			user_level=1
 		).values_list('org', flat=True)
+		org_objects = User.objects.filter(user_type=2, id__in=orgs, )
+		return org_objects
+
+
+class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
+	"""API endpoint to list all organisations in which current user is a member"""
+
+	serializer_class = OrgSerializer
+	permission_classes = (permissions.IsAuthenticated,)
+
+	def get_queryset(self):
+		"""Modify the queryset to fetch all organisations in which current user
+		is a member."""
+		current_user = self.request.user
+		orgs = Member.objects.filter(user=current_user).values_list('org', flat=True)
 		org_objects = User.objects.filter(user_type=2, id__in=orgs, )
 		return org_objects

@@ -7,8 +7,11 @@
 	<div class="row">
 		<div id="dash_wrapper" class="container">
 			<div class="row" >
+
+				<!-- Personal Projects -->
 				<div class="col s12">
 					<h5>Personal Projects</h5>
+
 					<div class="col s12 m4 l3" ng-repeat="project in personal_projects">
 						<div class="card">
 							<div class="card-content">
@@ -23,19 +26,20 @@
 								</div>
 							</div>
 							<div class="card-reveal">
-						     	<span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i>Actions</span>
-						    	<div class="fixed-action-btn horizontal" style="bottom: 45px; right: 24px;">
-								    <a class="btn-floating btn-small btn-flat black">
-									    <i class="fa fa-list" style="font-size: 17px;"></i>
+						    <span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i>Actions</span>
+						    <div class="fixed-action-btn horizontal" style="bottom: 45px; right: 24px;">
+								  <a class="btn-floating btn-small btn-flat black">
+									  <i class="fa fa-list" style="font-size: 17px;"></i>
 									</a>
 									<ul>
-									    <li><a class="btn-floating btn-small btn-flat red" ng-click="openDeleteModal(project.project_id, 'personal')"><i class="material-icons">delete</i></a></li>
-									    <li><a class="btn-floating btn-small btn-flat blue" ng-click="openEditProjectModal(project.project_id, project.owner, 'personal')"><i class="material-icons">edit</i></a></li>
+									  <li><a class="btn-floating btn-small btn-flat red" ng-click="openDeleteModal(project.project_id, 'personal')"><i class="material-icons">delete</i></a></li>
+									  <li><a class="btn-floating btn-small btn-flat blue" ng-click="openEditProjectModal(project.project_id, project.owner, 'personal')"><i class="material-icons">edit</i></a></li>
 									</ul>
 								</div>
 							</div>
 						</div>
 					</div>
+					<!-- Add personal project div -->
 					<div class="col s12 m4 l3 add-project">
 						<a href="#personalProjectModal" class="modal-trigger">
 							<div class="card valign-wrapper">
@@ -51,50 +55,60 @@
 						<a href="#">view all</a>
 					</div>
 				</div>
-				<div class="col s12">
-					<h5>Organization Projects</h5>
-					<div class="col s12 m4 l3" ng-repeat="project in org_projects">
-						<div class="card">
-							<div class="card-content">
-								<a class="card-title">
-									<i class="material-icons activator right">more_vert</i>
-									<!-- When a description is more than 14 characters, show the first 14
-									followed by three dots (cont) -->
-									[[ project.project_name.substring(0, 14) ]][[project.project_name.length > 14 ? "...": ""]]
-								</a>
-								<div class="word-wrap">
-									[[ project.project_desc.substring(0, 14) ]][[project.project_desc.length > 14 ? "...": ""]]
+
+				<!-- Organisational Projects -->
+				<br>
+				<h5>Organization Projects</h5>
+				<div class="col s12" ng-repeat="org in user_organisations">
+					<hr>
+					<p>[[ org.full_name]] </p>
+					<div ng-init="loadOrgProjects(org.org_id)">
+						<div class="col s12 m4 l3" ng-repeat="project in orgProjectClassifier[org.org_id]">
+							<div class="card">
+								<div class="card-content">
+									<a class="card-title">
+										<i class="material-icons activator right">more_vert</i>
+										<!-- When a description is more than 14 characters, show the first 14
+										followed by three dots (cont) -->
+										[[ project.project_name.substring(0, 14) ]][[project.project_name.length > 14 ? "...": ""]]
+									</a>
+									<div class="word-wrap">
+										[[ project.project_desc.substring(0, 14) ]][[project.project_desc.length > 14 ? "...": ""]]
+									</div>
 								</div>
+								<div class="card-reveal">
+						      <span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i>Actions</span>
+						      <div class="fixed-action-btn horizontal" style="bottom: 45px; right: 24px;">
+								   	<a class="btn-floating btn-small btn-flat black">
+									   	<i class="fa fa-list" style="font-size: 17px;"></i>
+									  </a>
+									  <ul>
+								   		<li><a class="btn-floating btn-small btn-flat red" ng-click="openDeleteModal(project.project_id, 'organisational')"><i class="material-icons">delete</i></a></li>
+								   		<li><a class="btn-floating btn-small btn-flat blue" ng-click="openEditProjectModal(project.project_id, project.owner, 'organisational')"><i class="material-icons">edit</i></a></li>
+								   	</ul>
+								  </div>
+						   	</div>
 							</div>
-							<div class="card-reveal">
-					      		<span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i>Actions</span>
-					      		<div class="fixed-action-btn horizontal" style="bottom: 45px; right: 24px;">
-							    	<a class="btn-floating btn-small btn-flat black">
-								      	<i class="fa fa-list" style="font-size: 17px;"></i>
-								    </a>
-								    <ul>
-							      		<li><a class="btn-floating btn-small btn-flat red" ng-click="openDeleteModal(project.project_id, 'organisational')"><i class="material-icons">delete</i></a></li>
-							      		<li><a class="btn-floating btn-small btn-flat blue" ng-click="openEditProjectModal(project.project_id, project.owner, 'organisational')"><i class="material-icons">edit</i></a></li>
-							    	</ul>
-							  	</div>
-					   		</div>
 						</div>
-					</div>
-					<div class="col s12 m4 l3 add-project">
-						<a href="#organisationalProjectModal" class="modal-trigger" ng-click="getAssociatedOrgs()">
-							<div  class="card valign-wrapper">
-								<div class="card-content valign">
-									<span>
-										<i class="material-icons tiny">add</i> Add Project
-									</span>
-								</div>
-							</div>
-						</a>
 					</div>
 					<div ng-show="org_projects.length !== 0" class="col s12">
 						<a href="#">view all</a>
 					</div>
 				</div>
+				<!-- Add organisational Project div -->
+				<div class="col s12 m4 l3 add-project">
+					<a href="#organisationalProjectModal" class="modal-trigger" ng-click="getAdminAssociatedOrgs()">
+						<div  class="card valign-wrapper">
+							<div class="card-content valign">
+								<span>
+									<i class="material-icons tiny">add</i> Add Project
+								</span>
+							</div>
+						</div>
+					</a>
+				</div>
+
+				<!-- Other projects view -->
 				<div class="col s12">
 					<h5>Other Projects</h5>
 					<div class="col s12 m4 l3" ng-repeat="project in other_projects">
@@ -140,7 +154,7 @@
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input ng-model="personal.project_name" id="personal_project_name" type="text" class="validate">
+					<input required ng-model="personal.project_name" id="personal_project_name" type="text" class="validate">
 					<label for="personal_project_name">Project Name</label>
 				</div>
 			</div>
@@ -152,7 +166,7 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a class="modal-action modal-close waves-effect waves-green btn-flat " ng-click="createPersonalProject()">Save</a>
+			<a class="modal-action waves-effect waves-green btn-flat " ng-click="createPersonalProject()">Save</a>
 			<a class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 		</div>
 	</div>
@@ -185,7 +199,7 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a class="modal-action modal-close waves-effect waves-green btn-flat " ng-click="createOrganisationalProject()">Save</a>
+			<a class="modal-action waves-effect waves-green btn-flat " ng-click="createOrganisationalProject()">Save</a>
 			<a class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 		</div>
 	</div>
@@ -209,7 +223,7 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a class="modal-action modal-close waves-effect waves-green btn-flat " ng-click="editProject()">Save Changes</a>
+			<a class="modal-action waves-effect waves-green btn-flat " ng-click="editProject()">Save Changes</a>
 			<a class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
 		</div>
 	</div>
