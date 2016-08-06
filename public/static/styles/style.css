@@ -61,6 +61,11 @@
     background: #2196f3;
 }
 
+#nav-mobile .btn-login{
+    border: 1px solid #2196f3;
+    background: transparent;
+}
+
 /*Footer Styles*/
 #footer {
     min-height: 50px;
@@ -205,3 +210,8 @@ h5 {
 .alternative {
     margin-top: 1em;
 }
+
+.feature {
+    text-align: justify;
+}
+
