@@ -6,7 +6,8 @@ from app.serializers import (
 
 	OrgSerializer, UserSerializer, ProjectSerializer,
 	TeamMemberSerializer, StorySerializer, MemberSerializer,
-	TaskSerializer, ProjectInviteSerializer, OrgInviteSerilizer
+	TaskSerializer, ProjectInviteSerializer, OrgInviteSerilizer,
+	PasswordResetSerializer
 
 )
 from django.shortcuts import get_object_or_404
@@ -16,6 +17,7 @@ from app.models.story import Story, Task
 from app.models.project import Project, TeamMember
 from app.models.invite import ProjectInvite
 from app.models.org_invite import OrgInvites
+from app.models.pass_reset import PasswordReset
 
 
 class OrgSignUpViewSet(viewsets.ModelViewSet):
@@ -542,3 +544,81 @@ class OrgAssociationViewSet(viewsets.ReadOnlyModelViewSet):
 		orgs = Member.objects.filter(user=current_user).values_list('org', flat=True)
 		org_objects = User.objects.filter(user_type=2, id__in=orgs, )
 		return org_objects
+
+
+class PasswordResetViewSet(viewsets.ModelViewSet):
+	"""API endpoint for managing 'password reset' requests."""
+
+	serializer_class = PasswordResetSerializer
+	queryset = PasswordReset.objects.all()
+
+	def create(self, request):
+		"""Customize POST request to '/api/password/reset'.
+
+		Expects a user id (when posted from the browsable viewset) or an email
+		(when posted from the client).
+		"""
+		data = {}
+		email = request.data.get('email')
+		# when 'email' has been provided and 'user' has not...
+		if email and not request.data.get('user'):
+			try:
+				user_auth = UserAuthentication.objects.get(email=email)
+				data['user'] = user_auth.id
+			except UserAuthentication.DoesNotExist:
+				return Response(
+					{
+						'status': 'User with specified email does not exist'
+					}, status=status.HTTP_404_NOT_FOUND
+				)
+		else:
+			data['user'] = request.data.get('user')
+
+		serializer = self.serializer_class(data=data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+	def update(self, request, pk=None):
+		"""Customize PUT request to '/api/password/reset/:reset_id/'.
+
+		This method retrieves the user from the PasswordReset object's user
+		attribute and calls the 'set_password' method on it.
+		"""
+		new_password = request.data.get('new_password')
+		if new_password:
+			try:
+				pass_reset = PasswordReset.objects.get(reset_code=pk)
+				# if a password reset has already been used before, return response
+				# saying link has expired
+				if pass_reset.request_completed:
+					return Response(
+						{
+							'status': 'That password reset request has expired.',
+						}, status=status.HTTP_400_BAD_REQUEST
+					)
+				user_auth = pass_reset.user
+				user_auth.set_password(new_password)
+				user_auth.save()
+				# set the process as complete
+				pass_reset.request_completed = True
+				pass_reset.save()
+				return Response(
+					{
+						'status': 'Success',
+						'detail': 'Password reset successful'
+					}, status=status.HTTP_200_OK
+				)
+			except PasswordReset.DoesNotExist:
+				return Response(
+					{
+						'status': 'Password reset request not found'
+					}, status=status.HTTP_404_NOT_FOUND
+				)
+		else:
+			return Response(
+				{
+					'status': 'New password required'
+				}, status=status.HTTP_400_BAD_REQUEST
+			)

@@ -8,3 +8,4 @@ from .story import Story, Task
 from .org_invite import  OrgInvites
 
 from .invite import ProjectInvite
+from .pass_reset import PasswordReset

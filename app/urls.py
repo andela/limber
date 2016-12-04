@@ -32,6 +32,11 @@ router.register(
 	viewsets.OrgAssociationViewSet,
 	'org-associations'
 )
+router.register(
+	r'password/reset',
+	viewsets.PasswordResetViewSet,
+	'password-reset'
+)
 
 urlpatterns = [
 	url(r'^', include(router.urls)),

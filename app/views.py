@@ -78,3 +78,10 @@ def respond_project_invite(request, invite_code):
         'limber/invite_response.html',
         {'invite_code': invite_code}
     )
+
+def respond_password_reset(request, reset_code):
+    return render(
+        request,
+        'limber/password_reset_completion.html',
+        {'reset_code': reset_code}
+    )

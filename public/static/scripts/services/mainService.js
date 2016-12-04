@@ -102,6 +102,16 @@ app.factory('mainService', function ($resource) {
             }
         }, {
             stripTrailingSlashes: false
+        }),
+        PasswordReset: $resource('/api/password/reset/:reset_id', {reset_id: '@reset_id'}, {
+            reset: {
+                method: 'POST'
+            },
+            resetPassword: {
+              method: 'PUT'
+            }
+        }, {
+            stripTrailingSlashes: false
         })
     };
 });
